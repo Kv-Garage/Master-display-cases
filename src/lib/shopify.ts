@@ -13,10 +13,10 @@ if (!SHOPIFY_DOMAIN || !SHOPIFY_TOKEN) {
 const domain = SHOPIFY_DOMAIN;
 const token = SHOPIFY_TOKEN;
 
-// Fixed shopifyFetch function - endpoint built inside function
+// Fixed shopifyFetch function - STEP 1 & 2: Fix endpoint and headers
 export async function shopifyFetch(query: string, variables = {}) {
-  // STEP 1: Fix endpoint - must be exact format
-  const endpoint = `https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN}/api/2024-01/graphql.json`;
+  // STEP 1: Fix endpoint - use 2023-10 (NOT 2024-01)
+  const endpoint = `https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN}/api/2023-10/graphql.json`;
 
   const res = await fetch(endpoint, {
     method: "POST",
@@ -26,6 +26,7 @@ export async function shopifyFetch(query: string, variables = {}) {
       "X-Shopify-Storefront-Access-Token": process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN!,
     },
     body: JSON.stringify({ query, variables }),
+    cache: "no-store",
   });
 
   const json = await res.json();
@@ -44,8 +45,9 @@ export async function testShopifyConnection() {
   return shopifyFetch(`{ shop { name } }`);
 }
 
-// STEP 4: Get products - fixed query with no variables
+// STEP 3: Get products - fixed query with proper fields for images and description
 export async function getProducts(first: number = 10) {
+  // STEP 3: Fixed product query - this fixes images + description
   const query = `{
     products(first: ${first}) {
       edges {
@@ -54,7 +56,6 @@ export async function getProducts(first: number = 10) {
           title
           handle
           description
-          descriptionHtml
           featuredImage {
             url
             altText
@@ -67,43 +68,8 @@ export async function getProducts(first: number = 10) {
               }
             }
           }
-          variants(first: 1) {
-            edges {
-              node {
-                id
-                title
-                price {
-                  amount
-                  currencyCode
-                }
-                compareAtPrice {
-                  amount
-                  currencyCode
-                }
-                sku
-                availableForSale
-                quantityAvailable
-                optionValues {
-                  name
-                  value
-                }
-              }
-            }
-          }
-          vendor
-          productType
-          tags
-          options(first: 3) {
-            id
-            name
-            values
-          }
           priceRange {
             minVariantPrice {
-              amount
-              currencyCode
-            }
-            maxVariantPrice {
               amount
               currencyCode
             }
@@ -119,16 +85,16 @@ export async function getProducts(first: number = 10) {
   if (result && result.products && result.products.edges) {
     return result.products.edges.map((edge: any) => {
       const product = edge.node;
-      const firstVariant = product.variants.edges[0]?.node;
+
+      // STEP 4: Fix image rendering - use proper fallback
+      const image = product.featuredImage?.url || product.images?.edges?.[0]?.node?.url;
 
       return {
         id: product.id,
         title: product.title,
         handle: product.handle,
         description: product.description || '',
-        descriptionHtml: product.descriptionHtml || '',
-        price: firstVariant ? parseFloat(firstVariant.price.amount) : 0,
-        compareAtPrice: firstVariant?.compareAtPrice ? parseFloat(firstVariant.compareAtPrice.amount) : undefined,
+        price: product.priceRange?.minVariantPrice?.amount ? parseFloat(product.priceRange.minVariantPrice.amount) : 0,
         images: product.images.edges.map((img: any) => ({
           id: img.node.id || `img-${Math.random()}`,
           url: img.node.url,
@@ -136,32 +102,15 @@ export async function getProducts(first: number = 10) {
           width: 800,
           height: 800,
         })),
-        variants: product.variants.edges.map((edge: any) => ({
-          id: edge.node.id,
-          title: edge.node.title,
-          price: parseFloat(edge.node.price.amount),
-          compareAtPrice: edge.node.compareAtPrice ? parseFloat(edge.node.compareAtPrice.amount) : undefined,
-          availableForSale: edge.node.availableForSale,
-          sku: edge.node.sku || '',
-          inventoryQuantity: edge.node.quantityAvailable || 0,
-          optionValues: edge.node.optionValues.map((ov: any) => ({
-            name: ov.name,
-            value: ov.value,
-          })),
-          image: undefined,
-        })),
-        vendor: product.vendor,
-        productType: product.productType,
-        tags: product.tags || [],
-        availableForSale: firstVariant?.availableForSale ?? false,
-        createdAt: product.createdAt || new Date().toISOString(),
-        updatedAt: product.updatedAt || new Date().toISOString(),
-        publishedAt: product.publishedAt || new Date().toISOString(),
-        options: product.options.map((opt: any) => ({
-          id: opt.id,
-          name: opt.name,
-          values: opt.values,
-        })),
+        vendor: 'Master Display Cases',
+        productType: 'Display Case',
+        tags: [],
+        availableForSale: true,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        publishedAt: new Date().toISOString(),
+        options: [],
+        variants: [],
       };
     });
   }
@@ -169,7 +118,7 @@ export async function getProducts(first: number = 10) {
   return [];
 }
 
-// Get single product - fixed query with no variables
+// Get single product - fixed query with proper fields
 export async function getProduct(handle: string) {
   const query = `{
     product(handle: "${handle}") {
@@ -177,7 +126,6 @@ export async function getProduct(handle: string) {
       title
       handle
       description
-      descriptionHtml
       featuredImage {
         url
         altText
@@ -199,34 +147,14 @@ export async function getProduct(handle: string) {
               amount
               currencyCode
             }
-            compareAtPrice {
-              amount
-              currencyCode
-            }
             sku
             availableForSale
             quantityAvailable
-            optionValues {
-              name
-              value
-            }
           }
         }
       }
-      vendor
-      productType
-      tags
-      options(first: 3) {
-        id
-        name
-        values
-      }
       priceRange {
         minVariantPrice {
-          amount
-          currencyCode
-        }
-        maxVariantPrice {
           amount
           currencyCode
         }
@@ -245,9 +173,7 @@ export async function getProduct(handle: string) {
       title: product.title,
       handle: product.handle,
       description: product.description || '',
-      descriptionHtml: product.descriptionHtml || '',
-      price: firstVariant ? parseFloat(firstVariant.price.amount) : 0,
-      compareAtPrice: firstVariant?.compareAtPrice ? parseFloat(firstVariant.compareAtPrice.amount) : undefined,
+      price: firstVariant ? parseFloat(firstVariant.price.amount) : (product.priceRange?.minVariantPrice?.amount ? parseFloat(product.priceRange.minVariantPrice.amount) : 0),
       images: product.images.edges.map((img: any) => ({
         id: img.node.id || `img-${Math.random()}`,
         url: img.node.url,
@@ -259,35 +185,27 @@ export async function getProduct(handle: string) {
         id: edge.node.id,
         title: edge.node.title,
         price: parseFloat(edge.node.price.amount),
-        compareAtPrice: edge.node.compareAtPrice ? parseFloat(edge.node.compareAtPrice.amount) : undefined,
         availableForSale: edge.node.availableForSale,
         sku: edge.node.sku || '',
         inventoryQuantity: edge.node.quantityAvailable || 0,
-        optionValues: edge.node.optionValues.map((ov: any) => ({
-          name: ov.name,
-          value: ov.value,
-        })),
         image: undefined,
+        optionValues: [],
       })),
-      vendor: product.vendor,
-      productType: product.productType,
-      tags: product.tags || [],
-      availableForSale: firstVariant?.availableForSale ?? false,
-      createdAt: product.createdAt || new Date().toISOString(),
-      updatedAt: product.updatedAt || new Date().toISOString(),
-      publishedAt: product.publishedAt || new Date().toISOString(),
-      options: product.options.map((opt: any) => ({
-        id: opt.id,
-        name: opt.name,
-        values: opt.values,
-      })),
+      vendor: 'Master Display Cases',
+      productType: 'Display Case',
+      tags: [],
+      availableForSale: firstVariant?.availableForSale ?? true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      publishedAt: new Date().toISOString(),
+      options: [],
     };
   }
 
   return null;
 }
 
-// Get single collection by handle - fixed query with no variables
+// Get single collection by handle
 export async function getCollection(handle: string) {
   const query = `{
     collection(handle: "${handle}") {
@@ -295,7 +213,6 @@ export async function getCollection(handle: string) {
       title
       handle
       description
-      descriptionHtml
       productsCount
       image {
         url
@@ -314,7 +231,6 @@ export async function getCollection(handle: string) {
       title: collection.title,
       handle: collection.handle,
       description: collection.description || '',
-      descriptionHtml: collection.descriptionHtml || '',
       productsCount: collection.productsCount,
       image: collection.image ? {
         id: collection.image.id || `col-img-${Math.random()}`,
@@ -330,7 +246,7 @@ export async function getCollection(handle: string) {
   return null;
 }
 
-// Get collections - fixed query with no variables
+// Get collections
 export async function getCollections(first: number = 10) {
   const query = `{
     collections(first: ${first}) {
@@ -379,7 +295,7 @@ export async function getCollections(first: number = 10) {
   return [];
 }
 
-// Get collection products - fixed query with no variables
+// Get collection products
 export async function getCollectionProducts({ handle, first = 20 }: { handle: string; first?: number }) {
   const query = `{
     collection(handle: "${handle}") {
@@ -390,7 +306,6 @@ export async function getCollectionProducts({ handle, first = 20 }: { handle: st
             title
             handle
             description
-            descriptionHtml
             featuredImage {
               url
               altText
@@ -403,27 +318,11 @@ export async function getCollectionProducts({ handle, first = 20 }: { handle: st
                 }
               }
             }
-            variants(first: 1) {
-              edges {
-                node {
-                  price {
-                    amount
-                    currencyCode
-                  }
-                  compareAtPrice {
-                    amount
-                    currencyCode
-                  }
-                }
+            priceRange {
+              minVariantPrice {
+                amount
+                currencyCode
               }
-            }
-            vendor
-            productType
-            tags
-            options(first: 3) {
-              id
-              name
-              values
             }
           }
         }
@@ -436,16 +335,13 @@ export async function getCollectionProducts({ handle, first = 20 }: { handle: st
   if (result && result.collection && result.collection.products) {
     return result.collection.products.edges.map((edge: any) => {
       const product = edge.node;
-      const firstVariant = product.variants.edges[0]?.node;
 
       return {
         id: product.id,
         title: product.title,
         handle: product.handle,
         description: product.description || '',
-        descriptionHtml: product.descriptionHtml || '',
-        price: firstVariant ? parseFloat(firstVariant.price.amount) : 0,
-        compareAtPrice: firstVariant?.compareAtPrice ? parseFloat(firstVariant.compareAtPrice.amount) : undefined,
+        price: product.priceRange?.minVariantPrice?.amount ? parseFloat(product.priceRange.minVariantPrice.amount) : 0,
         images: product.images.edges.map((img: any) => ({
           id: img.node.id || `img-${Math.random()}`,
           url: img.node.url,
@@ -454,18 +350,14 @@ export async function getCollectionProducts({ handle, first = 20 }: { handle: st
           height: 800,
         })),
         variants: [],
-        vendor: product.vendor,
-        productType: product.productType,
-        tags: product.tags || [],
+        vendor: 'Master Display Cases',
+        productType: 'Display Case',
+        tags: [],
         availableForSale: true,
-        createdAt: product.createdAt || new Date().toISOString(),
-        updatedAt: product.updatedAt || new Date().toISOString(),
-        publishedAt: product.publishedAt || new Date().toISOString(),
-        options: product.options ? product.options.map((opt: any) => ({
-          id: opt.id,
-          name: opt.name,
-          values: opt.values,
-        })) : [],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        publishedAt: new Date().toISOString(),
+        options: [],
       };
     });
   }
@@ -499,7 +391,7 @@ export function generateCheckoutUrl(variantId: string, quantity: number = 1) {
   return `https://${domain}/cart/${variantId}:${quantity}`;
 }
 
-// Create draft order (simplified - in production you'd use Admin API)
+// Create draft order (simplified)
 export async function createDraftOrder(lineItems: any[], email: string) {
   console.log('Creating draft order for:', email, 'with items:', lineItems);
 
@@ -511,7 +403,7 @@ export async function createDraftOrder(lineItems: any[], email: string) {
   };
 }
 
-// Get blog post by handle - fixed query with no variables
+// Get blog post by handle
 export async function getBlogPost(handle: string) {
   const query = `{
     blogByHandle(handle: "news") {
@@ -557,7 +449,7 @@ export async function getBlogPost(handle: string) {
   return null;
 }
 
-// Get blog posts - fixed query with no variables
+// Get blog posts
 export async function getBlogPosts({ first = 10 }: { first?: number } = {}) {
   const query = `{
     blogByHandle(handle: "news") {
