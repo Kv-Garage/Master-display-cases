@@ -1,6 +1,7 @@
-// Shopify Storefront API Configuration (for Headless channel)
-const SHOPIFY_DOMAIN = process.env.SHOPIFY_STORE_DOMAIN;
-const SHOPIFY_TOKEN = process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN;
+// Shopify Storefront API Configuration (Headless Storefront)
+// Uses NEXT_PUBLIC_ env vars for Storefront API access
+const SHOPIFY_DOMAIN = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN;
+const SHOPIFY_TOKEN = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN;
 
 if (!SHOPIFY_DOMAIN || !SHOPIFY_TOKEN) {
   throw new Error("Missing Shopify environment variables. Please check .env.local");
