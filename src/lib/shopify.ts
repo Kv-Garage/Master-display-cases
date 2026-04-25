@@ -14,113 +14,110 @@ const token = SHOPIFY_TOKEN;
 // Using stable version: https://shopify.dev/api/release-schedule
 const endpoint = `https://${SHOPIFY_DOMAIN}/api/2024-01/graphql.json`;
 
-export async function shopifyFetch(query: string) {
+// Fixed shopifyFetch function - handles errors properly and passes variables
+export async function shopifyFetch(query: string, variables: any = {}) {
   const res = await fetch(endpoint, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "X-Shopify-Storefront-Access-Token": token, // Storefront API header (different from Admin API)
+      "X-Shopify-Storefront-Access-Token": token,
     },
-    body: JSON.stringify({ query }),
+    body: JSON.stringify({ query, variables }),
   });
 
-  const text = await res.text();
+  const json = await res.json();
 
-  if (!res.ok) {
-    throw new Error(`Shopify Storefront API error: ${res.status}`);
+  console.log("SHOPIFY RESPONSE:", JSON.stringify(json, null, 2));
+
+  // Check for GraphQL errors inside the JSON response
+  if (json.errors) {
+    throw new Error(json.errors[0]?.message || 'GraphQL error');
   }
 
-  return JSON.parse(text);
+  return json;
 }
 
 // Test function to verify connection
 export async function testShopifyConnection() {
-  return shopifyFetch(`
-    {
-      shop {
-        name
-      }
-    }
-  `);
+  return shopifyFetch(`{ shop { name } }`);
 }
 
 // Get products with full data using Storefront API
+// Fixed: removed unused $first variable, using hardcoded value
 export async function getProducts(first: number = 20) {
-  const result = await shopifyFetch(`
-    query GetProducts($first: Int!) {
-      products(first: $first) {
-        edges {
-          node {
+  const result = await shopifyFetch(`{
+    products(first: ${first}) {
+      edges {
+        node {
+          id
+          title
+          handle
+          description
+          descriptionHtml
+          featuredImage {
+            url
+            altText
+          }
+          images(first: 5) {
+            edges {
+              node {
+                url
+                altText
+              }
+            }
+          }
+          variants(first: 1) {
+            edges {
+              node {
+                id
+                title
+                price {
+                  amount
+                  currencyCode
+                }
+                compareAtPrice {
+                  amount
+                  currencyCode
+                }
+                sku
+                availableForSale
+                quantityAvailable
+                optionValues {
+                  name
+                  value
+                }
+              }
+            }
+          }
+          vendor
+          productType
+          tags
+          options(first: 3) {
             id
-            title
-            handle
-            description
-            descriptionHtml
-            featuredImage {
-              url
-              altText
+            name
+            values
+          }
+          priceRange {
+            minVariantPrice {
+              amount
+              currencyCode
             }
-            images(first: 10) {
-              edges {
-                node {
-                  url
-                  altText
-                }
-              }
-            }
-            variants(first: 10) {
-              edges {
-                node {
-                  id
-                  title
-                  price {
-                    amount
-                    currencyCode
-                  }
-                  compareAtPrice {
-                    amount
-                    currencyCode
-                  }
-                  sku
-                  availableForSale
-                  quantityAvailable
-                  optionValues {
-                    name
-                    value
-                  }
-                }
-              }
-            }
-            vendor
-            productType
-            tags
-            options(first: 3) {
-              id
-              name
-              values
-            }
-            priceRange {
-              minVariantPrice {
-                amount
-                currencyCode
-              }
-              maxVariantPrice {
-                amount
-                currencyCode
-              }
+            maxVariantPrice {
+              amount
+              currencyCode
             }
           }
         }
       }
     }
-  `);
-  
+  }`);
+
   // Transform Storefront API response to match our Product type
   if (result.data && result.data.products && result.data.products.edges) {
     return result.data.products.edges.map((edge: any) => {
       const product = edge.node;
       const firstVariant = product.variants.edges[0]?.node;
-      
+
       return {
         id: product.id,
         title: product.title,
@@ -165,81 +162,79 @@ export async function getProducts(first: number = 20) {
       };
     });
   }
-  
+
   return [];
 }
 
-// Get single product
+// Get single product - Fixed: removed unused $handle variable
 export async function getProduct(handle: string) {
-  const result = await shopifyFetch(`
-    query GetProduct($handle: String!) {
-      product(handle: $handle) {
-        id
-        title
-        handle
-        description
-        descriptionHtml
-        featuredImage {
-          url
-          altText
-        }
-        images(first: 10) {
-          edges {
-            node {
-              url
-              altText
-            }
-          }
-        }
-        variants(first: 10) {
-          edges {
-            node {
-              id
-              title
-              price {
-                amount
-                currencyCode
-              }
-              compareAtPrice {
-                amount
-                currencyCode
-              }
-              sku
-              availableForSale
-              quantityAvailable
-              optionValues {
-                name
-                value
-              }
-            }
-          }
-        }
-        vendor
-        productType
-        tags
-        options(first: 3) {
-          id
-          name
-          values
-        }
-        priceRange {
-          minVariantPrice {
-            amount
-            currencyCode
-          }
-          maxVariantPrice {
-            amount
-            currencyCode
+  const result = await shopifyFetch(`{
+    product(handle: "${handle}") {
+      id
+      title
+      handle
+      description
+      descriptionHtml
+      featuredImage {
+        url
+        altText
+      }
+      images(first: 10) {
+        edges {
+          node {
+            url
+            altText
           }
         }
       }
+      variants(first: 10) {
+        edges {
+          node {
+            id
+            title
+            price {
+              amount
+              currencyCode
+            }
+            compareAtPrice {
+              amount
+              currencyCode
+            }
+            sku
+            availableForSale
+            quantityAvailable
+            optionValues {
+              name
+              value
+            }
+          }
+        }
+      }
+      vendor
+      productType
+      tags
+      options(first: 3) {
+        id
+        name
+        values
+      }
+      priceRange {
+        minVariantPrice {
+          amount
+          currencyCode
+        }
+        maxVariantPrice {
+          amount
+          currencyCode
+        }
+      }
     }
-  `);
-  
+  }`);
+
   if (result.data && result.data.product) {
     const product = result.data.product;
     const firstVariant = product.variants.edges[0]?.node;
-    
+
     return {
       id: product.id,
       title: product.title,
@@ -283,30 +278,28 @@ export async function getProduct(handle: string) {
       })),
     };
   }
-  
+
   return null;
 }
 
-// Get single collection by handle
+// Get single collection by handle - Fixed: removed unused $handle variable
 export async function getCollection(handle: string) {
-  const result = await shopifyFetch(`
-    query GetCollection($handle: String!) {
-      collection(handle: $handle) {
+  const result = await shopifyFetch(`{
+    collection(handle: "${handle}") {
+      id
+      title
+      handle
+      description
+      descriptionHtml
+      productsCount
+      image {
+        url
+        altText
         id
-        title
-        handle
-        description
-        descriptionHtml
-        productsCount
-        image {
-          url
-          altText
-          id
-        }
       }
     }
-  `);
-  
+  }`);
+
   if (result.data && result.data.collection) {
     const collection = result.data.collection;
     return {
@@ -326,35 +319,33 @@ export async function getCollection(handle: string) {
       updatedAt: new Date().toISOString(),
     };
   }
-  
+
   return null;
 }
 
-// Get collections - simplified query to avoid 404 errors
-export async function getCollections(first: number = 20) {
-  const result = await shopifyFetch(`
-    query GetCollections($first: Int!) {
-      collections(first: $first) {
-        edges {
-          node {
+// Get collections - Fixed: removed unused $first variable
+export async function getCollections(first: number = 10) {
+  const result = await shopifyFetch(`{
+    collections(first: ${first}) {
+      edges {
+        node {
+          id
+          title
+          handle
+          description
+          productsCount
+          image {
+            url
+            altText
             id
-            title
-            handle
-            description
-            productsCount
-            image {
-              url
-              altText
-              id
-            }
           }
         }
       }
     }
-  `);
-  
+  }`);
+
   console.log("COLLECTION RESPONSE:", result);
-  
+
   if (result.data && result.data.collections && result.data.collections.edges) {
     return result.data.collections.edges.map((edge: any) => {
       const collection = edge.node;
@@ -375,69 +366,67 @@ export async function getCollections(first: number = 20) {
       };
     });
   }
-  
+
   return [];
 }
 
-// Get collection products
+// Get collection products - Fixed: removed unused variables
 export async function getCollectionProducts({ handle, first = 20 }: { handle: string; first?: number }) {
-  const result = await shopifyFetch(`
-    query GetCollectionProducts($handle: String!, $first: Int!) {
-      collection(handle: $handle) {
-        products(first: $first) {
-          edges {
-            node {
+  const result = await shopifyFetch(`{
+    collection(handle: "${handle}") {
+      products(first: ${first}) {
+        edges {
+          node {
+            id
+            title
+            handle
+            description
+            descriptionHtml
+            featuredImage {
+              url
+              altText
+            }
+            images(first: 5) {
+              edges {
+                node {
+                  url
+                  altText
+                }
+              }
+            }
+            variants(first: 1) {
+              edges {
+                node {
+                  price {
+                    amount
+                    currencyCode
+                  }
+                  compareAtPrice {
+                    amount
+                    currencyCode
+                  }
+                }
+              }
+            }
+            vendor
+            productType
+            tags
+            options(first: 3) {
               id
-              title
-              handle
-              description
-              descriptionHtml
-              featuredImage {
-                url
-                altText
-              }
-              images(first: 5) {
-                edges {
-                  node {
-                    url
-                    altText
-                  }
-                }
-              }
-              variants(first: 1) {
-                edges {
-                  node {
-                    price {
-                      amount
-                      currencyCode
-                    }
-                    compareAtPrice {
-                      amount
-                      currencyCode
-                    }
-                  }
-                }
-              }
-              vendor
-              productType
-              tags
-              options(first: 3) {
-                id
-                name
-                values
-              }
+              name
+              values
             }
           }
         }
       }
     }
-  `);
-  
+  }`);
+
   if (result.data && result.data.collection && result.data.collection.products) {
     return result.data.collection.products.edges.map((edge: any) => {
       const product = edge.node;
       const firstVariant = product.variants.edges[0]?.node;
-      
+
       return {
         id: product.id,
         title: product.title,
@@ -469,7 +458,7 @@ export async function getCollectionProducts({ handle, first = 20 }: { handle: st
       };
     });
   }
-  
+
   return [];
 }
 
@@ -479,7 +468,7 @@ export async function getShippingRates(zipCode: string) {
   const perMileRate = 0.50;
   const estimatedDistance = Math.abs(parseInt(zipCode) - 49500) * 0.5;
   const shippingCost = baseRate + (estimatedDistance * perMileRate);
-  
+
   return {
     standard: {
       name: 'Standard Freight Shipping',
@@ -501,11 +490,8 @@ export function generateCheckoutUrl(variantId: string, quantity: number = 1) {
 
 // Create draft order (simplified - in production you'd use Admin API)
 export async function createDraftOrder(lineItems: any[], email: string) {
-  // This is a simplified implementation
-  // In production, you would use Shopify Admin API to create actual draft orders
   console.log('Creating draft order for:', email, 'with items:', lineItems);
-  
-  // Return a mock response for now
+
   return {
     id: `draft-${Date.now()}`,
     name: `#${Math.floor(Math.random() * 10000)}`,
@@ -514,32 +500,29 @@ export async function createDraftOrder(lineItems: any[], email: string) {
   };
 }
 
-// Get blog post by handle
+// Get blog post by handle - Fixed: removed unused $handle variable
 export async function getBlogPost(handle: string) {
-  // Shopify Blog API query
-  const result = await shopifyFetch(`
-    query GetBlogPost($handle: String!) {
-      blogByHandle(handle: "news") {
-        articleByHandle(handle: $handle) {
-          id
-          title
-          handle
-          excerpt
-          content
-          publishedAt
-          author: authorV2 {
-            name
-          }
-          featuredImage {
-            url
-            altText
-          }
-          tags
+  const result = await shopifyFetch(`{
+    blogByHandle(handle: "news") {
+      articleByHandle(handle: "${handle}") {
+        id
+        title
+        handle
+        excerpt
+        content
+        publishedAt
+        author: authorV2 {
+          name
         }
+        featuredImage {
+          url
+          altText
+        }
+        tags
       }
     }
-  `);
-  
+  }`);
+
   if (result.data && result.data.blogByHandle && result.data.blogByHandle.articleByHandle) {
     const article = result.data.blogByHandle.articleByHandle;
     return {
@@ -557,38 +540,36 @@ export async function getBlogPost(handle: string) {
       tags: article.tags || [],
     };
   }
-  
+
   return null;
 }
 
-// Get blog posts
+// Get blog posts - Fixed: removed unused $first variable
 export async function getBlogPosts({ first = 10 }: { first?: number } = {}) {
-  const result = await shopifyFetch(`
-    query GetBlogPosts($first: Int!) {
-      blogByHandle(handle: "news") {
-        articles(first: $first) {
-          edges {
-            node {
-              id
-              title
-              handle
-              excerpt
-              publishedAt
-              author: authorV2 {
-                name
-              }
-              featuredImage {
-                url
-                altText
-              }
-              tags
+  const result = await shopifyFetch(`{
+    blogByHandle(handle: "news") {
+      articles(first: ${first}) {
+        edges {
+          node {
+            id
+            title
+            handle
+            excerpt
+            publishedAt
+            author: authorV2 {
+              name
             }
+            featuredImage {
+              url
+              altText
+            }
+            tags
           }
         }
       }
     }
-  `);
-  
+  }`);
+
   if (result.data && result.data.blogByHandle) {
     return {
       blog: {
@@ -596,7 +577,7 @@ export async function getBlogPosts({ first = 10 }: { first?: number } = {}) {
       },
     };
   }
-  
+
   return null;
 }
 
