@@ -1,5 +1,8 @@
 // Shopify Storefront API Configuration (Headless Storefront)
-// Uses NEXT_PUBLIC_ env vars for Storefront API access
+// Debug: Check environment variables
+console.log("DOMAIN:", process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN);
+console.log("TOKEN:", process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN?.slice(0, 10) + "...");
+
 const SHOPIFY_DOMAIN = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN;
 const SHOPIFY_TOKEN = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN;
 
@@ -10,17 +13,17 @@ if (!SHOPIFY_DOMAIN || !SHOPIFY_TOKEN) {
 const domain = SHOPIFY_DOMAIN;
 const token = SHOPIFY_TOKEN;
 
-// Storefront API endpoint (different from Admin API)
-// Using stable version: https://shopify.dev/api/release-schedule
-const endpoint = `https://${SHOPIFY_DOMAIN}/api/2024-01/graphql.json`;
+// Fixed shopifyFetch function - endpoint built inside function
+export async function shopifyFetch(query: string, variables = {}) {
+  // STEP 1: Fix endpoint - must be exact format
+  const endpoint = `https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN}/api/2024-01/graphql.json`;
 
-// Fixed shopifyFetch function - handles errors properly and passes variables
-export async function shopifyFetch(query: string, variables: any = {}) {
   const res = await fetch(endpoint, {
     method: "POST",
     headers: {
+      // STEP 2: Fix headers - exact format
       "Content-Type": "application/json",
-      "X-Shopify-Storefront-Access-Token": token,
+      "X-Shopify-Storefront-Access-Token": process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN!,
     },
     body: JSON.stringify({ query, variables }),
   });
@@ -29,12 +32,11 @@ export async function shopifyFetch(query: string, variables: any = {}) {
 
   console.log("SHOPIFY RESPONSE:", JSON.stringify(json, null, 2));
 
-  // Check for GraphQL errors inside the JSON response
   if (json.errors) {
-    throw new Error(json.errors[0]?.message || 'GraphQL error');
+    throw new Error(json.errors[0]?.message || "Shopify error");
   }
 
-  return json;
+  return json.data;
 }
 
 // Test function to verify connection
@@ -42,10 +44,9 @@ export async function testShopifyConnection() {
   return shopifyFetch(`{ shop { name } }`);
 }
 
-// Get products with full data using Storefront API
-// Fixed: removed unused $first variable, using hardcoded value
-export async function getProducts(first: number = 20) {
-  const result = await shopifyFetch(`{
+// STEP 4: Get products - fixed query with no variables
+export async function getProducts(first: number = 10) {
+  const query = `{
     products(first: ${first}) {
       edges {
         node {
@@ -110,11 +111,13 @@ export async function getProducts(first: number = 20) {
         }
       }
     }
-  }`);
+  }`;
+
+  const result = await shopifyFetch(query);
 
   // Transform Storefront API response to match our Product type
-  if (result.data && result.data.products && result.data.products.edges) {
-    return result.data.products.edges.map((edge: any) => {
+  if (result && result.products && result.products.edges) {
+    return result.products.edges.map((edge: any) => {
       const product = edge.node;
       const firstVariant = product.variants.edges[0]?.node;
 
@@ -166,9 +169,9 @@ export async function getProducts(first: number = 20) {
   return [];
 }
 
-// Get single product - Fixed: removed unused $handle variable
+// Get single product - fixed query with no variables
 export async function getProduct(handle: string) {
-  const result = await shopifyFetch(`{
+  const query = `{
     product(handle: "${handle}") {
       id
       title
@@ -229,10 +232,12 @@ export async function getProduct(handle: string) {
         }
       }
     }
-  }`);
+  }`;
 
-  if (result.data && result.data.product) {
-    const product = result.data.product;
+  const result = await shopifyFetch(query);
+
+  if (result && result.product) {
+    const product = result.product;
     const firstVariant = product.variants.edges[0]?.node;
 
     return {
@@ -282,9 +287,9 @@ export async function getProduct(handle: string) {
   return null;
 }
 
-// Get single collection by handle - Fixed: removed unused $handle variable
+// Get single collection by handle - fixed query with no variables
 export async function getCollection(handle: string) {
-  const result = await shopifyFetch(`{
+  const query = `{
     collection(handle: "${handle}") {
       id
       title
@@ -298,10 +303,12 @@ export async function getCollection(handle: string) {
         id
       }
     }
-  }`);
+  }`;
 
-  if (result.data && result.data.collection) {
-    const collection = result.data.collection;
+  const result = await shopifyFetch(query);
+
+  if (result && result.collection) {
+    const collection = result.collection;
     return {
       id: collection.id,
       title: collection.title,
@@ -323,9 +330,9 @@ export async function getCollection(handle: string) {
   return null;
 }
 
-// Get collections - Fixed: removed unused $first variable
+// Get collections - fixed query with no variables
 export async function getCollections(first: number = 10) {
-  const result = await shopifyFetch(`{
+  const query = `{
     collections(first: ${first}) {
       edges {
         node {
@@ -342,12 +349,14 @@ export async function getCollections(first: number = 10) {
         }
       }
     }
-  }`);
+  }`;
+
+  const result = await shopifyFetch(query);
 
   console.log("COLLECTION RESPONSE:", result);
 
-  if (result.data && result.data.collections && result.data.collections.edges) {
-    return result.data.collections.edges.map((edge: any) => {
+  if (result && result.collections && result.collections.edges) {
+    return result.collections.edges.map((edge: any) => {
       const collection = edge.node;
       return {
         id: collection.id,
@@ -370,9 +379,9 @@ export async function getCollections(first: number = 10) {
   return [];
 }
 
-// Get collection products - Fixed: removed unused variables
+// Get collection products - fixed query with no variables
 export async function getCollectionProducts({ handle, first = 20 }: { handle: string; first?: number }) {
-  const result = await shopifyFetch(`{
+  const query = `{
     collection(handle: "${handle}") {
       products(first: ${first}) {
         edges {
@@ -420,10 +429,12 @@ export async function getCollectionProducts({ handle, first = 20 }: { handle: st
         }
       }
     }
-  }`);
+  }`;
 
-  if (result.data && result.data.collection && result.data.collection.products) {
-    return result.data.collection.products.edges.map((edge: any) => {
+  const result = await shopifyFetch(query);
+
+  if (result && result.collection && result.collection.products) {
+    return result.collection.products.edges.map((edge: any) => {
       const product = edge.node;
       const firstVariant = product.variants.edges[0]?.node;
 
@@ -485,7 +496,7 @@ export async function getShippingRates(zipCode: string) {
 
 // Generate checkout URL
 export function generateCheckoutUrl(variantId: string, quantity: number = 1) {
-  return `https://${SHOPIFY_DOMAIN}/cart/${variantId}:${quantity}`;
+  return `https://${domain}/cart/${variantId}:${quantity}`;
 }
 
 // Create draft order (simplified - in production you'd use Admin API)
@@ -500,9 +511,9 @@ export async function createDraftOrder(lineItems: any[], email: string) {
   };
 }
 
-// Get blog post by handle - Fixed: removed unused $handle variable
+// Get blog post by handle - fixed query with no variables
 export async function getBlogPost(handle: string) {
-  const result = await shopifyFetch(`{
+  const query = `{
     blogByHandle(handle: "news") {
       articleByHandle(handle: "${handle}") {
         id
@@ -521,10 +532,12 @@ export async function getBlogPost(handle: string) {
         tags
       }
     }
-  }`);
+  }`;
 
-  if (result.data && result.data.blogByHandle && result.data.blogByHandle.articleByHandle) {
-    const article = result.data.blogByHandle.articleByHandle;
+  const result = await shopifyFetch(query);
+
+  if (result && result.blogByHandle && result.blogByHandle.articleByHandle) {
+    const article = result.blogByHandle.articleByHandle;
     return {
       id: article.id,
       title: article.title,
@@ -544,9 +557,9 @@ export async function getBlogPost(handle: string) {
   return null;
 }
 
-// Get blog posts - Fixed: removed unused $first variable
+// Get blog posts - fixed query with no variables
 export async function getBlogPosts({ first = 10 }: { first?: number } = {}) {
-  const result = await shopifyFetch(`{
+  const query = `{
     blogByHandle(handle: "news") {
       articles(first: ${first}) {
         edges {
@@ -568,12 +581,14 @@ export async function getBlogPosts({ first = 10 }: { first?: number } = {}) {
         }
       }
     }
-  }`);
+  }`;
 
-  if (result.data && result.data.blogByHandle) {
+  const result = await shopifyFetch(query);
+
+  if (result && result.blogByHandle) {
     return {
       blog: {
-        articles: result.data.blogByHandle.articles,
+        articles: result.blogByHandle.articles,
       },
     };
   }
