@@ -2,42 +2,74 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Product } from '@/types';
 import { formatPrice } from '@/lib/shopify';
 import { useCart } from '@/lib/cart-context';
 import { useState } from 'react';
 
+// Accept partial product data from Shopify
+interface PartialProduct {
+  id: string;
+  title: string;
+  handle: string;
+  description?: string;
+  price?: number;
+  compareAtPrice?: number;
+  featuredImage?: {
+    url?: string;
+    altText?: string;
+  };
+  images?: {
+    edges?: Array<{
+      node?: {
+        url?: string;
+        altText?: string;
+      };
+    }>;
+  };
+  priceRange?: {
+    minVariantPrice?: {
+      amount?: string;
+      currencyCode?: string;
+    };
+  };
+  tags?: string[];
+  variants?: any[];
+}
+
 interface ProductCardProps {
-  product: Product;
+  product: PartialProduct;
   variant?: 'default' | 'featured';
 }
 
 export default function ProductCard({ product, variant = 'default' }: ProductCardProps) {
-  const { id, title, handle, price, compareAtPrice, images, variants } = product;
+  const { id, title, handle, featuredImage, images, priceRange, tags } = product;
   const { addItem } = useCart();
   const [isAdded, setIsAdded] = useState(false);
 
-  const mainImage = images[0];
-  const hasDiscount = compareAtPrice && compareAtPrice > price;
-  const discountPercentage = hasDiscount
-    ? Math.round(((compareAtPrice - price) / compareAtPrice) * 100)
-    : 0;
+  // Get image from featuredImage or first image edge
+  const mainImageUrl = featuredImage?.url || images?.edges?.[0]?.node?.url;
+  const mainImageAlt = featuredImage?.altText || images?.edges?.[0]?.node?.altText || title;
+  
+  // Get price from priceRange
+  const price = priceRange?.minVariantPrice?.amount ? parseFloat(priceRange.minVariantPrice.amount) : 0;
+  
+  const hasDiscount = false; // No discount info in simplified query
 
   const handleAddToQuote = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     
-    // Get the first available variant or use product defaults
-    const firstVariant = variants.length > 0 ? variants[0] : null;
-    
     addItem({
-      variantId: firstVariant?.id || `manual-${id}`,
+      variantId: `manual-${id}`,
       productId: id,
       title,
       productHandle: handle,
-      variantTitle: firstVariant?.title || 'Default',
+      variantTitle: 'Default',
       price,
-      image: mainImage,
+      image: mainImageUrl ? {
+        url: mainImageUrl,
+        altText: mainImageAlt,
+      } : undefined,
     });
     
     setIsAdded(true);
@@ -56,10 +88,10 @@ export default function ProductCard({ product, variant = 'default' }: ProductCar
         <div className={`relative overflow-hidden ${
           variant === 'featured' ? 'aspect-[4/3]' : 'aspect-square'
         }`}>
-          {mainImage ? (
+          {mainImageUrl ? (
             <Image
-              src={mainImage.url}
-              alt={mainImage.altText || title}
+              src={mainImageUrl}
+              alt={mainImageAlt}
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -72,9 +104,9 @@ export default function ProductCard({ product, variant = 'default' }: ProductCar
           )}
 
           {/* Discount Badge */}
-          {hasDiscount && discountPercentage > 0 && (
+          {hasDiscount && (
             <div className="absolute top-4 left-4 bg-black text-white text-xs font-semibold uppercase tracking-wider px-3 py-1">
-              {discountPercentage}% Off
+              Sale
             </div>
           )}
 
@@ -92,22 +124,12 @@ export default function ProductCard({ product, variant = 'default' }: ProductCar
             <span className="text-sm font-semibold text-black">
               {formatPrice(price)}
             </span>
-            {hasDiscount && (
-              <>
-                <span className="text-sm text-gray-500 line-through">
-                  {formatPrice(compareAtPrice!)}
-                </span>
-                <span className="text-xs font-medium text-black bg-gray-100 px-2 py-0.5">
-                  Save {formatPrice(compareAtPrice! - price)}
-                </span>
-              </>
-            )}
           </div>
 
           {/* Product Tags */}
-          {product.tags.length > 0 && (
+          {tags && tags.length > 0 && (
             <div className="flex flex-wrap gap-1 pt-1">
-              {product.tags.slice(0, 3).map((tag) => (
+              {tags.slice(0, 3).map((tag) => (
                 <span
                   key={tag}
                   className="text-xs text-gray-500 uppercase tracking-wide"

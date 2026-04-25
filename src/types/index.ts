@@ -15,6 +15,16 @@ export interface Product {
   updatedAt: string;
   publishedAt: string;
   options: ProductOption[];
+  featuredImage?: {
+    url: string;
+    altText?: string;
+  };
+  priceRange?: {
+    minVariantPrice: {
+      amount: string;
+      currencyCode: string;
+    };
+  };
 }
 
 export interface ProductImage {

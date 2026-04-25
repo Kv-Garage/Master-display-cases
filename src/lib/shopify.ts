@@ -1,27 +1,24 @@
 // Shopify Storefront API Configuration (Headless Storefront)
-// Debug: Check environment variables
+// STEP 2: Hard validate environment variables
+if (!process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN) {
+  throw new Error("Missing SHOPIFY DOMAIN");
+}
+
+if (!process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN) {
+  throw new Error("Missing STOREFRONT TOKEN");
+}
+
 console.log("DOMAIN:", process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN);
 console.log("TOKEN:", process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN?.slice(0, 10) + "...");
 
-const SHOPIFY_DOMAIN = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN;
-const SHOPIFY_TOKEN = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN;
-
-if (!SHOPIFY_DOMAIN || !SHOPIFY_TOKEN) {
-  throw new Error("Missing Shopify environment variables. Please check .env.local");
-}
-
-const domain = SHOPIFY_DOMAIN;
-const token = SHOPIFY_TOKEN;
-
-// Fixed shopifyFetch function - STEP 1 & 2: Fix endpoint and headers
+// STEP 4: Hard rewrite of shopifyFetch
 export async function shopifyFetch(query: string, variables = {}) {
-  // STEP 1: Fix endpoint - use 2023-10 (NOT 2024-01)
+  // STEP 3: Fix endpoint - use ONLY this format
   const endpoint = `https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN}/api/2023-10/graphql.json`;
 
   const res = await fetch(endpoint, {
     method: "POST",
     headers: {
-      // STEP 2: Fix headers - exact format
       "Content-Type": "application/json",
       "X-Shopify-Storefront-Access-Token": process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN!,
     },
@@ -31,25 +28,31 @@ export async function shopifyFetch(query: string, variables = {}) {
 
   const json = await res.json();
 
-  console.log("SHOPIFY RESPONSE:", JSON.stringify(json, null, 2));
+  console.log("SHOPIFY DEBUG:", JSON.stringify(json, null, 2));
 
-  if (json.errors) {
-    throw new Error(json.errors[0]?.message || "Shopify error");
+  if (!res.ok || json.errors) {
+    throw new Error(json?.errors?.[0]?.message || `HTTP ERROR ${res.status}`);
   }
 
   return json.data;
 }
 
-// Test function to verify connection
+// STEP 5: Add connection test (CRITICAL)
 export async function testShopifyConnection() {
-  return shopifyFetch(`{ shop { name } }`);
+  const data = await shopifyFetch(`{
+    shop {
+      name
+    }
+  }`);
+
+  console.log("SHOPIFY CONNECTION SUCCESS:", data);
+  return data;
 }
 
-// STEP 3: Get products - fixed query with proper fields for images and description
-export async function getProducts(first: number = 10) {
-  // STEP 3: Fixed product query - this fixes images + description
-  const query = `{
-    products(first: ${first}) {
+// STEP 6: Fix product query (full rewrite)
+export async function getProducts() {
+  const data = await shopifyFetch(`{
+    products(first: 10) {
       edges {
         node {
           id
@@ -77,50 +80,14 @@ export async function getProducts(first: number = 10) {
         }
       }
     }
-  }`;
+  }`);
 
-  const result = await shopifyFetch(query);
-
-  // Transform Storefront API response to match our Product type
-  if (result && result.products && result.products.edges) {
-    return result.products.edges.map((edge: any) => {
-      const product = edge.node;
-
-      // STEP 4: Fix image rendering - use proper fallback
-      const image = product.featuredImage?.url || product.images?.edges?.[0]?.node?.url;
-
-      return {
-        id: product.id,
-        title: product.title,
-        handle: product.handle,
-        description: product.description || '',
-        price: product.priceRange?.minVariantPrice?.amount ? parseFloat(product.priceRange.minVariantPrice.amount) : 0,
-        images: product.images.edges.map((img: any) => ({
-          id: img.node.id || `img-${Math.random()}`,
-          url: img.node.url,
-          altText: img.node.altText,
-          width: 800,
-          height: 800,
-        })),
-        vendor: 'Master Display Cases',
-        productType: 'Display Case',
-        tags: [],
-        availableForSale: true,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        publishedAt: new Date().toISOString(),
-        options: [],
-        variants: [],
-      };
-    });
-  }
-
-  return [];
+  return data.products.edges.map((edge: any) => edge.node);
 }
 
-// Get single product - fixed query with proper fields
+// Get single product
 export async function getProduct(handle: string) {
-  const query = `{
+  const data = await shopifyFetch(`{
     product(handle: "${handle}") {
       id
       title
@@ -138,21 +105,6 @@ export async function getProduct(handle: string) {
           }
         }
       }
-      variants(first: 10) {
-        edges {
-          node {
-            id
-            title
-            price {
-              amount
-              currencyCode
-            }
-            sku
-            availableForSale
-            quantityAvailable
-          }
-        }
-      }
       priceRange {
         minVariantPrice {
           amount
@@ -160,54 +112,14 @@ export async function getProduct(handle: string) {
         }
       }
     }
-  }`;
+  }`);
 
-  const result = await shopifyFetch(query);
-
-  if (result && result.product) {
-    const product = result.product;
-    const firstVariant = product.variants.edges[0]?.node;
-
-    return {
-      id: product.id,
-      title: product.title,
-      handle: product.handle,
-      description: product.description || '',
-      price: firstVariant ? parseFloat(firstVariant.price.amount) : (product.priceRange?.minVariantPrice?.amount ? parseFloat(product.priceRange.minVariantPrice.amount) : 0),
-      images: product.images.edges.map((img: any) => ({
-        id: img.node.id || `img-${Math.random()}`,
-        url: img.node.url,
-        altText: img.node.altText,
-        width: 800,
-        height: 800,
-      })),
-      variants: product.variants.edges.map((edge: any) => ({
-        id: edge.node.id,
-        title: edge.node.title,
-        price: parseFloat(edge.node.price.amount),
-        availableForSale: edge.node.availableForSale,
-        sku: edge.node.sku || '',
-        inventoryQuantity: edge.node.quantityAvailable || 0,
-        image: undefined,
-        optionValues: [],
-      })),
-      vendor: 'Master Display Cases',
-      productType: 'Display Case',
-      tags: [],
-      availableForSale: firstVariant?.availableForSale ?? true,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      publishedAt: new Date().toISOString(),
-      options: [],
-    };
-  }
-
-  return null;
+  return data.product;
 }
 
 // Get single collection by handle
 export async function getCollection(handle: string) {
-  const query = `{
+  const data = await shopifyFetch(`{
     collection(handle: "${handle}") {
       id
       title
@@ -220,36 +132,15 @@ export async function getCollection(handle: string) {
         id
       }
     }
-  }`;
+  }`);
 
-  const result = await shopifyFetch(query);
-
-  if (result && result.collection) {
-    const collection = result.collection;
-    return {
-      id: collection.id,
-      title: collection.title,
-      handle: collection.handle,
-      description: collection.description || '',
-      productsCount: collection.productsCount,
-      image: collection.image ? {
-        id: collection.image.id || `col-img-${Math.random()}`,
-        url: collection.image.url,
-        altText: collection.image.altText,
-        width: 800,
-        height: 800,
-      } : undefined,
-      updatedAt: new Date().toISOString(),
-    };
-  }
-
-  return null;
+  return data.collection;
 }
 
 // Get collections
-export async function getCollections(first: number = 10) {
-  const query = `{
-    collections(first: ${first}) {
+export async function getCollections() {
+  const data = await shopifyFetch(`{
+    collections(first: 10) {
       edges {
         node {
           id
@@ -265,41 +156,17 @@ export async function getCollections(first: number = 10) {
         }
       }
     }
-  }`;
+  }`);
 
-  const result = await shopifyFetch(query);
-
-  console.log("COLLECTION RESPONSE:", result);
-
-  if (result && result.collections && result.collections.edges) {
-    return result.collections.edges.map((edge: any) => {
-      const collection = edge.node;
-      return {
-        id: collection.id,
-        title: collection.title,
-        handle: collection.handle,
-        description: collection.description || '',
-        productsCount: collection.productsCount,
-        image: collection.image ? {
-          id: collection.image.id || `col-img-${Math.random()}`,
-          url: collection.image.url,
-          altText: collection.image.altText,
-          width: 800,
-          height: 800,
-        } : undefined,
-        updatedAt: new Date().toISOString(),
-      };
-    });
-  }
-
-  return [];
+  console.log("COLLECTION RESPONSE:", data);
+  return data.collections.edges.map((edge: any) => edge.node);
 }
 
 // Get collection products
-export async function getCollectionProducts({ handle, first = 20 }: { handle: string; first?: number }) {
-  const query = `{
+export async function getCollectionProducts({ handle }: { handle: string }) {
+  const data = await shopifyFetch(`{
     collection(handle: "${handle}") {
-      products(first: ${first}) {
+      products(first: 20) {
         edges {
           node {
             id
@@ -328,41 +195,9 @@ export async function getCollectionProducts({ handle, first = 20 }: { handle: st
         }
       }
     }
-  }`;
+  }`);
 
-  const result = await shopifyFetch(query);
-
-  if (result && result.collection && result.collection.products) {
-    return result.collection.products.edges.map((edge: any) => {
-      const product = edge.node;
-
-      return {
-        id: product.id,
-        title: product.title,
-        handle: product.handle,
-        description: product.description || '',
-        price: product.priceRange?.minVariantPrice?.amount ? parseFloat(product.priceRange.minVariantPrice.amount) : 0,
-        images: product.images.edges.map((img: any) => ({
-          id: img.node.id || `img-${Math.random()}`,
-          url: img.node.url,
-          altText: img.node.altText,
-          width: 800,
-          height: 800,
-        })),
-        variants: [],
-        vendor: 'Master Display Cases',
-        productType: 'Display Case',
-        tags: [],
-        availableForSale: true,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        publishedAt: new Date().toISOString(),
-        options: [],
-      };
-    });
-  }
-
-  return [];
+  return data.collection.products.edges.map((edge: any) => edge.node);
 }
 
 // Get shipping rates (simplified calculator)
@@ -388,7 +223,7 @@ export async function getShippingRates(zipCode: string) {
 
 // Generate checkout URL
 export function generateCheckoutUrl(variantId: string, quantity: number = 1) {
-  return `https://${domain}/cart/${variantId}:${quantity}`;
+  return `https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN}/cart/${variantId}:${quantity}`;
 }
 
 // Create draft order (simplified)
@@ -405,7 +240,7 @@ export async function createDraftOrder(lineItems: any[], email: string) {
 
 // Get blog post by handle
 export async function getBlogPost(handle: string) {
-  const query = `{
+  const data = await shopifyFetch(`{
     blogByHandle(handle: "news") {
       articleByHandle(handle: "${handle}") {
         id
@@ -424,36 +259,16 @@ export async function getBlogPost(handle: string) {
         tags
       }
     }
-  }`;
+  }`);
 
-  const result = await shopifyFetch(query);
-
-  if (result && result.blogByHandle && result.blogByHandle.articleByHandle) {
-    const article = result.blogByHandle.articleByHandle;
-    return {
-      id: article.id,
-      title: article.title,
-      handle: article.handle,
-      excerpt: article.excerpt || '',
-      content: article.content || '',
-      publishedAt: article.publishedAt,
-      author: article.author || { name: 'Master Display Cases' },
-      featuredImage: article.featuredImage ? {
-        url: article.featuredImage.url,
-        altText: article.featuredImage.altText,
-      } : undefined,
-      tags: article.tags || [],
-    };
-  }
-
-  return null;
+  return data.blogByHandle.articleByHandle;
 }
 
 // Get blog posts
-export async function getBlogPosts({ first = 10 }: { first?: number } = {}) {
-  const query = `{
+export async function getBlogPosts() {
+  const data = await shopifyFetch(`{
     blogByHandle(handle: "news") {
-      articles(first: ${first}) {
+      articles(first: 10) {
         edges {
           node {
             id
@@ -473,19 +288,9 @@ export async function getBlogPosts({ first = 10 }: { first?: number } = {}) {
         }
       }
     }
-  }`;
+  }`);
 
-  const result = await shopifyFetch(query);
-
-  if (result && result.blogByHandle) {
-    return {
-      blog: {
-        articles: result.blogByHandle.articles,
-      },
-    };
-  }
-
-  return null;
+  return data.blogByHandle.articles;
 }
 
 // Format price helper

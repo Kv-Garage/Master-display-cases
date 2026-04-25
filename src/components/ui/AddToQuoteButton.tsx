@@ -2,10 +2,22 @@
 
 import { useState } from 'react';
 import { useCart } from '@/lib/cart-context';
-import { Product } from '@/types';
+
+// Accept partial product data from Shopify
+interface PartialProduct {
+  id: string;
+  title: string;
+  handle: string;
+  price?: number;
+  featuredImage?: {
+    url?: string;
+    altText?: string;
+  };
+  images?: any[];
+}
 
 interface AddToQuoteButtonProps {
-  product: Product;
+  product: PartialProduct;
   fullWidth?: boolean;
   size?: 'sm' | 'md' | 'lg';
 }
@@ -20,17 +32,17 @@ export default function AddToQuoteButton({ product, fullWidth = false, size = 'l
     
     setIsAdding(true);
     
-    // Get the first available variant or use product defaults
-    const firstVariant = product.variants.length > 0 ? product.variants[0] : null;
-    
     addItem({
-      variantId: firstVariant?.id || `manual-${product.id}`,
+      variantId: `manual-${product.id}`,
       productId: product.id,
       title: product.title,
       productHandle: product.handle,
-      variantTitle: firstVariant?.title || 'Default',
-      price: product.price,
-      image: product.images[0],
+      variantTitle: 'Default',
+      price: product.price || 0,
+      image: product.featuredImage ? {
+        url: product.featuredImage.url || '',
+        altText: product.featuredImage.altText,
+      } : undefined,
     });
     
     setIsAdded(true);

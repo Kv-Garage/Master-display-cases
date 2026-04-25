@@ -109,9 +109,8 @@ export default async function BlogPage() {
   // Try to fetch from Shopify, fall back to sample data
   let posts = samplePosts;
   try {
-    const shopifyData = await getBlogPosts({ first: 10 });
-    const articles = shopifyData?.blog?.articles?.edges || [];
-    if (articles.length > 0) {
+    const articles = await getBlogPosts();
+    if (articles && articles.length > 0) {
       // Transform Shopify articles to BlogPost format
       posts = articles.map((edge: { node: any }) => ({
         id: edge.node.id,

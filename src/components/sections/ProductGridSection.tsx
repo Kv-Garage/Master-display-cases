@@ -82,7 +82,7 @@ export default function ProductGridSection({
               Array.from({ length: 4 }).map((_, index) => (
                 <ProductCardSkeleton key={index} />
               ))
-            : products?.slice(0, 4).map((product) => (
+            : products?.slice(0, 4).map((product: any) => (
                 <ProductCard key={product.id} product={product} />
               ))}
         </div>
@@ -125,7 +125,7 @@ export function FeaturedProductsSection({
             ? Array.from({ length: 3 }).map((_, index) => (
                 <ProductCardSkeleton key={index} />
               ))
-            : products?.slice(0, 3).map((product) => (
+            : products?.slice(0, 3).map((product: any) => (
                 <ProductCard key={product.id} product={product} variant="featured" />
               ))}
         </div>

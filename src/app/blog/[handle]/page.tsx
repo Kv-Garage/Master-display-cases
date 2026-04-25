@@ -35,14 +35,12 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 
 export async function generateStaticParams() {
   try {
-    const data = await getBlogPosts({ first: 20 });
-    const blog = data?.blog;
-    const articles = blog?.articles?.edges || [];
-    return articles.map((edge: { node: { handle: string } }) => ({
-      handle: edge.node.handle,
+    const data = await getBlogPosts();
+    const articles = data?.edges || [];
+    return articles.map((article: { handle: string }) => ({
+      handle: article.handle,
     }));
   } catch {
-    // Return empty if Shopify not configured
     return [];
   }
 }

@@ -80,12 +80,11 @@ export default async function CollectionPage({ params, searchParams }: Collectio
   try {
     products = await getCollectionProducts({
       handle: resolvedParams.handle,
-      first: 20,
     });
 
     // If no products from collection, try general products
     if (products.length === 0) {
-      products = await getProducts(12);
+      products = await getProducts();
     }
   } catch {
     // Use sample products
@@ -250,7 +249,7 @@ export default async function CollectionPage({ params, searchParams }: Collectio
               </div>
             ) : sortedProducts.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {sortedProducts.map((product) => (
+                {sortedProducts.map((product: any) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
               </div>
