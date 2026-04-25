@@ -1,65 +1,151 @@
-import Image from "next/image";
+import HeroSection from '@/components/sections/HeroSection';
+import TrustBar from '@/components/sections/TrustBar';
+import BenefitsSection from '@/components/sections/BenefitsSection';
+import ProductGridSection from '@/components/sections/ProductGridSection';
+import UseCasesSection from '@/components/sections/UseCasesSection';
+import FAQSection from '@/components/sections/FAQSection';
+import CTASection from '@/components/sections/CTASection';
+import { getProducts } from '@/lib/shopify';
+import { Product } from '@/types';
 
-export default function Home() {
+// Sample display case products for demo when Shopify is not configured
+// Based on real products from masterdisplaycases.com
+const sampleProducts: Product[] = [
+  {
+    id: 'demo-1',
+    title: '70" LED Retail Display Showcase - RGB',
+    handle: '70-led-retail-display-showcase-rgb',
+    description: 'Professional 70" LED retail display showcase with RGB lighting system. Perfect for high-end retail environments and product exhibitions.',
+    price: 1899,
+    compareAtPrice: 2299,
+    images: [
+      {
+        id: 'img-1',
+        url: 'https://masterdisplaycases.com/cdn/shop/files/70-led-retail-display-showcase-rgb_1.jpg?v=1704067200&width=800',
+        altText: '70" LED Retail Display Showcase - RGB',
+        width: 800,
+        height: 800,
+      },
+    ],
+    variants: [
+      { id: 'var-1', title: 'Black', price: 1899, compareAtPrice: 2299, availableForSale: true, sku: 'LED-70-RGB-BLK', inventoryQuantity: 12, optionValues: [{ name: 'Color' }], image: undefined },
+      { id: 'var-2', title: 'White', price: 1899, compareAtPrice: 2299, availableForSale: true, sku: 'LED-70-RGB-WHT', inventoryQuantity: 8, optionValues: [{ name: 'Color' }], image: undefined },
+    ],
+    vendor: 'Master Display Cases',
+    productType: 'Display Case',
+    tags: ['LED', 'RGB', 'Floor Standing', 'Retail', '70"', 'display-cases'],
+    availableForSale: true,
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z',
+    publishedAt: '2024-01-01T00:00:00Z',
+    options: [{ id: 'opt-1', name: 'Color', values: ['Black', 'White'] }],
+  },
+  {
+    id: 'demo-2',
+    title: '48" LED Retail Display Showcase - RGB',
+    handle: '48-led-retail-display-showcase-rgb',
+    description: 'Compact 48" LED retail display showcase with RGB lighting. Ideal for smaller retail spaces and countertop displays.',
+    price: 1299,
+    compareAtPrice: 1599,
+    images: [
+      {
+        id: 'img-2',
+        url: 'https://masterdisplaycases.com/cdn/shop/files/48-led-retail-display-showcase-rgb_1.jpg?v=1704067200&width=800',
+        altText: '48" LED Retail Display Showcase - RGB',
+        width: 800,
+        height: 800,
+      },
+    ],
+    variants: [],
+    vendor: 'Master Display Cases',
+    productType: 'Countertop',
+    tags: ['LED', 'RGB', 'Countertop', 'Retail', '48"', 'countertop'],
+    availableForSale: true,
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z',
+    publishedAt: '2024-01-01T00:00:00Z',
+    options: [],
+  },
+  {
+    id: 'demo-3',
+    title: '72" LED Retail Display Case - RGB',
+    handle: '72-led-retail-display-case-rgb',
+    description: 'Large 72" LED retail display case with premium RGB lighting system. Maximum visibility for high-value products.',
+    price: 2499,
+    compareAtPrice: 2999,
+    images: [
+      {
+        id: 'img-3',
+        url: 'https://masterdisplaycases.com/cdn/shop/files/72-led-retail-display-case-rgb_1.jpg?v=1704067200&width=800',
+        altText: '72" LED Retail Display Case - RGB',
+        width: 800,
+        height: 800,
+      },
+    ],
+    variants: [],
+    vendor: 'Master Display Cases',
+    productType: 'Display Case',
+    tags: ['LED', 'RGB', 'Floor Standing', 'Retail', '72"', 'display-cases'],
+    availableForSale: true,
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z',
+    publishedAt: '2024-01-01T00:00:00Z',
+    options: [],
+  },
+  {
+    id: 'demo-4',
+    title: '48" LED Retail Wrap Counter - RGB',
+    handle: '48-led-retail-wrap-counter-rgb',
+    description: '48" LED retail wrap counter with RGB lighting. Perfect for checkout areas and product showcases.',
+    price: 1699,
+    compareAtPrice: 1999,
+    images: [
+      {
+        id: 'img-4',
+        url: 'https://masterdisplaycases.com/cdn/shop/files/48-led-retail-wrap-counter-rgb_1.jpg?v=1704067200&width=800',
+        altText: '48" LED Retail Wrap Counter - RGB',
+        width: 800,
+        height: 800,
+      },
+    ],
+    variants: [],
+    vendor: 'Master Display Cases',
+    productType: 'Countertop',
+    tags: ['LED', 'RGB', 'Wrap Counter', 'Retail', '48"', 'countertop'],
+    availableForSale: true,
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z',
+    publishedAt: '2024-01-01T00:00:00Z',
+    options: [],
+  },
+];
+
+export default async function HomePage() {
+  // Fetch products from Shopify, fall back to sample products
+  let products: Product[] = sampleProducts;
+
+  try {
+    const shopifyProducts = await getProducts(8);
+    if (shopifyProducts && shopifyProducts.length > 0) {
+      products = shopifyProducts;
+    }
+  } catch (error) {
+    // Use sample products if Shopify API is not configured
+    console.log('Using sample products - Shopify API may not be configured');
+  }
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <>
+      <HeroSection />
+      <TrustBar />
+      <BenefitsSection />
+      <ProductGridSection 
+        products={products} 
+        showEmptyState={false}
+      />
+      <UseCasesSection />
+      <FAQSection />
+      <CTASection />
+    </>
   );
 }

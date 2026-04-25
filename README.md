@@ -1,36 +1,265 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Master Display Cases - Premium Ecommerce Storefront
+
+A world-class, high-converting ecommerce storefront for Master Display Cases, a premium commercial display case company based in Grand Rapids, Michigan.
+
+## Features
+
+### Design System
+- **Minimal, high-end aesthetic** with black, white, and gray color palette
+- **Apple-level cleanliness** with large whitespace and grid-based layouts
+- **Commercial/industrial premium** feel - NOT a dropshipping store aesthetic
+- **Mobile-first responsive** design
+
+### Core Pages
+- **Homepage** - Hero, trust bar, benefits, product grid, use cases, FAQ, CTA sections
+- **Product Pages** - High-converting template with gallery, pricing, variants, bundle discounts
+- **Collection Pages** - Clean grid with filters (type, lighting, size) and sort options
+- **Contact/Bulk Order** - Comprehensive form for bulk pricing requests
+- **Blog System** - SEO-optimized blog with article templates
+
+### Technical Features
+- **Next.js 15** with App Router and Server Components
+- **TypeScript** for type safety
+- **Tailwind CSS** for styling
+- **Shopify Storefront API** integration ready
+- **SEO optimized** with schema.org markup
+- **Performance optimized** with image optimization and caching
+
+### Conversion Features
+- No fake reviews or urgency tactics
+- Transparent pricing with anchor pricing
+- Bundle discount displays
+- Clear shipping information
+- Trust indicators throughout
+- Multiple CTAs (Get Quote, View Products, Bulk Pricing)
+
+## Tech Stack
+
+- **Framework**: Next.js 15 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS 4
+- **Ecommerce**: Shopify Storefront API
+- **Images**: Next.js Image Optimization
+- **Deployment**: Vercel (recommended)
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- npm or yarn
+- Shopify store (for product data)
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd master-display-cases
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Set up environment variables:
+```bash
+cp .env.example .env.local
+```
+
+4. Configure your Shopify credentials in `.env.local`:
+```
+SHOPIFY_STORE_DOMAIN=your-store.myshopify.com
+SHOPIFY_STOREFRONT_ACCESS_TOKEN=your-storefront-access-token
+```
+
+### Getting Shopify API Credentials
+
+1. In your Shopify admin, go to **Settings > Apps and sales channels**
+2. Click **Develop apps** (at the bottom)
+3. Click **Create an app**
+4. Give it a name (e.g., "Storefront")
+5. Configure the **Storefront API** access:
+   - Unauthenticated selling scope: `unauthenticated_read`, `unauthenticated_write`
+   - Storefront API access token scopes: Check all needed permissions
+6. Save and install the app
+7. Copy the **Storefront API access token**
+
+### Running the Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to see the site.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Building for Production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm start
+```
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+├── app/                    # Next.js App Router
+│   ├── blog/              # Blog pages
+│   │   ├── [handle]/      # Individual blog post
+│   │   └── page.tsx       # Blog listing
+│   ├── collections/       # Collection pages
+│   │   └── [handle]/      # Individual collection
+│   ├── contact/           # Contact/bulk order page
+│   ├── products/          # Product pages
+│   │   └── [handle]/      # Individual product
+│   ├── globals.css        # Global styles
+│   ├── layout.tsx         # Root layout
+│   └── page.tsx           # Homepage
+├── components/
+│   ├── layout/            # Header, Footer
+│   ├── sections/          # Hero, Benefits, FAQ, etc.
+│   └── ui/                # Button, ProductCard, etc.
+├── lib/
+│   └── shopify.ts         # Shopify API integration
+├── types/
+│   └── index.ts           # TypeScript definitions
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## SEO Configuration
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The site includes comprehensive SEO optimization:
 
-## Deploy on Vercel
+- **Meta tags** for all pages
+- **Open Graph** tags for social sharing
+- **Schema.org** structured data:
+  - LocalBusiness (footer)
+  - Product (product pages)
+  - Article (blog posts)
+- **XML sitemap** (auto-generated by Next.js)
+- **Canonical URLs**
+- **Target keywords**: retail display cases, glass display cases, store display fixtures
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Customization
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Colors
+Edit the CSS variables in `src/app/globals.css`:
+```css
+:root {
+  --background: #ffffff;
+  --foreground: #000000;
+  --gray-50: #F5F5F5;
+  /* ... */
+}
+```
+
+### Typography
+The site uses Inter font from Google Fonts. Modify in `src/app/layout.tsx`.
+
+### Products & Images
+
+Products and images are pulled directly from Shopify. 
+
+**Note**: When Shopify is not configured, sample display case products are shown for demonstration purposes.
+
+To configure with your own products:
+
+1. **Set up Shopify Storefront API** (see "Getting Shopify API Credentials" below)
+2. **Add products in Shopify Admin** with:
+   - Product title and description
+   - Product images (first image is used as main product image)
+   - Product type (used for categorization, e.g., "Display Case", "Countertop", "Floor Standing")
+   - Tags (optional, for additional filtering)
+   - Price and compare-at price (for discounts)
+
+3. **Create collections in Shopify** that match your navigation:
+   - `display-cases` - Main display cases collection
+   - `store-packages` - Store package deals
+   - `countertop` - Countertop display cases
+   - `floor-standing` - Floor standing units
+   - `wall-mounted` - Wall mounted displays
+
+The storefront automatically:
+- Displays product images from Shopify
+- Links products to their correct collection based on product type
+- Shows related products from the same collection
+- Displays discount badges when compare-at price is set
+- Falls back to sample products when Shopify is not configured
+
+## Performance Targets
+
+- **Lighthouse Score**: 90+
+- **First Contentful Paint**: < 1.5s
+- **Time to Interactive**: < 3.5s
+- **Cumulative Layout Shift**: < 0.1
+
+## Deployment
+
+For comprehensive deployment instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md).
+
+### Vercel (Recommended)
+
+1. Push your code to GitHub
+2. Import the repository to Vercel
+3. Add environment variables in Vercel dashboard
+4. Deploy
+
+### Self-Hosting
+
+```bash
+npm run build
+npm start
+```
+
+### Docker
+
+A production-ready Dockerfile is included. Build and run:
+
+```bash
+docker build -t master-display-cases .
+docker run -d -p 3000:3000 \
+  -e SHOPIFY_STORE_DOMAIN=your-store.myshopify.com \
+  -e SHOPIFY_STOREFRONT_ACCESS_TOKEN=your-token \
+  -e NEXT_PUBLIC_SITE_URL=https://your-domain.com \
+  master-display-cases
+```
+
+## Shopify App (Admin Integration)
+
+This project also includes a Shopify app in the `master-display-cases/` directory for admin integration and page editing capabilities.
+
+### App Features
+
+- Product management via Admin API
+- Metaobject support for custom data
+- Webhook handling for app events
+- Session storage with PostgreSQL
+
+### App Deployment
+
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed instructions on deploying the Shopify app.
+
+Quick start:
+
+```bash
+cd master-display-cases
+npm install
+npm run build
+npm run deploy
+```
+
+## Support
+
+For questions or issues:
+- Email: info@masterdisplaycases.com
+- Phone: 1-800-555-0123
+
+## License
+
+Proprietary - All rights reserved.
+
+---
+
+Built with Next.js, Tailwind CSS, and Shopify.
+Location: Grand Rapids, Michigan, United States
