@@ -11,8 +11,8 @@ const domain = SHOPIFY_DOMAIN;
 const token = SHOPIFY_TOKEN;
 
 // Storefront API endpoint (different from Admin API)
-// Using latest stable version: https://shopify.dev/api/release-schedule
-const endpoint = `https://${SHOPIFY_DOMAIN}/api/2026-04/graphql.json`;
+// Using stable version: https://shopify.dev/api/release-schedule
+const endpoint = `https://${SHOPIFY_DOMAIN}/api/2024-01/graphql.json`;
 
 export async function shopifyFetch(query: string) {
   const res = await fetch(endpoint, {
@@ -330,7 +330,7 @@ export async function getCollection(handle: string) {
   return null;
 }
 
-// Get collections
+// Get collections - simplified query to avoid 404 errors
 export async function getCollections(first: number = 20) {
   const result = await shopifyFetch(`
     query GetCollections($first: Int!) {
@@ -345,12 +345,15 @@ export async function getCollections(first: number = 20) {
             image {
               url
               altText
+              id
             }
           }
         }
       }
     }
   `);
+  
+  console.log("COLLECTION RESPONSE:", result);
   
   if (result.data && result.data.collections && result.data.collections.edges) {
     return result.data.collections.edges.map((edge: any) => {
@@ -359,7 +362,7 @@ export async function getCollections(first: number = 20) {
         id: collection.id,
         title: collection.title,
         handle: collection.handle,
-        description: collection.description,
+        description: collection.description || '',
         productsCount: collection.productsCount,
         image: collection.image ? {
           id: collection.image.id || `col-img-${Math.random()}`,

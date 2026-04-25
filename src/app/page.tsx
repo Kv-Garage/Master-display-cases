@@ -9,7 +9,6 @@ import { getProducts } from '@/lib/shopify';
 import { Product } from '@/types';
 
 // Sample display case products for demo when Shopify is not configured
-// Based on real products from masterdisplaycases.com
 const sampleProducts: Product[] = [
   {
     id: 'demo-1',
@@ -21,7 +20,7 @@ const sampleProducts: Product[] = [
     images: [
       {
         id: 'img-1',
-        url: 'https://masterdisplaycases.com/cdn/shop/files/70-led-retail-display-showcase-rgb_1.jpg?v=1704067200&width=800',
+        url: 'https://cdn.shopify.com/s/files/1/0001/0001/products/display-case-70-rgb.jpg',
         altText: '70" LED Retail Display Showcase - RGB',
         width: 800,
         height: 800,
@@ -50,7 +49,7 @@ const sampleProducts: Product[] = [
     images: [
       {
         id: 'img-2',
-        url: 'https://masterdisplaycases.com/cdn/shop/files/48-led-retail-display-showcase-rgb_1.jpg?v=1704067200&width=800',
+        url: 'https://cdn.shopify.com/s/files/1/0001/0001/products/display-case-48-rgb.jpg',
         altText: '48" LED Retail Display Showcase - RGB',
         width: 800,
         height: 800,
@@ -76,7 +75,7 @@ const sampleProducts: Product[] = [
     images: [
       {
         id: 'img-3',
-        url: 'https://masterdisplaycases.com/cdn/shop/files/72-led-retail-display-case-rgb_1.jpg?v=1704067200&width=800',
+        url: 'https://cdn.shopify.com/s/files/1/0001/0001/products/display-case-72-rgb.jpg',
         altText: '72" LED Retail Display Case - RGB',
         width: 800,
         height: 800,
@@ -102,7 +101,7 @@ const sampleProducts: Product[] = [
     images: [
       {
         id: 'img-4',
-        url: 'https://masterdisplaycases.com/cdn/shop/files/48-led-retail-wrap-counter-rgb_1.jpg?v=1704067200&width=800',
+        url: 'https://cdn.shopify.com/s/files/1/0001/0001/products/wrap-counter-48-rgb.jpg',
         altText: '48" LED Retail Wrap Counter - RGB',
         width: 800,
         height: 800,
