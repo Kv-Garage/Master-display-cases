@@ -1,11 +1,12 @@
-import { getProduct, getCollectionProducts, formatPrice } from '@/lib/shopify';
-import Button from '@/components/ui/Button';
+import { getProduct, getProducts, formatPrice } from '@/lib/shopify';
+import ProductConfigurator from '@/components/sections/ProductConfigurator';
+import ProductGallery from '@/components/sections/ProductGallery';
+import BeforeAfterSlider from '@/components/ui/BeforeAfterSlider';
+import FAQSection from '@/components/sections/FAQSection';
+import UGCGallery from '@/components/sections/UGCGallery';
+import ProductPageReviews from '@/components/sections/ProductReviews';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import ProductCard from '@/components/ui/ProductCard';
-import ShippingCalculator from '@/components/sections/ShippingCalculator';
-import AddToQuoteButton from '@/components/ui/AddToQuoteButton';
-import ProductGallery from '@/components/sections/ProductGallery';
 
 interface ProductPageProps {
   params: Promise<{ handle: string }>;
@@ -27,7 +28,7 @@ export async function generateMetadata({ params }: ProductPageProps) {
         type: 'website',
         title: product.title,
         description: product.description,
-        images: product.featuredImage ? [product.featuredImage.url] : [],
+        images: product.image ? [product.image] : [],
       },
     };
   } catch {
@@ -39,7 +40,6 @@ export async function generateStaticParams() {
   return [];
 }
 
-// Get collection handle from product tags
 function getCollectionHandle(product: any): string {
   if (product.tags) {
     const tagCollections = ['display-cases', 'countertop', 'floor-standing', 'wall-mounted', 'showcase', 'store-packages'];
@@ -53,6 +53,30 @@ function getCollectionHandle(product: any): string {
   return 'display-cases';
 }
 
+const ROI_DATA = [
+  { label: 'Avg. Sales Increase', value: '35%', description: 'Stores see 35% more impulse purchases' },
+  { label: 'Payback Period', value: '30-60', description: 'Days to recover investment' },
+  { label: 'Customer Attention', value: '3x', description: 'More eyes on featured products' },
+];
+
+const BEFORE_AFTER_DATA = [
+  {
+    before: '/Before and after of 48".png',
+    after: '/Before and after of 48".png',
+    title: '48" Display Case',
+  },
+  {
+    before: '/Before and after of 72".png',
+    after: '/Before and after of 72".png',
+    title: '72" Display Case',
+  },
+  {
+    before: '/Before and after of the 70W.png',
+    after: '/Before and after of the 70W.png',
+    title: '70W Display Case',
+  },
+];
+
 export default async function ProductPage({ params }: ProductPageProps) {
   const resolvedParams = await params;
   
@@ -65,26 +89,49 @@ export default async function ProductPage({ params }: ProductPageProps) {
     const {
       title,
       description,
-      featuredImage,
+      image,
       images,
-      priceRange,
+      price,
       handle: productHandle,
+      variants,
+      variantId,
+      productType,
+      id: productId,
     } = product;
 
-    const price = priceRange?.minVariantPrice?.amount ? parseFloat(priceRange.minVariantPrice.amount) : 0;
-    const mainImage = featuredImage?.url || images?.edges?.[0]?.node?.url;
+    const mainImage = image || images?.[0]?.url;
+    const collectionHandle = getCollectionHandle(product);
 
-    // Get related products from the same collection
-    let relatedProducts: any[] = [];
+    // Get all products for the configurator (for mixed-product bundles)
+    let allProducts: any[] = [];
     try {
-      const collectionHandle = getCollectionHandle(product);
-      const collectionProducts = await getCollectionProducts({ handle: collectionHandle });
-      relatedProducts = collectionProducts
-        .filter((p: any) => p.id !== product.id)
-        .slice(0, 4);
+      allProducts = await getProducts();
     } catch {
-      // No related products
+      // Fallback to empty array
     }
+
+    // Format products for configurator with variant data
+    const configuratorProducts = allProducts.map((p: any) => ({
+      id: p.id,
+      name: p.title,
+      handle: p.handle,
+      price: p.price,
+      image: p.image || p.images?.[0]?.url || '',
+      variantId: p.variantId || p.variants?.[0]?.id || '',
+      variants: (p.variants as Array<{ id: string; title: string; price: number; availableForSale: boolean }>)?.map((v: { id: string; title: string; price: number; availableForSale: boolean }) => ({
+        id: v.id,
+        title: v.title,
+        price: v.price,
+        available: v.availableForSale,
+      })) || [],
+    }));
+
+    // Check if current product has variants with different prices
+    const hasVariantPricing = variants && variants.length > 1 && 
+      variants.some((v: { price: number }) => v.price !== variants[0]?.price);
+
+    // Get default variant
+    const defaultVariant = variants?.find((v: { id: string }) => v.id === variantId) || variants?.[0];
 
     return (
       <div className="bg-white">
@@ -95,108 +142,152 @@ export default async function ProductPage({ params }: ProductPageProps) {
               Home
             </Link>
             <span className="mx-2">/</span>
-            <Link href={`/collections/${getCollectionHandle(product)}`} className="hover:text-black capitalize">
-              {getCollectionHandle(product).replace(/-/g, ' ')}
+            <Link href={`/collections/${collectionHandle}`} className="hover:text-black capitalize">
+              {collectionHandle.replace(/-/g, ' ')}
             </Link>
             <span className="mx-2">/</span>
             <span className="text-black">{title}</span>
           </nav>
         </div>
 
-        {/* Main Product Section */}
-        <section className="container-custom pb-16">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
-            {/* Image Gallery */}
-            <ProductGallery
-              images={images?.edges?.map((img: any) => ({
-                id: img.node.id || `img-${Math.random()}`,
-                url: img.node.url,
-                altText: img.node.altText,
-                width: 800,
-                height: 800,
-              })) || []}
-              title={title}
-              hasDiscount={false}
-              compareAtPrice={undefined}
-              price={price}
-            />
-
-            {/* Product Info */}
-            <div className="space-y-8">
-              {/* Header */}
+        {/* HERO SECTION: 2-Column Layout - Gallery Left, Configurator Right */}
+        <section className="py-8">
+          <div className="container-custom">
+            <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
+              {/* LEFT: Product Gallery */}
               <div>
-                <p className="text-sm text-gray-500 uppercase tracking-wider mb-2">
-                  Master Display Cases
-                </p>
-                <h1 className="heading-lg mb-4">{title}</h1>
-                <div className="flex items-center space-x-4">
-                  <span className="text-2xl font-bold text-black">
-                    {formatPrice(price)}
-                  </span>
+                <ProductGallery
+                  images={images}
+                  title={title}
+                  hasDiscount={!!product.compareAtPrice && product.compareAtPrice > price}
+                  compareAtPrice={product.compareAtPrice}
+                  price={price}
+                  description={description}
+                  productType={productType}
+                  variants={variants?.map((v: { title: string; price: number }) => ({ title: v.title, price: v.price })) || []}
+                />
+                
+                {/* Quick Product Info (below gallery on mobile) */}
+                <div className="mt-6 lg:hidden">
+                  <h1 className="text-2xl font-bold text-black mb-2">{title}</h1>
+                  <div className="flex items-baseline gap-4 mb-4">
+                    <span className="text-2xl font-bold text-black">
+                      {hasVariantPricing 
+                        ? `From ${formatPrice(product.minPrice || price)}`
+                        : formatPrice(price)
+                      }
+                    </span>
+                    {product.compareAtPrice && product.compareAtPrice > price && (
+                      <span className="text-lg text-gray-500 line-through">
+                        {formatPrice(product.compareAtPrice)}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
 
-              {/* Description */}
-              <div
-                className="prose prose-sm max-w-none text-gray-600"
-                dangerouslySetInnerHTML={{ __html: description || '' }}
-              />
+              {/* RIGHT: Product Configurator */}
+              <div>
+                {/* Product Title (desktop only) */}
+                <div className="hidden lg:block mb-6">
+                  <h1 className="text-2xl lg:text-3xl font-bold text-black mb-2">{title}</h1>
+                  <div className="flex items-baseline gap-4">
+                    <span className="text-2xl font-bold text-black">
+                      {hasVariantPricing 
+                        ? `From ${formatPrice(product.minPrice || price)}`
+                        : formatPrice(price)
+                      }
+                    </span>
+                    {product.compareAtPrice && product.compareAtPrice > price && (
+                      <>
+                        <span className="text-lg text-gray-500 line-through">
+                          {formatPrice(product.compareAtPrice)}
+                        </span>
+                        <span className="bg-red-100 text-red-700 text-xs font-semibold px-2 py-1 rounded">
+                          Save {formatPrice(product.compareAtPrice - price)}
+                        </span>
+                      </>
+                    )}
+                  </div>
+                </div>
 
-              {/* CTA Buttons */}
-              <div className="space-y-4">
-                <AddToQuoteButton
-                  product={{
-                    id: product.id,
-                    title: product.title,
+                {/* Main Configurator - handles variant selection + bundle */}
+                <ProductConfigurator
+                  products={configuratorProducts}
+                  currentProductHandle={productHandle}
+                  // Pass the current product as the "base" product
+                  baseProduct={{
+                    id: productId,
+                    name: title,
                     handle: productHandle,
-                    price: price,
-                    featuredImage: featuredImage,
+                    price: defaultVariant?.price || price,
+                    image: image || images?.[0]?.url || '',
+                    variantId: defaultVariant?.id || variantId || '',
+                    variants: variants?.map((v: { id: string; title: string; price: number; availableForSale: boolean }) => ({
+                      id: v.id,
+                      title: v.title,
+                      price: v.price,
+                      available: v.availableForSale,
+                    })) || [],
                   }}
-                  fullWidth
                 />
-                <Button href={`/contact?product=${productHandle}`} fullWidth size="lg">
-                  Get a Quote
-                </Button>
-                <Button
-                  href={`/contact?product=${productHandle}&bulk=true`}
-                  variant="secondary"
-                  fullWidth
-                  size="lg"
-                >
-                  Request Bulk Pricing
-                </Button>
               </div>
-
-              {/* Shipping Calculator */}
-              <ShippingCalculator price={price} />
             </div>
           </div>
         </section>
 
-        {/* Related Products */}
-        {relatedProducts.length > 0 && (
-          <section className="section-padding bg-gray-50">
-            <div className="container-custom">
-              <h2 className="heading-md mb-8">Related Display Cases</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {relatedProducts.map((p: any) => (
-                  <ProductCard 
-                    key={p.id} 
-                    product={{
-                      id: p.id,
-                      title: p.title,
-                      handle: p.handle,
-                      description: p.description,
-                      featuredImage: p.featuredImage,
-                      images: p.images,
-                      priceRange: p.priceRange,
-                    }} 
-                  />
-                ))}
-              </div>
+        {/* ROI Section */}
+        <section className="py-12 bg-gray-50 border-y border-gray-200">
+          <div className="container-custom">
+            <h2 className="text-2xl font-bold text-black text-center mb-8">
+              Why Retailers Choose Our Display Cases
+            </h2>
+            <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+              {ROI_DATA.map((item, index) => (
+                <div key={index} className="text-center p-6 bg-white rounded-lg shadow-sm">
+                  <div className="text-4xl font-bold text-black mb-2">{item.value}</div>
+                  <div className="font-semibold text-black mb-1">{item.label}</div>
+                  <div className="text-sm text-gray-500">{item.description}</div>
+                </div>
+              ))}
             </div>
-          </section>
-        )}
+          </div>
+        </section>
+
+        {/* Before/After Section */}
+        <section className="py-12 bg-white">
+          <div className="container-custom">
+            <h2 className="text-2xl font-bold text-black text-center mb-8">
+              See the Difference
+            </h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              {BEFORE_AFTER_DATA.map((item, index) => (
+                <div key={index} className="rounded-lg overflow-hidden border border-gray-200">
+                  <BeforeAfterSlider
+                    beforeImage={item.before}
+                    afterImage={item.after}
+                    altText={item.title}
+                    showCallout={false}
+                  />
+                  <div className="p-3 text-center font-medium text-black">{item.title}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* UGC Gallery Section - Real Store Photos */}
+        <UGCGallery />
+
+        {/* Product Reviews Section - Store Owner Testimonials */}
+        <ProductPageReviews />
+
+        {/* FAQ Section */}
+        <section className="py-12 bg-gray-50">
+          <div className="container-custom max-w-4xl">
+            <FAQSection />
+          </div>
+        </section>
 
         {/* Schema.org Product markup */}
         <script
@@ -223,8 +314,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
         />
       </div>
     );
-  } catch (error) {
-    console.error('Product page error:', error);
+  } catch {
     notFound();
   }
 }

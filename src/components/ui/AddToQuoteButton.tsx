@@ -2,18 +2,28 @@
 
 import { useState } from 'react';
 import { useCart } from '@/lib/cart-context';
+import { convertToNumericId } from '@/lib/cart-utils';
 
-// Accept partial product data from Shopify
+// Accept partial product data from Shopify (supports both raw and normalized formats)
 interface PartialProduct {
   id: string;
   title: string;
   handle: string;
   price?: number;
+  variantId?: string; // Real Shopify variant ID for checkout
+  // Normalized format
+  image?: string;
+  // Raw Shopify format (backwards compatibility)
   featuredImage?: {
     url?: string;
     altText?: string;
   };
   images?: any[];
+  variants?: Array<{
+    id: string;
+    title: string;
+    price: number;
+  }>;
 }
 
 interface AddToQuoteButtonProps {
@@ -32,16 +42,24 @@ export default function AddToQuoteButton({ product, fullWidth = false, size = 'l
     
     setIsAdding(true);
     
+    // Get real Shopify variant ID or fall back to manual ID
+    const realVariantId = product.variantId || product.variants?.[0]?.id || `manual-${product.id}`;
+    const realPrice = product.variants?.[0]?.price || product.price || 0;
+    const variantTitle = product.variants?.[0]?.title || 'Default';
+    
+    // Get image URL - support both normalized (image) and raw (featuredImage) formats
+    const imageUrl = product.image || product.featuredImage?.url;
+    
     addItem({
-      variantId: `manual-${product.id}`,
+      variantId: convertToNumericId(realVariantId),
       productId: product.id,
       title: product.title,
       productHandle: product.handle,
-      variantTitle: 'Default',
-      price: product.price || 0,
-      image: product.featuredImage ? {
-        url: product.featuredImage.url || '',
-        altText: product.featuredImage.altText,
+      variantTitle: variantTitle,
+      price: realPrice,
+      image: imageUrl ? {
+        url: imageUrl,
+        altText: product.featuredImage?.altText,
       } : undefined,
     });
     

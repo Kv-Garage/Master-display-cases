@@ -15,9 +15,16 @@ export default function CartDrawer() {
     totalPrice,
     totalItems,
     checkoutUrl,
+    goToCheckout,
   } = useCart();
 
   if (!isOpen) return null;
+
+  const handleCheckout = () => {
+    if (checkoutUrl && checkoutUrl !== '#') {
+      goToCheckout();
+    }
+  };
 
   return (
     <>
@@ -89,7 +96,7 @@ export default function CartDrawer() {
                     <div className="relative w-20 h-20 flex-shrink-0 bg-gray-100 rounded">
                       <Image
                         src={item.image.url}
-                        alt={item.image.altText || item.title}
+                        alt={item.image.altText || item.title || 'Product image'}
                         fill
                         className="object-cover rounded"
                       />
@@ -99,15 +106,15 @@ export default function CartDrawer() {
                     <h3 className="font-medium text-sm line-clamp-2">
                       {item.title}
                     </h3>
-                    <p className="text-sm text-gray-500">{item.variantTitle}</p>
+                    <p className="text-sm text-gray-500">{item.variantTitle || ''}</p>
                     <p className="text-sm font-semibold mt-1">
-                      {formatPrice(item.price)}
+                      {formatPrice(item.price || 0)}
                     </p>
                     <div className="flex items-center gap-3 mt-2">
                       <div className="flex items-center border border-gray-300 rounded">
                         <button
                           onClick={() =>
-                            updateQuantity(item.variantId, item.quantity - 1)
+                            updateQuantity(String(item.variantId), Math.max(1, item.quantity - 1))
                           }
                           className="px-2 py-1 hover:bg-gray-100 transition-colors"
                           disabled={item.quantity <= 1}
@@ -117,7 +124,7 @@ export default function CartDrawer() {
                         <span className="px-2 py-1 text-sm">{item.quantity}</span>
                         <button
                           onClick={() =>
-                            updateQuantity(item.variantId, item.quantity + 1)
+                            updateQuantity(String(item.variantId), item.quantity + 1)
                           }
                           className="px-2 py-1 hover:bg-gray-100 transition-colors"
                         >
@@ -125,7 +132,7 @@ export default function CartDrawer() {
                         </button>
                       </div>
                       <button
-                        onClick={() => removeItem(item.variantId)}
+                        onClick={() => removeItem(String(item.variantId))}
                         className="text-sm text-gray-500 hover:text-red-600 transition-colors"
                       >
                         Remove
@@ -148,12 +155,13 @@ export default function CartDrawer() {
             <p className="text-xs text-gray-500">
               Shipping costs calculated at checkout. Freight shipping available.
             </p>
-            <a
-              href={checkoutUrl}
+            <button
+              onClick={handleCheckout}
               className="btn-primary w-full text-center block"
+              disabled={!checkoutUrl || checkoutUrl === '#'}
             >
               Proceed to Checkout
-            </a>
+            </button>
             <Link
               href="/contact"
               className="btn-secondary w-full text-center block"

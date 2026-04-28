@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createDraftOrder } from '@/lib/shopify';
 
 export async function POST(request: NextRequest) {
   try {
@@ -55,13 +54,7 @@ Message: ${data.message}
 
     console.log('Quote Request:', note);
 
-    // Try to create a draft order in Shopify (optional)
-    try {
-      await createDraftOrder(lineItems, data.email);
-    } catch (shopifyError) {
-      console.error('Failed to create draft order:', shopifyError);
-      // Don't fail the request if draft order creation fails
-    }
+    // In production, you would create a draft order or send to a CRM here
 
     return NextResponse.json({
       success: true,

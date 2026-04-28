@@ -17,7 +17,7 @@ export default function CTASection() {
             perceived value, and sales.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button href="/collections/display-cases" size="lg">
+            <Button href="/collections/rgb-display-cases" size="lg">
               View Products
             </Button>
             <Button

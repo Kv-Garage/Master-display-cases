@@ -5,6 +5,9 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { CartProvider } from "@/lib/cart-context";
 import CartDrawer from "@/components/layout/CartDrawer";
+import AnalyticsProvider from "@/components/analytics/AnalyticsProvider";
+import EmailCapturePopup from "@/components/marketing/EmailCapturePopup";
+import AIChatbot from "@/components/chat/AIChatbot";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -13,6 +16,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://masterdisplaycases.com'),
   title: "Master Display Cases | Commercial Display Cases & Store Fixtures",
   description:
     "Premium commercial-grade display cases for retail stores. Built for visibility, durability, and higher-value sales. Freight shipping available nationwide from Grand Rapids, Michigan.",
@@ -65,12 +69,15 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} scroll-smooth`}>
       <body className="min-h-screen flex flex-col font-sans antialiased">
+        <AnalyticsProvider />
         <CartProvider>
           <Header />
           <main className="flex-1">{children}</main>
           <Footer />
           <CartDrawer />
         </CartProvider>
+        <EmailCapturePopup />
+        <AIChatbot />
       </body>
     </html>
   );

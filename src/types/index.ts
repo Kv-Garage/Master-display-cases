@@ -1,20 +1,26 @@
 export interface Product {
   id: string;
+  shopifyId?: string;
   title: string;
   handle: string;
   description: string;
   price: number;
-  compareAtPrice?: number;
+  priceFormatted?: string;
+  compareAtPrice?: number | null;
+  image?: string;
   images: ProductImage[];
   variants: Variant[];
+  variantId?: string;
+  minPrice?: number;
+  maxPrice?: number;
   vendor: string;
   productType: string;
   tags: string[];
   availableForSale: boolean;
   createdAt: string;
   updatedAt: string;
-  publishedAt: string;
-  options: ProductOption[];
+  publishedAt?: string;
+  options?: ProductOption[];
   featuredImage?: {
     url: string;
     altText?: string;
@@ -41,9 +47,9 @@ export interface Variant {
   price: number;
   compareAtPrice?: number;
   availableForSale: boolean;
-  sku: string;
-  inventoryQuantity: number;
-  optionValues: OptionValue[];
+  sku?: string;
+  inventoryQuantity?: number;
+  optionValues?: OptionValue[];
   image?: ProductImage;
 }
 
@@ -63,8 +69,8 @@ export interface Collection {
   handle: string;
   description?: string;
   image?: CollectionImage;
-  productsCount: number;
-  updatedAt: string;
+  productsCount?: number;
+  updatedAt?: string;
 }
 
 export interface CollectionImage {

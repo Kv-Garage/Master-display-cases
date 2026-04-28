@@ -1,65 +1,45 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { useCart } from '@/lib/cart-context';
 
-// Default navigation items - these correspond to Shopify collection handles
-const defaultNavItems = [
-  { href: '/collections/display-cases', label: 'Display Cases' },
-  { href: '/collections/store-packages', label: 'Store Packages' },
-  { href: '/collections/countertop', label: 'Countertop' },
-  { href: '/collections/floor-standing', label: 'Floor Standing' },
-];
-
-function CartSection() {
-  const { totalItems, setIsOpen } = useCart();
-
-  return (
-    <div className="hidden lg:flex items-center gap-4">
-      <Link
-        href="/contact"
-        className="btn-primary inline-flex items-center justify-center"
-      >
-        Get Quote
-      </Link>
-      
-      {/* Cart Icon */}
-      <button
-        onClick={() => setIsOpen(true)}
-        className="relative p-2 hover:bg-gray-100 rounded-full transition-colors"
-        aria-label={`Shopping cart with ${totalItems} items`}
-      >
-        <svg
-          className="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={1.5}
-            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-          />
-        </svg>
-        {totalItems > 0 && (
-          <span className="absolute -top-1 -right-1 bg-black text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-medium">
-            {totalItems}
-          </span>
-        )}
-      </button>
-    </div>
-  );
+// Dropdown menu item type
+interface DropdownItem {
+  label: string;
+  href: string;
 }
 
-function MobileCartButton() {
-  const { totalItems, setIsOpen } = useCart();
-  
+// Dropdown menu type
+interface DropdownMenu {
+  label: string;
+  items: DropdownItem[];
+}
+
+// Main navigation structure - Simplified for conversion
+const shopDisplaysItems: DropdownItem[] = [
+  { label: 'RGB Display Cases', href: '/collections/rgb-displays' },
+];
+
+const useCasesItems: DropdownItem[] = [
+  { label: 'Smoke Shops', href: '/use-cases/smoke-shops' },
+  { label: 'Jewelry Stores', href: '/use-cases/jewelry-stores' },
+  { label: 'Boutiques', href: '/use-cases/boutiques' },
+  { label: 'Electronics', href: '/use-cases/electronics' },
+];
+
+const resourcesItems: DropdownItem[] = [
+  { label: 'Blog', href: '/blog' },
+  { label: 'Buying Guide', href: '/buying-guide' },
+  { label: 'FAQ', href: '/faq' },
+];
+
+function CartIcon({ totalItems }: { totalItems: number }) {
   return (
-    <button
-      onClick={() => setIsOpen(true)}
+    <Link
+      href="/cart"
       className="relative p-2 hover:bg-gray-100 rounded-full transition-colors"
       aria-label={`Shopping cart with ${totalItems} items`}
     >
@@ -81,14 +61,144 @@ function MobileCartButton() {
           {totalItems}
         </span>
       )}
-    </button>
+    </Link>
+  );
+}
+
+function DesktopDropdown({
+  label,
+  items,
+  pathname,
+}: {
+  label: string;
+  items: DropdownItem[];
+  pathname: string;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    setIsOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setIsOpen(false);
+    }, 150);
+  };
+
+  return (
+    <div
+      className="relative"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <button
+        className={`flex items-center gap-1 text-sm font-medium uppercase tracking-wider transition-colors duration-200 py-6 ${
+          isOpen ? 'text-black' : 'text-gray-600 hover:text-black'
+        }`}
+      >
+        {label}
+        <svg
+          className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M19 9l-7 7-7-7"
+          />
+        </svg>
+      </button>
+
+      {/* Dropdown Menu */}
+      {isOpen && (
+        <div className="absolute left-0 top-full pt-2 z-50">
+          <div className="bg-white rounded-lg shadow-lg border border-gray-100 min-w-[200px] py-2">
+            {items.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`block px-4 py-3 text-sm transition-colors ${
+                  pathname === item.href
+                    ? 'bg-gray-50 text-black font-medium'
+                    : 'text-gray-600 hover:bg-gray-50 hover:text-black'
+                }`}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MobileDropdown({
+  label,
+  items,
+  pathname,
+}: {
+  label: string;
+  items: DropdownItem[];
+  pathname: string;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className="border-b border-gray-100">
+      <button
+        className="w-full flex items-center justify-between py-4 text-sm font-medium uppercase tracking-wider text-gray-800"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        {label}
+        <svg
+          className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M19 9l-7 7-7-7"
+          />
+        </svg>
+      </button>
+
+      {isOpen && (
+        <div className="pb-4">
+          {items.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`block py-3 pl-4 text-sm ${
+                pathname === item.href
+                  ? 'text-black font-medium'
+                  : 'text-gray-500 hover:text-black'
+              }`}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [navItems, setNavItems] = useState(defaultNavItems);
+  const { totalItems } = useCart();
   const pathname = usePathname();
 
   useEffect(() => {
@@ -100,81 +210,69 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Fetch collections from Shopify to populate navigation
+  // Close mobile menu on route change
   useEffect(() => {
-    async function fetchCollections() {
-      try {
-        const response = await fetch('/api/collections');
-        if (response.ok) {
-          const collections = await response.json();
-          if (collections.length > 0) {
-            // Map Shopify collections to navigation items
-            const collectionNavItems = collections
-              .filter((c: { handle: string }) => c.handle)
-              .map((c: { handle: string; title: string }) => ({
-                href: `/collections/${c.handle}`,
-                label: c.title,
-              }));
-
-            // Add static pages
-            setNavItems([
-              ...collectionNavItems.slice(0, 4), // Limit to 4 items for clean navigation
-              { href: '/contact', label: 'Contact' },
-            ]);
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching collections for navigation:', error);
-        // Keep default nav items on error
-      }
-    }
-
-    fetchCollections();
-  }, []);
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
 
   return (
     <>
       {/* Top Bar */}
-      <div className="bg-black text-white text-xs font-medium uppercase tracking-wider py-2 px-4 text-center">
-        Commercial-Grade Display Systems | Freight Shipping Available Nationwide
+      <div className="bg-gray-100 text-gray-600 text-xs font-medium py-2 px-4 text-center">
+        Commercial-Grade Display Systems | Designed for High-Conversion Retail
       </div>
 
       {/* Main Header */}
       <header
         className={`sticky top-0 z-50 transition-all duration-300 ${
-          isScrolled ? 'bg-white shadow-sm' : 'bg-white'
+          isScrolled ? 'bg-white shadow-md' : 'bg-white'
         }`}
       >
         <div className="container-custom">
-          <div className="flex items-center justify-between h-20">
-            {/* Logo */}
-            <Link href="/" className="flex-shrink-0">
-              <div className="flex items-center">
-                <span className="text-xl font-bold tracking-tight text-black uppercase">
-                  Master Display Cases
-                </span>
-              </div>
+          <div className="flex items-center justify-between h-[96px]">
+            {/* Logo - LEFT (Brand Anchor) */}
+            <Link href="/" className="flex items-center mr-12 flex-shrink-0">
+              <span className="text-xl lg:text-2xl font-extrabold tracking-tight text-black uppercase">
+                MASTER DISPLAY CASES
+              </span>
             </Link>
 
-            {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center space-x-8">
-              {navItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`text-sm font-medium uppercase tracking-wider transition-colors duration-200 ${
-                    pathname === item.href
-                      ? 'text-black'
-                     : 'text-gray-500 hover:text-black'
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              ))}
+            {/* Desktop Navigation - CENTER (Simplified for conversion) */}
+            <nav className="hidden lg:flex items-center gap-10">
+              <Link
+                href="/collections/rgb-displays"
+                className="text-sm font-medium uppercase tracking-wider text-gray-600 hover:text-black transition-colors duration-200"
+              >
+                RGB Display Cases
+              </Link>
+              <DesktopDropdown
+                label="Use Cases"
+                items={useCasesItems}
+                pathname={pathname}
+              />
+              <Link
+                href="/wholesale"
+                className="text-[14px] font-medium uppercase tracking-wide text-gray-600 hover:text-black transition-colors duration-200"
+              >
+                Wholesale / Bulk Pricing
+              </Link>
+              <DesktopDropdown
+                label="Resources"
+                items={resourcesItems}
+                pathname={pathname}
+              />
             </nav>
 
-            {/* CTA Button & Cart */}
-            <CartSection />
+            {/* Right Section - CTA, Cart */}
+            <div className="hidden lg:flex items-center gap-6">
+              <Link
+                href="/contact"
+                className="bg-black text-white px-5 py-2.5 text-[13px] font-semibold uppercase tracking-wide hover:bg-gray-800 transition-colors rounded-none"
+              >
+                Get Quote
+              </Link>
+              <CartIcon totalItems={totalItems} />
+            </div>
 
             {/* Mobile Menu Button */}
             <button
@@ -208,65 +306,41 @@ export default function Header() {
           </div>
         </div>
 
-            {/* Mobile Cart & Menu */}
-        <div className="lg:hidden flex items-center gap-4">
-          <MobileCartButton />
-          <button
-            className="p-2"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              {isMobileMenuOpen ? (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              )}
-            </svg>
-          </button>
-        </div>
-
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden bg-white border-t border-gray-100">
+          <div className="lg:hidden bg-white border-t border-gray-100 shadow-lg">
             <div className="container-custom py-4">
-              <nav className="flex flex-col space-y-4">
-                {navItems.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={`text-sm font-medium uppercase tracking-wider py-2 ${
-                      pathname === item.href
-                        ? 'text-black'
-                        : 'text-gray-500 hover:text-black'
-                    }`}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {item.label}
-                  </Link>
-                ))}
+              <nav className="flex flex-col">
                 <Link
-                  href="/contact"
-                  className="btn-primary text-center"
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  href="/collections/rgb-displays"
+                  className="py-4 text-sm font-medium uppercase tracking-wider text-gray-800 border-b border-gray-100"
                 >
-                  Get Quote
+                  RGB Display Cases
                 </Link>
+                <MobileDropdown
+                  label="Use Cases"
+                  items={useCasesItems}
+                  pathname={pathname}
+                />
+                <Link
+                  href="/wholesale"
+                  className="py-4 text-sm font-medium uppercase tracking-wider text-gray-800 border-b border-gray-100"
+                >
+                  Wholesale / Bulk Pricing
+                </Link>
+                <MobileDropdown
+                  label="Resources"
+                  items={resourcesItems}
+                  pathname={pathname}
+                />
+                <div className="pt-4 pb-2">
+                  <Link
+                    href="/contact"
+                    className="btn-primary w-full text-center block"
+                  >
+                    Get Quote
+                  </Link>
+                </div>
               </nav>
             </div>
           </div>

@@ -6,25 +6,26 @@ import { formatPrice } from '@/lib/shopify';
 import { useCart } from '@/lib/cart-context';
 import { useState } from 'react';
 
-// Accept partial product data from Shopify
+// Accept partial product data from Shopify (supports both raw and normalized formats)
 interface PartialProduct {
   id: string;
   title: string;
   handle: string;
   description?: string;
+  // Normalized format
   price?: number;
-  compareAtPrice?: number;
+  variantId?: string; // Real Shopify variant ID for checkout
+  image?: string;
+  images?: Array<{
+    url?: string;
+    altText?: string;
+    width?: number;
+    height?: number;
+  }>;
+  // Raw Shopify format (backwards compatibility)
   featuredImage?: {
     url?: string;
     altText?: string;
-  };
-  images?: {
-    edges?: Array<{
-      node?: {
-        url?: string;
-        altText?: string;
-      };
-    }>;
   };
   priceRange?: {
     minVariantPrice?: {
@@ -42,16 +43,23 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, variant = 'default' }: ProductCardProps) {
-  const { id, title, handle, featuredImage, images, priceRange, tags } = product;
+  const { id, title, handle, tags } = product;
   const { addItem } = useCart();
   const [isAdded, setIsAdded] = useState(false);
 
-  // Get image from featuredImage or first image edge
-  const mainImageUrl = featuredImage?.url || images?.edges?.[0]?.node?.url;
-  const mainImageAlt = featuredImage?.altText || images?.edges?.[0]?.node?.altText || title;
+  // Get image - support both normalized (image, images[]) and raw (featuredImage, images.edges[].node) formats
+  const mainImageUrl = product.image || 
+                       product.featuredImage?.url || 
+                       product.images?.[0]?.url || 
+                       (product.images as any)?.edges?.[0]?.node?.url;
+  const mainImageAlt = product.featuredImage?.altText || 
+                       product.images?.[0]?.altText || 
+                       (product.images as any)?.edges?.[0]?.node?.altText || 
+                       title;
   
-  // Get price from priceRange
-  const price = priceRange?.minVariantPrice?.amount ? parseFloat(priceRange.minVariantPrice.amount) : 0;
+  // Get price - support both normalized (price) and raw (priceRange.minVariantPrice.amount) formats
+  const price = product.price || 
+                (product.priceRange?.minVariantPrice?.amount ? parseFloat(product.priceRange.minVariantPrice.amount) : 0);
   
   const hasDiscount = false; // No discount info in simplified query
 
@@ -59,12 +67,16 @@ export default function ProductCard({ product, variant = 'default' }: ProductCar
     e.preventDefault();
     e.stopPropagation();
     
+    // Get real Shopify variant ID - prefer direct variantId, then variants array
+    const realVariantId = product.variantId || product.variants?.[0]?.id || `manual-${id}`;
+    const variantTitle = product.variants?.[0]?.title || 'Default';
+    
     addItem({
-      variantId: `manual-${id}`,
+      variantId: realVariantId,
       productId: id,
       title,
       productHandle: handle,
-      variantTitle: 'Default',
+      variantTitle: variantTitle,
       price,
       image: mainImageUrl ? {
         url: mainImageUrl,

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { formatPrice, getShippingRates } from '@/lib/shopify';
+import { formatPrice } from '@/lib/shopify';
 
 interface ShippingCalculatorProps {
   price: number;
@@ -11,6 +11,26 @@ interface ShippingRate {
   name: string;
   price: number;
   estimatedDays: string;
+}
+
+// Local shipping rate calculator (mock implementation)
+function getShippingRates(zipCode: string, orderTotal: number): { standard: ShippingRate; expedited: ShippingRate } {
+  // Base rates for freight shipping
+  const baseStandard = orderTotal * 0.08;
+  const baseExpedited = orderTotal * 0.15;
+  
+  return {
+    standard: {
+      name: 'Standard Freight (5-7 business days)',
+      price: Math.max(baseStandard, 99),
+      estimatedDays: '5-7 business days',
+    },
+    expedited: {
+      name: 'Expedited Freight (2-3 business days)',
+      price: Math.max(baseExpedited, 199),
+      estimatedDays: '2-3 business days',
+    },
+  };
 }
 
 export default function ShippingCalculator({ price }: ShippingCalculatorProps) {
@@ -29,8 +49,11 @@ export default function ShippingCalculator({ price }: ShippingCalculatorProps) {
     setError(null);
     setRates(null);
 
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 800));
+
     try {
-      const shippingRates = await getShippingRates(zipCode);
+      const shippingRates = getShippingRates(zipCode, price);
       setRates(shippingRates);
     } catch (err) {
       setError('Failed to calculate shipping. Please try again.');

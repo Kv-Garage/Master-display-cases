@@ -27,14 +27,8 @@ export async function generateMetadata({ params }: CollectionPageProps) {
 }
 
 export async function generateStaticParams() {
-  // Common collection handles
-  return [
-    { handle: 'display-cases' },
-    { handle: 'store-packages' },
-    { handle: 'countertop' },
-    { handle: 'floor-standing' },
-    { handle: 'wall-mounted' },
-  ];
+  // Return empty array - pages will be generated on-demand
+  return [];
 }
 
 // Filter options
@@ -78,9 +72,7 @@ export default async function CollectionPage({ params, searchParams }: Collectio
   let isLoading = false;
 
   try {
-    products = await getCollectionProducts({
-      handle: resolvedParams.handle,
-    });
+    products = await getCollectionProducts(resolvedParams.handle);
 
     // If no products from collection, try general products
     if (products.length === 0) {

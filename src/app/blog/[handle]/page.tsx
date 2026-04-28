@@ -1,4 +1,4 @@
-import { getBlogPost, getBlogPosts } from '@/lib/shopify';
+import { getBlogPostByHandle, getRelatedPosts, blogPosts } from '@/data/blog-posts';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -9,9 +9,17 @@ interface BlogPostPageProps {
   params: Promise<{ handle: string }>;
 }
 
+// Generate static params for all blog posts
+export async function generateStaticParams() {
+  return blogPosts.map((post) => ({
+    handle: post.handle,
+  }));
+}
+
+// Generate metadata for SEO
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   const resolvedParams = await params;
-  const post = await getBlogPost(resolvedParams.handle);
+  const post = getBlogPostByHandle(resolvedParams.handle);
 
   if (!post) {
     return {
@@ -20,147 +28,62 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   }
 
   return {
-    title: `${post.title} | Master Display Cases`,
-    description: post.excerpt,
+    title: `${post.metaTitle}`,
+    description: post.metaDescription,
     openGraph: {
       type: 'article',
       title: post.title,
       description: post.excerpt,
       publishedTime: post.publishedAt,
-      authors: [post.author.name],
-      images: post.featuredImage ? [post.featuredImage.url] : [],
+      authors: [post.author],
+      images: post.image ? [{ url: post.image, alt: post.imageAlt }] : [],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.excerpt,
     },
   };
 }
 
-export async function generateStaticParams() {
-  try {
-    const data = await getBlogPosts();
-    const articles = data?.edges || [];
-    return articles.map((article: { handle: string }) => ({
-      handle: article.handle,
-    }));
-  } catch {
-    return [];
-  }
+// JSON-LD structured data for SEO
+function generateStructuredData(post: any) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: post.title,
+    description: post.excerpt,
+    image: post.image,
+    datePublished: post.publishedAt,
+    dateModified: post.publishedAt,
+    author: {
+      '@type': 'Organization',
+      name: post.author,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Master Display Cases',
+      logo: {
+        '@type': 'ImageObject',
+        url: '/Master-display-cases-logo.png',
+      },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://masterdisplaycases.com${post.href}`,
+    },
+  };
 }
-
-// Sample full content for demo posts
-const sampleContent: Record<string, string> = {
-  'best-display-cases-smoke-shops-2024': `
-    <h2>Why Display Cases Matter for Smoke Shops</h2>
-    <p>Smoke shops face unique challenges when it comes to product display. You need to showcase often small, high-value items while maintaining security and complying with regulations. The right display case solution can make all the difference.</p>
-    
-    <h2>Key Features to Look For</h2>
-    <h3>1. Security Features</h3>
-    <p>Look for cases with integrated locking systems, tempered glass, and optional alarm integration. Your display should protect inventory without sacrificing visibility.</p>
-    
-    <h3>2. Proper Lighting</h3>
-    <p>LED lighting is essential for showcasing products. Consider cases with adjustable lighting to highlight different product categories.</p>
-    
-    <h3>3. Flexible Shelving</h3>
-    <p>Adjustable shelves allow you to accommodate products of various sizes, from small vape cartridges to larger hookahs.</p>
-    
-    <h2>Top Recommendations for 2024</h2>
-    <p>Based on our experience working with hundreds of smoke shop owners, we recommend floor-standing display cases with RGB lighting for maximum visual impact. Countertop cases work well for high-margin impulse items near the register.</p>
-    
-    <h2>Conclusion</h2>
-    <p>Investing in quality display cases is one of the highest-ROI improvements you can make to your smoke shop. Contact our team for personalized recommendations.</p>
-  `,
-  'increase-retail-sales-better-displays': `
-    <h2>The Science Behind Display-Driven Sales</h2>
-    <p>Research consistently shows that product presentation directly impacts purchasing decisions. In this article, we break down the data behind display case effectiveness.</p>
-    
-    <h2>Key Findings</h2>
-    <ul>
-      <li>Products in well-lit display cases see up to 34% higher perceived value</li>
-      <li>Strategic placement near checkout increases impulse purchases by 23%</li>
-      <li>Professional displays increase customer trust and time spent in store</li>
-    </ul>
-    
-    <h2>Implementation Strategies</h2>
-    <p>The key is to think of your display cases as active sales tools, not passive furniture. Position them to guide customer flow and highlight your highest-margin products.</p>
-  `,
-  'display-case-buying-guide': `
-    <h2>Complete Buying Guide for Commercial Display Cases</h2>
-    <p>Choosing the right display case for your retail environment requires careful consideration of several factors. This guide covers everything you need to know.</p>
-    
-    <h2>Sizing Considerations</h2>
-    <p>Measure your available space carefully. Consider both the footprint of the case and the space needed for doors to open fully. Leave at least 36 inches of clearance for customer viewing.</p>
-    
-    <h2>Lighting Options</h2>
-    <p>LED lighting is the standard for modern display cases. RGB options allow you to change colors for seasonal promotions or to match your brand.</p>
-    
-    <h2>Security Features</h2>
-    <p>Tempered glass, quality locks, and optional alarm integration protect your inventory. Consider your loss prevention needs when selecting features.</p>
-    
-    <h2>Budget Planning</h2>
-    <p>Quality commercial display cases range from $600 to $3,000+ depending on size and features. Factor in freight shipping costs ($349-$459) and potential assembly services.</p>
-  `,
-};
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const resolvedParams = await params;
-  
-  // Try to fetch from Shopify, fall back to sample data
-  let post = await getBlogPost(resolvedParams.handle);
-  
-  // If no post found from Shopify, check if it is a sample post
-  if (!post) {
-    const samplePosts = [
-      {
-        id: '1',
-        title: 'Best Display Cases for Smoke Shops in 2024',
-        handle: 'best-display-cases-smoke-shops-2024',
-        excerpt:
-          'Discover the top display case solutions for smoke shops. Learn about security features, lighting options, and how to maximize product visibility while protecting inventory.',
-        content: sampleContent['best-display-cases-smoke-shops-2024'] || 'Content not available.',
-        author: { name: 'Master Display Cases' },
-        publishedAt: '2024-01-15',
-        featuredImage: {
-          url: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80',
-          altText: 'Smoke shop display case',
-        },
-        tags: ['Smoke Shop', 'Security', 'Display Cases'],
-      },
-      {
-        id: '2',
-        title: 'How to Increase Retail Sales with Better Displays',
-        handle: 'increase-retail-sales-better-displays',
-        excerpt:
-          'Learn how strategic display case placement and lighting can increase your average transaction value by up to 34%. Real data from retail stores that upgraded their displays.',
-        content: sampleContent['increase-retail-sales-better-displays'] || 'Content not available.',
-        author: { name: 'Master Display Cases' },
-        publishedAt: '2024-01-10',
-        featuredImage: {
-          url: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=80',
-          altText: 'Retail store display',
-        },
-        tags: ['Retail Tips', 'Sales', 'Store Layout'],
-      },
-      {
-        id: '3',
-        title: 'Display Case Buying Guide: Everything You Need to Know',
-        handle: 'display-case-buying-guide',
-        excerpt:
-          'A comprehensive guide to choosing the right display case for your store. Covers sizing, lighting, security, and budget considerations for commercial retail environments.',
-        content: sampleContent['display-case-buying-guide'] || 'Content not available.',
-        author: { name: 'Master Display Cases' },
-        publishedAt: '2024-01-05',
-        featuredImage: {
-          url: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&q=80',
-          altText: 'Display case buying guide',
-        },
-        tags: ['Buying Guide', 'Commercial', 'Tips'],
-      },
-    ];
-    
-    post = samplePosts.find(p => p.handle === resolvedParams.handle) || null;
-  }
+  const post = getBlogPostByHandle(resolvedParams.handle);
 
   if (!post) {
     notFound();
   }
+
+  const relatedPosts = getRelatedPosts(post.handle, 3);
 
   const publishedDate = new Date(post.publishedAt).toLocaleDateString('en-US', {
     month: 'long',
@@ -168,20 +91,28 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     year: 'numeric',
   });
 
+  const structuredData = generateStructuredData(post);
+
   return (
     <div className="bg-white">
+      {/* Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+
       {/* Breadcrumb */}
       <div className="container-custom py-4">
-        <nav className="text-sm text-gray-500">
-          <Link href="/" className="hover:text-black">
+        <nav className="text-sm text-gray-500" aria-label="Breadcrumb">
+          <Link href="/" className="hover:text-black transition-colors">
             Home
           </Link>
           <span className="mx-2">/</span>
-          <Link href="/blog" className="hover:text-black">
+          <Link href="/blog" className="hover:text-black transition-colors">
             Blog
           </Link>
           <span className="mx-2">/</span>
-          <span className="text-black">{post.title}</span>
+          <span className="text-black font-medium">{post.title}</span>
         </nav>
       </div>
 
@@ -189,7 +120,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       <section className="container-custom pb-8">
         <div className="max-w-4xl mx-auto">
           <div className="flex flex-wrap gap-2 mb-6">
-            {post.tags.map((tag: string) => (
+            <span className="text-xs bg-black text-white px-3 py-1 uppercase tracking-wider font-semibold">
+              {post.category}
+            </span>
+            {post.tags.slice(1).map((tag: string) => (
               <span
                 key={tag}
                 className="text-xs bg-gray-100 text-gray-600 px-3 py-1 uppercase tracking-wider"
@@ -202,37 +136,42 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <h1 className="heading-lg mb-6">{post.title}</h1>
 
           <div className="flex items-center space-x-4 text-sm text-gray-500 mb-8">
-            <span>{post.author.name}</span>
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
+                <span className="text-xs font-bold text-gray-600">MD</span>
+              </div>
+              <span className="font-medium text-black">{post.author}</span>
+            </div>
             <span>•</span>
             <span>{publishedDate}</span>
             <span>•</span>
-            <span>5 min read</span>
+            <span>{post.readTime}</span>
           </div>
 
-          {post.featuredImage && (
-            <div className="relative aspect-[16/9] overflow-hidden rounded-lg bg-gray-100 mb-12">
-              <Image
-                src={post.featuredImage.url}
-                alt={post.featuredImage.altText || post.title}
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 50vw"
-                className="object-cover"
-                priority
-              />
-            </div>
-          )}
+          {/* Featured Image */}
+          <div className="relative aspect-[16/9] overflow-hidden rounded-lg bg-gray-100 mb-12 shadow-lg">
+            <Image
+              src={post.image}
+              alt={post.imageAlt}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 50vw"
+              className="object-cover"
+              priority
+            />
+          </div>
 
           {/* Article Content */}
           <article
             className="prose prose-lg max-w-none"
+            style={{ maxWidth: '800px', margin: '0 auto' }}
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
 
           {/* Author Box */}
           <div className="mt-12 pt-8 border-t border-gray-200">
             <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
-                <span className="text-sm font-bold text-gray-600">MD</span>
+              <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center">
+                <span className="text-sm font-bold text-white">MD</span>
               </div>
               <div>
                 <p className="font-medium text-black">Master Display Cases</p>
@@ -245,20 +184,61 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </div>
       </section>
 
+      {/* Related Articles */}
+      {relatedPosts.length > 0 && (
+        <section className="bg-gray-50 section-padding">
+          <div className="container-custom">
+            <div className="max-w-4xl mx-auto">
+              <h2 className="heading-md mb-8">Related Articles</h2>
+              <div className="grid md:grid-cols-3 gap-6">
+                {relatedPosts.map((relatedPost) => (
+                  <Link
+                    key={relatedPost.id}
+                    href={relatedPost.href}
+                    className="group bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+                  >
+                    <div className="relative aspect-[16/9] overflow-hidden">
+                      <Image
+                        src={relatedPost.image}
+                        alt={relatedPost.imageAlt}
+                        fill
+                        sizes="33vw"
+                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                    <div className="p-4">
+                      <span className="text-xs font-semibold uppercase tracking-wider text-black bg-gray-100 px-2 py-1 rounded">
+                        {relatedPost.category}
+                      </span>
+                      <h3 className="heading-sm mt-3 mb-2 line-clamp-2 group-hover:text-gray-600 transition-colors">
+                        {relatedPost.title}
+                      </h3>
+                      <p className="text-sm text-gray-500">{relatedPost.readTime}</p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* CTA Section */}
-      <section className="bg-gray-50 section-padding">
+      <section className="bg-black text-white section-padding">
         <div className="container-custom">
           <div className="max-w-2xl mx-auto text-center">
-            <h2 className="heading-md mb-4">
+            <h2 className="heading-lg mb-4">
               Ready to Upgrade Your Display Cases?
             </h2>
-            <p className="text-gray-600 mb-8">
+            <p className="text-gray-400 mb-8 text-lg">
               Explore our commercial-grade display systems designed to increase
-              your store revenue.
+              your store revenue with premium LED lighting and robust security.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button href="/collections/display-cases">View Products</Button>
-              <Button href="/contact" variant="outline">
+              <Button href="/collections/display-cases" className="bg-white text-black hover:bg-gray-200">
+                View Products
+              </Button>
+              <Button href="/contact" variant="outline" className="border-white text-white hover:bg-white hover:text-black">
                 Get a Quote
               </Button>
             </div>
