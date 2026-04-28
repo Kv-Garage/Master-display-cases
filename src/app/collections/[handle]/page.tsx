@@ -2,7 +2,6 @@ import { getCollection, getCollectionProducts, getProducts, formatPrice } from '
 import ProductCard, { ProductCardSkeleton } from '@/components/ui/ProductCard';
 import Button from '@/components/ui/Button';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
 import { Product } from '@/types';
 
 interface CollectionPageProps {
@@ -61,10 +60,26 @@ const sortOptions = [
 export default async function CollectionPage({ params, searchParams }: CollectionPageProps) {
   const resolvedParams = await params;
   const resolvedSearchParams = await searchParams;
-  const collection = await getCollection(resolvedParams.handle);
+  
+  let collection = null;
+  let collectionError = null;
+  
+  try {
+    collection = await getCollection(resolvedParams.handle);
+  } catch (error: any) {
+    collectionError = error.message;
+  }
 
+  // If collection not found (or API not configured), use a fallback
   if (!collection) {
-    notFound();
+    collection = {
+      id: resolvedParams.handle,
+      title: resolvedParams.handle.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+      description: collectionError 
+        ? `SHOPIFY CONNECTION FAILED — ${collectionError}` 
+        : 'Browse our collection of premium display cases.',
+      handle: resolvedParams.handle,
+    };
   }
 
   // Get products for this collection

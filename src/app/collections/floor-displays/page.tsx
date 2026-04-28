@@ -16,7 +16,12 @@ export const metadata = {
 };
 
 export default async function FloorDisplaysCollection() {
-  const products = await getProducts();
+  let products = [];
+  try {
+    products = await getProducts();
+  } catch (error: any) {
+    console.error('Error fetching products:', error.message);
+  }
   // Filter for floor display products
   const floorProducts = products.filter((p: any) => 
     p.title.toLowerCase().includes('floor') || 

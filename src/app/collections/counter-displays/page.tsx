@@ -16,7 +16,12 @@ export const metadata = {
 };
 
 export default async function CounterDisplaysCollection() {
-  const products = await getProducts();
+  let products = [];
+  try {
+    products = await getProducts();
+  } catch (error: any) {
+    console.error('Error fetching products:', error.message);
+  }
   // Filter for counter display products (in a real app, this would use collection filtering)
   const counterProducts = products.filter((p: any) => 
     p.title.toLowerCase().includes('counter') || 

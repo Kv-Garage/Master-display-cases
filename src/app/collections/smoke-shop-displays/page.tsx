@@ -16,7 +16,13 @@ export const metadata = {
 };
 
 export default async function SmokeShopDisplaysCollection() {
-  const products = await getProducts();
+  let products = [];
+  try {
+    products = await getProducts();
+  } catch (error: any) {
+    console.error('Error fetching products:', error.message);
+    // Products will be empty, page will show empty state
+  }
 
   return (
     <main className="min-h-screen">
