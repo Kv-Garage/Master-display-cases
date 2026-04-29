@@ -62,25 +62,72 @@ export async function testShopifyConnection() {
 }
 
 /**
- * Get products from Shopify (STRICT query)
+ * Normalize product data for consistent UI rendering
+ */
+export function normalizeProduct(product: any) {
+  const firstVariant = product.variants?.edges?.[0]?.node;
+  const firstImage = product.images?.edges?.[0]?.node;
+  
+  return {
+    id: product.id,
+    handle: product.handle,
+    title: product.title,
+    description: product.description,
+    image: firstImage?.url || '/placeholder.jpg',
+    images: product.images?.edges?.map(({ node }: any) => ({
+      url: node.url,
+      altText: node.altText,
+      width: node.width,
+      height: node.height,
+    })) || [],
+    price: parseFloat(firstVariant?.price?.amount || 0),
+    priceFormatted: formatPrice(parseFloat(firstVariant?.price?.amount || 0)),
+    compareAtPrice: firstVariant?.compareAtPrice?.amount ? parseFloat(firstVariant.compareAtPrice.amount) : null,
+    currency: firstVariant?.price?.currencyCode || 'USD',
+    variantId: firstVariant?.id,
+    variants: product.variants?.edges?.map(({ node }: any) => ({
+      id: node.id,
+      title: node.title,
+      price: parseFloat(node.price?.amount || 0),
+      available: node.availableForSale,
+      compareAtPrice: node.compareAtPrice?.amount ? parseFloat(node.compareAtPrice.amount) : null,
+    })) || [],
+    minPrice: parseFloat(product.priceRange?.minVariantPrice?.amount || 0),
+    maxPrice: parseFloat(product.priceRange?.maxVariantPrice?.amount || 0),
+    tags: product.tags || [],
+    productType: product.productType,
+    vendor: product.vendor,
+    availableForSale: product.variants?.edges?.some(({ node }: any) => node.availableForSale) || false,
+  };
+}
+
+/**
+ * Get products from Shopify (with normalization)
  */
 export async function getProducts() {
-  const data = await shopifyFetch(`{
+  const data = await shopifyFetch(`query {
     products(first: 20) {
       edges {
         node {
           id
-          title
           handle
+          title
           description
           images(first: 1) {
-            edges { node { url } }
+            edges {
+              node {
+                url
+              }
+            }
           }
           variants(first: 1) {
             edges {
               node {
                 id
-                price { amount }
+                price {
+                  amount
+                  currencyCode
+                }
               }
             }
           }
@@ -89,36 +136,41 @@ export async function getProducts() {
     }
   }`);
 
-  return data.products.edges.map((edge: any) => edge.node);
+  return data.products.edges.map(({ node }: any) => normalizeProduct(node));
 }
 
 /**
- * Get a single product by handle (CRITICAL)
+ * Get a single product by handle (CRITICAL - with normalization)
  */
 export async function getProduct(handle: string) {
-  const data = await shopifyFetch(`
-    query ($handle: String!) {
-      product(handle: $handle) {
-        id
-        title
-        description
-        handle
-        images(first: 5) {
-          edges { node { url } }
+  const data = await shopifyFetch(`query getProduct($handle: String!) {
+    product(handle: $handle) {
+      id
+      handle
+      title
+      description
+      images(first: 1) {
+        edges {
+          node {
+            url
+          }
         }
-        variants(first: 5) {
-          edges {
-            node {
-              id
-              price { amount }
+      }
+      variants(first: 1) {
+        edges {
+          node {
+            id
+            price {
+              amount
+              currencyCode
             }
           }
         }
       }
     }
-  `, { handle });
+  }`, { handle });
 
-  return data.product;
+  return normalizeProduct(data.product);
 }
 
 /**
@@ -158,27 +210,32 @@ export async function getCollection(handle: string) {
 }
 
 /**
- * Get collection products (FIXED)
+ * Get collection products (with normalization)
  */
 export async function getCollectionProducts(handle: string) {
-  const data = await shopifyFetch(`
-    query ($handle: String!) {
-      collection(handle: $handle) {
-        products(first: 20) {
-          edges {
-            node {
-              id
-              title
-              handle
-              description
-              images(first: 1) {
-                edges { node { url } }
+  const data = await shopifyFetch(`query getCollectionProducts($handle: String!) {
+    collection(handle: $handle) {
+      products(first: 20) {
+        edges {
+          node {
+            id
+            handle
+            title
+            description
+            images(first: 1) {
+              edges {
+                node {
+                  url
+                }
               }
-              variants(first: 1) {
-                edges {
-                  node {
-                    id
-                    price { amount }
+            }
+            variants(first: 1) {
+              edges {
+                node {
+                  id
+                  price {
+                    amount
+                    currencyCode
                   }
                 }
               }
@@ -187,9 +244,9 @@ export async function getCollectionProducts(handle: string) {
         }
       }
     }
-  `, { handle });
+  }`, { handle });
 
-  return data.collection.products.edges.map((edge: any) => edge.node);
+  return data.collection.products.edges.map(({ node }: any) => normalizeProduct(node));
 }
 
 /**
@@ -288,44 +345,6 @@ export function formatPrice(price: number, currencyCode: string = 'USD'): string
     style: 'currency',
     currency: currencyCode,
   }).format(price);
-}
-
-/**
- * Normalize Shopify product for consistent data structure
- */
-export function normalizeProduct(product: any) {
-  const firstVariant = product.variants?.edges?.[0]?.node;
-  const firstImage = product.images?.edges?.[0]?.node;
-  
-  return {
-    id: product.id,
-    title: product.title,
-    handle: product.handle,
-    description: product.description,
-    image: firstImage?.url || '/placeholder.jpg',
-    images: product.images?.edges?.map(({ node }: any) => ({
-      url: node.url,
-      altText: node.altText,
-      width: node.width,
-      height: node.height,
-    })) || [],
-    price: parseFloat(firstVariant?.price?.amount || 0),
-    priceFormatted: formatPrice(parseFloat(firstVariant?.price?.amount || 0)),
-    compareAtPrice: firstVariant?.compareAtPrice?.amount ? parseFloat(firstVariant.compareAtPrice.amount) : null,
-    variantId: firstVariant?.id,
-    variants: product.variants?.edges?.map(({ node }: any) => ({
-      id: node.id,
-      title: node.title,
-      price: parseFloat(node.price?.amount || 0),
-      available: node.availableForSale,
-      compareAtPrice: node.compareAtPrice?.amount ? parseFloat(node.compareAtPrice.amount) : null,
-    })) || [],
-    minPrice: parseFloat(product.priceRange?.minVariantPrice?.amount || 0),
-    tags: product.tags || [],
-    productType: product.productType,
-    vendor: product.vendor,
-    availableForSale: product.variants?.edges?.some(({ node }: any) => node.availableForSale) || false,
-  };
 }
 
 // Default export for convenience
