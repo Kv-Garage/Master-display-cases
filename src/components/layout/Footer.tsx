@@ -40,9 +40,6 @@ const trustBadges = [
 // Footer navigation data
 const shopLinks = [
   { label: 'RGB Display Cases', href: '/collections/rgb-displays' },
-  { label: 'Counter Displays', href: '/collections/counter-displays' },
-  { label: 'Floor Displays', href: '/collections/floor-displays' },
-  { label: 'Retail Displays', href: '/collections/retail-displays' },
 ];
 
 const companyLinks = [

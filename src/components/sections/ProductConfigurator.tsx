@@ -144,17 +144,10 @@ const DISCOUNT_TIERS: DiscountTier[] = [
 
 const ADDON_OPTIONS: AddonOption[] = [
   { 
-    id: 'pre-assembly', 
-    name: 'Pre-Assembly Option', 
-    price: 199, 
-    description: 'Fully assembled and quality-checked before shipping',
-    includesAssembly: true 
-  },
-  { 
     id: 'lock-upgrade', 
-    name: 'Lock & Security Upgrade', 
+    name: 'Plunger Lock Upgrade', 
     price: 149, 
-    description: 'Premium keyed-alike locks with reinforced strike plates',
+    description: 'Premium keyed plunger lock with reinforced strike plate',
     includesLock: true 
   },
 ];

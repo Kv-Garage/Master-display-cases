@@ -19,17 +19,6 @@ interface DropdownMenu {
 }
 
 // Main navigation structure - Simplified for conversion
-const shopDisplaysItems: DropdownItem[] = [
-  { label: 'RGB Display Cases', href: '/collections/rgb-displays' },
-];
-
-const useCasesItems: DropdownItem[] = [
-  { label: 'Smoke Shops', href: '/use-cases/smoke-shops' },
-  { label: 'Jewelry Stores', href: '/use-cases/jewelry-stores' },
-  { label: 'Boutiques', href: '/use-cases/boutiques' },
-  { label: 'Electronics', href: '/use-cases/electronics' },
-];
-
 const resourcesItems: DropdownItem[] = [
   { label: 'Blog', href: '/blog' },
   { label: 'Buying Guide', href: '/buying-guide' },
@@ -245,11 +234,6 @@ export default function Header() {
               >
                 RGB Display Cases
               </Link>
-              <DesktopDropdown
-                label="Use Cases"
-                items={useCasesItems}
-                pathname={pathname}
-              />
               <Link
                 href="/wholesale"
                 className="text-[14px] font-medium uppercase tracking-wide text-gray-600 hover:text-black transition-colors duration-200"
@@ -317,11 +301,6 @@ export default function Header() {
                 >
                   RGB Display Cases
                 </Link>
-                <MobileDropdown
-                  label="Use Cases"
-                  items={useCasesItems}
-                  pathname={pathname}
-                />
                 <Link
                   href="/wholesale"
                   className="py-4 text-sm font-medium uppercase tracking-wider text-gray-800 border-b border-gray-100"

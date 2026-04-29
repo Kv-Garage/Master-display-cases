@@ -39,8 +39,11 @@ export default function TestCheckoutPage() {
 
     try {
       const numericId = convertToNumericId(variantId);
-      const url = `https://masterdisplaycases.myshopify.com/cart/${numericId}:${quantity}`;
+      // Use the correct Shopify domain from environment
+      const shopifyDomain = process.env.NEXT_PUBLIC_SHOPIFY_DOMAIN || 'mraze2-ra.myshopify.com';
+      const url = `https://${shopifyDomain}/cart/${numericId}:${quantity}`;
       setResult(`Checkout URL: ${url}`);
+      console.log('[Test Checkout] Generated URL:', url);
     } catch (error) {
       setResult(`Error: ${error}`);
     }

@@ -1,9 +1,26 @@
 /**
  * Cart utilities for Shopify storefront using cart URL method
  * No Storefront API required - uses localStorage and direct Shopify checkout URLs
+ * 
+ * IMPORTANT: Uses the Shopify domain from environment variable for checkout
  */
 
-const SHOPIFY_DOMAIN = 'masterdisplaycases.myshopify.com';
+/**
+ * Get the checkout domain - MUST be set via environment variable
+ * NO fallbacks - will throw error if not configured
+ */
+function getCheckoutDomain(): string {
+  const domain = process.env.NEXT_PUBLIC_SHOPIFY_DOMAIN;
+
+  if (!domain) {
+    throw new Error('NEXT_PUBLIC_SHOPIFY_DOMAIN environment variable is not set');
+  }
+
+  console.log('[DOMAIN USED]:', domain);
+
+  return domain;
+}
+
 const CART_STORAGE_KEY = 'cart';
 
 export interface CartItem {
@@ -174,46 +191,99 @@ export function isCartEmpty(): boolean {
 /**
  * Build Shopify checkout URL from cart items
  * Format: https://domain.com/cart/variantId1:qty,variantId2:qty
+ * 
+ * Uses the myshopify.com domain for reliable checkout
  */
 export function buildCheckoutUrl(): string | null {
   const cart = getCart();
 
   if (cart.length === 0) {
+    console.warn('[Shopify Checkout] Cart is empty - cannot build checkout URL');
     return null;
+  }
+
+  // Validate all cart items
+  for (const item of cart) {
+    if (!item.variantId || item.variantId <= 0) {
+      console.error('[Shopify Checkout] Invalid variant ID:', item.variantId);
+      return null;
+    }
+    if (!item.quantity || item.quantity <= 0) {
+      console.error('[Shopify Checkout] Invalid quantity for variant', item.variantId, ':', item.quantity);
+      return null;
+    }
   }
 
   const variantLine = cart
     .map((item) => `${item.variantId}:${item.quantity}`)
     .join(',');
 
-  return `https://${SHOPIFY_DOMAIN}/cart/${variantLine}`;
+  // Use domain from environment variable for checkout
+  const domain = getCheckoutDomain();
+  const checkoutUrl = `https://${domain}/cart/${variantLine}`;
+  
+  console.log('[Shopify Checkout] Built checkout URL:', checkoutUrl);
+  console.log('[Shopify Checkout] Cart items:', cart);
+
+  return checkoutUrl;
 }
 
 /**
  * Redirect to Shopify checkout
+ * Uses window.location.href for reliable redirect
  */
 export function goToCheckout(): void {
   const checkoutUrl = buildCheckoutUrl();
 
   if (!checkoutUrl) {
-    console.warn('Cannot checkout: cart is empty');
+    console.error('[Shopify Checkout] Cannot checkout: cart is empty or invalid');
     return;
   }
 
+  console.log('[Shopify Checkout] Redirecting to:', checkoutUrl);
+  
+  // Use window.location.href for reliable redirect
   window.location.href = checkoutUrl;
 }
 
 /**
  * Buy now - redirect directly to checkout with single item
  * Bypasses the cart and goes straight to checkout
+ * 
+ * @param variantId - Shopify variant ID (numeric or GID format)
+ * @param quantity - Quantity to purchase (default: 1)
  */
 export function buyNow(variantId: string | number, quantity: number = 1): void {
   try {
     const numericId = convertToNumericId(variantId);
-    const checkoutUrl = `https://${SHOPIFY_DOMAIN}/cart/${numericId}:${quantity}`;
+    
+    // Validate variant ID
+    if (!numericId || numericId <= 0) {
+      console.error('[Shopify Checkout] Buy Now: Invalid variant ID:', variantId);
+      return;
+    }
+    
+    // Validate quantity
+    if (!quantity || quantity <= 0) {
+      console.error('[Shopify Checkout] Buy Now: Invalid quantity:', quantity);
+      quantity = 1;
+    }
+
+    // Use domain from environment variable for checkout
+    const domain = getCheckoutDomain();
+    const checkoutUrl = `https://${domain}/cart/${numericId}:${quantity}`;
+    
+    console.log('[Shopify Checkout] Buy Now:');
+    console.log('  - Original variant ID:', variantId);
+    console.log('  - Numeric ID:', numericId);
+    console.log('  - Quantity:', quantity);
+    console.log('  - Checkout URL:', checkoutUrl);
+    console.log('  - Domain:', domain);
+
+    // Use window.location.href for reliable redirect
     window.location.href = checkoutUrl;
   } catch (error) {
-    console.error('Failed to buy now:', error);
+    console.error('[Shopify Checkout] Buy Now failed:', error);
     throw error;
   }
 }

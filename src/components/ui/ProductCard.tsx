@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { formatPrice } from '@/lib/shopify';
+import { formatPrice, buyNow } from '@/lib/shopify';
 import { useCart } from '@/lib/cart-context';
 import { useState } from 'react';
 
@@ -14,6 +14,9 @@ interface PartialProduct {
   description?: string;
   // Normalized format
   price?: number;
+  minPrice?: number;
+  maxPrice?: number;
+  compareAtPrice?: number | null;
   variantId?: string; // Real Shopify variant ID for checkout
   image?: string;
   images?: Array<{
@@ -57,18 +60,27 @@ export default function ProductCard({ product, variant = 'default' }: ProductCar
                        (product.images as any)?.edges?.[0]?.node?.altText || 
                        title;
   
-  // Get price - support both normalized (price) and raw (priceRange.minVariantPrice.amount) formats
-  const price = product.price || 
+  // Get price - prioritize minPrice from priceRange, then price, then parse from priceRange
+  const price = product.minPrice || product.price || 
                 (product.priceRange?.minVariantPrice?.amount ? parseFloat(product.priceRange.minVariantPrice.amount) : 0);
+  const maxPrice = product.maxPrice || product.price || 0;
+  const hasPriceRange = maxPrice > price && maxPrice > 0;
   
-  const hasDiscount = false; // No discount info in simplified query
+  // Check for discount
+  const compareAtPrice = product.compareAtPrice;
+  const hasDiscount = compareAtPrice && compareAtPrice > price;
 
   const handleAddToQuote = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     
     // Get real Shopify variant ID - prefer direct variantId, then variants array
-    const realVariantId = product.variantId || product.variants?.[0]?.id || `manual-${id}`;
+    const realVariantId = product.variantId || product.variants?.[0]?.id;
+    if (!realVariantId) {
+      console.warn('No variant ID available for product:', title);
+      return;
+    }
+    
     const variantTitle = product.variants?.[0]?.title || 'Default';
     
     addItem({
@@ -86,6 +98,19 @@ export default function ProductCard({ product, variant = 'default' }: ProductCar
     
     setIsAdded(true);
     setTimeout(() => setIsAdded(false), 2000);
+  };
+
+  const handleBuyNow = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const realVariantId = product.variantId || product.variants?.[0]?.id;
+    if (!realVariantId) {
+      console.warn('No variant ID available for Buy Now:', title);
+      return;
+    }
+    
+    buyNow(realVariantId);
   };
 
   return (
@@ -154,17 +179,25 @@ export default function ProductCard({ product, variant = 'default' }: ProductCar
         </div>
       </Link>
 
-      {/* Add to Quote Button */}
-      <button
-        onClick={handleAddToQuote}
-        className={`mt-3 w-full py-2 px-4 text-sm font-medium transition-colors ${
-          isAdded
-            ? 'bg-green-600 text-white'
-            : 'bg-black text-white hover:bg-gray-800'
-        }`}
-      >
-        {isAdded ? 'Added to Quote' : 'Add to Quote'}
-      </button>
+      {/* Action Buttons */}
+      <div className="mt-3 grid grid-cols-2 gap-2">
+        <button
+          onClick={handleAddToQuote}
+          className={`py-2 px-3 text-xs font-medium transition-colors rounded ${
+            isAdded
+              ? 'bg-green-600 text-white'
+              : 'bg-black text-white hover:bg-gray-800'
+          }`}
+        >
+          {isAdded ? 'Added' : 'Add to Quote'}
+        </button>
+        <button
+          onClick={handleBuyNow}
+          className="py-2 px-3 text-xs font-medium transition-colors bg-green-600 text-white hover:bg-green-700 rounded"
+        >
+          Buy Now
+        </button>
+      </div>
     </div>
   );
 }

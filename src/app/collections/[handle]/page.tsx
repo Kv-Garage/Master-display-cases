@@ -1,4 +1,4 @@
-import { getCollection, getCollectionProducts, getProducts, formatPrice } from '@/lib/shopify';
+import { getCollection, getCollectionProducts, getProducts, formatPrice, isShopifyConfigured } from '@/lib/shopify';
 import ProductCard, { ProductCardSkeleton } from '@/components/ui/ProductCard';
 import Button from '@/components/ui/Button';
 import Link from 'next/link';
@@ -11,18 +11,24 @@ interface CollectionPageProps {
 
 export async function generateMetadata({ params }: CollectionPageProps) {
   const resolvedParams = await params;
-  const collection = await getCollection(resolvedParams.handle);
+  
+  try {
+    const collection = await getCollection(resolvedParams.handle);
+    if (!collection) {
+      return {
+        title: 'Collection Not Found | Master Display Cases',
+      };
+    }
 
-  if (!collection) {
     return {
-      title: 'Collection Not Found | Master Display Cases',
+      title: `${collection.title} | Master Display Cases`,
+      description: collection.description || `Browse our ${collection.title} collection`,
+    };
+  } catch {
+    return {
+      title: 'Collection | Master Display Cases',
     };
   }
-
-  return {
-    title: `${collection.title} | Master Display Cases`,
-    description: collection.description,
-  };
 }
 
 export async function generateStaticParams() {
@@ -61,6 +67,9 @@ export default async function CollectionPage({ params, searchParams }: Collectio
   const resolvedParams = await params;
   const resolvedSearchParams = await searchParams;
   
+  // Check if Shopify is configured
+  const shopifyConfigured = isShopifyConfigured();
+  
   let collection = null;
   let collectionError = null;
   
@@ -68,34 +77,48 @@ export default async function CollectionPage({ params, searchParams }: Collectio
     collection = await getCollection(resolvedParams.handle);
   } catch (error: any) {
     collectionError = error.message;
+    console.error('Collection fetch error:', error);
   }
+
+  // Format collection title from handle if no collection data
+  const formattedTitle = resolvedParams.handle
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
 
   // If collection not found (or API not configured), use a fallback
   if (!collection) {
     collection = {
       id: resolvedParams.handle,
-      title: resolvedParams.handle.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-      description: collectionError 
-        ? `SHOPIFY CONNECTION FAILED — ${collectionError}` 
-        : 'Browse our collection of premium display cases.',
+      title: formattedTitle,
+      description: !shopifyConfigured 
+        ? 'Shopify Storefront API is not configured. Please set NEXT_PUBLIC_SHOPIFY_STOREFRONT_TOKEN.'
+        : collectionError 
+          ? `Error loading collection: ${collectionError}` 
+          : 'Browse our collection of premium display cases.',
       handle: resolvedParams.handle,
     };
   }
 
   // Get products for this collection
   let products: Product[] = [];
-  let isLoading = false;
+  let apiError = null;
 
   try {
     products = await getCollectionProducts(resolvedParams.handle);
-
-    // If no products from collection, try general products
-    if (products.length === 0) {
+    console.log(`Loaded ${products.length} products for collection: ${resolvedParams.handle}`);
+  } catch (error: any) {
+    apiError = error.message;
+    console.error('Collection products fetch error:', error);
+    
+    // Fallback to general products
+    try {
       products = await getProducts();
+      console.log(`Fallback: Loaded ${products.length} general products`);
+    } catch (fallbackError: any) {
+      console.error('Fallback products fetch error:', fallbackError);
+      apiError = fallbackError.message;
     }
-  } catch {
-    // Use sample products
-    isLoading = true;
   }
 
   // Get string values from search params
@@ -109,21 +132,32 @@ export default async function CollectionPage({ params, searchParams }: Collectio
   const currentLighting = getStringParam(resolvedSearchParams.lighting, 'All');
   const currentSize = getStringParam(resolvedSearchParams.size, 'All');
 
-  // Filter products (client-side filtering for demo)
+  // Filter products (client-side filtering)
   const filteredProducts = products.filter((product) => {
+    // Type filter
     if (currentType !== 'All') {
-      const typeMatch = product.tags.some(
+      const typeMatch = product.tags?.some(
         (tag) => tag.toLowerCase().includes(currentType.toLowerCase())
       );
       if (!typeMatch) return false;
     }
+    
+    // Lighting filter
     if (currentLighting !== 'All') {
-      const lightingMatch = product.tags.some(
-        (tag) => tag.toLowerCase().includes(currentLighting.toLowerCase())
-      );
-      if (!lightingMatch && currentLighting !== 'No Lighting') return false;
-      if (currentLighting === 'No Lighting' && product.tags.some(t => t === 'LED' || t === 'RGB')) return false;
+      const lightingTags = product.tags || [];
+      if (currentLighting === 'No Lighting') {
+        // Exclude products with LED or RGB tags
+        if (lightingTags.some(t => t.toUpperCase() === 'LED' || t.toUpperCase() === 'RGB')) {
+          return false;
+        }
+      } else {
+        const lightingMatch = lightingTags.some(
+          (tag) => tag.toLowerCase().includes(currentLighting.toLowerCase())
+        );
+        if (!lightingMatch) return false;
+      }
     }
+    
     return true;
   });
 
@@ -248,11 +282,38 @@ export default async function CollectionPage({ params, searchParams }: Collectio
             </div>
 
             {/* Products */}
-            {isLoading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {Array.from({ length: 6 }).map((_, index) => (
-                  <ProductCardSkeleton key={index} />
-                ))}
+            {!shopifyConfigured ? (
+              <div className="text-center py-16">
+                <div className="w-16 h-16 mx-auto mb-4 bg-yellow-100 rounded-full flex items-center justify-center">
+                  <svg className="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-semibold text-black mb-2">Shopify Not Configured</h3>
+                <p className="text-gray-600 mb-6 max-w-md mx-auto">
+                  The Shopify Storefront API token is not set. Products cannot be loaded.
+                </p>
+                <Button href="/contact" variant="outline">
+                  Contact Support
+                </Button>
+              </div>
+            ) : apiError && sortedProducts.length === 0 ? (
+              <div className="text-center py-16">
+                <div className="w-16 h-16 mx-auto mb-4 bg-red-100 rounded-full flex items-center justify-center">
+                  <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-semibold text-black mb-2">Unable to Load Products</h3>
+                <p className="text-gray-600 mb-2 max-w-md mx-auto">
+                  There was an error connecting to Shopify: {apiError}
+                </p>
+                <p className="text-sm text-gray-500 mb-6">
+                  Please try again later or contact us for assistance.
+                </p>
+                <Button href="/contact" variant="outline">
+                  Contact Us
+                </Button>
               </div>
             ) : sortedProducts.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -262,11 +323,16 @@ export default async function CollectionPage({ params, searchParams }: Collectio
               </div>
             ) : (
               <div className="text-center py-16">
+                <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+                  <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                  </svg>
+                </div>
                 <p className="text-gray-500 mb-4">
-                  No products match your filters.
+                  No products found in this collection.
                 </p>
-                <Button href={`/collections/${resolvedParams.handle}`}>
-                  Clear Filters
+                <Button href="/">
+                  Browse All Products
                 </Button>
               </div>
             )}

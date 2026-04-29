@@ -6,8 +6,9 @@ This is a complete cart and checkout system for a Next.js Shopify storefront usi
 
 ## Store Configuration
 
-- **Store Domain**: `masterdisplaycases.myshopify.com`
-- **Checkout URL Format**: `https://masterdisplaycases.myshopify.com/cart/VARIANT_ID:QUANTITY`
+- **Store Domain**: Configured via `NEXT_PUBLIC_SHOPIFY_DOMAIN` environment variable
+- **Current Domain**: `mraze2-ra.myshopify.com` (from `.env.local`)
+- **Checkout URL Format**: `https://{domain}/cart/VARIANT_ID:QUANTITY`
 
 ## Architecture
 
@@ -41,13 +42,13 @@ Converts GraphQL GID format to numeric ID:
 - Reads all items from cart
 - Builds Shopify cart URL: `/cart/variantId1:qty,variantId2:qty`
 - Redirects user using `window.location.href`
-- Example: `https://masterdisplaycases.myshopify.com/cart/123:1,456:2`
+- Example: `https://mraze2-ra.myshopify.com/cart/123:1,456:2`
 
 #### `buyNow(variantId: string | number, quantity = 1): void`
 - Converts variantId to numeric format
 - Redirects instantly to checkout with single item
 - Bypasses cart entirely
-- Example: `https://masterdisplaycases.myshopify.com/cart/123:1`
+- Example: `https://mraze2-ra.myshopify.com/cart/123:1`
 
 #### Additional Functions:
 - `removeFromCart(variantId)`: Remove item from cart
@@ -282,12 +283,12 @@ Item details are stored separately under `"cart_details"`:
 The system builds Shopify cart URLs in this format:
 
 ```
-https://masterdisplaycases.myshopify.com/cart/VARIANT_ID:QUANTITY,VARIANT_ID:QUANTITY
+https://{domain}/cart/VARIANT_ID:QUANTITY,VARIANT_ID:QUANTITY
 ```
 
 Examples:
-- Single item: `https://masterdisplaycases.myshopify.com/cart/123:1`
-- Multiple items: `https://masterdisplaycases.myshopify.com/cart/123:2,456:1,789:3`
+- Single item: `https://mraze2-ra.myshopify.com/cart/123:1`
+- Multiple items: `https://mraze2-ra.myshopify.com/cart/123:2,456:1,789:3`
 
 When user clicks "Checkout" or "Buy Now", they are redirected to this URL, which:
 1. Preloads the cart with the specified items

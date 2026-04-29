@@ -10,19 +10,11 @@ import { Suspense, useState, useCallback } from 'react';
 // Upsell products that can be added directly from cart
 const UPSSELL_PRODUCTS = [
   {
-    id: 'assembly-upgrade',
-    variantId: 'assembly-premium',
-    name: 'Professional Assembly',
-    description: 'Save 2-3 hours of labor',
-    price: 149,
-    image: null,
-  },
-  {
     id: 'lock-upgrade',
-    variantId: 'lock-electronic',
-    name: 'Lock & Security Upgrade',
-    description: 'Electronic keypad lock',
-    price: 99,
+    variantId: 'lock-plunger',
+    name: 'Plunger Lock Upgrade',
+    description: 'Premium keyed plunger lock with reinforced strike plate',
+    price: 149,
     image: null,
   },
 ];
@@ -91,8 +83,8 @@ function CartContent() {
             <p className="text-gray-600 mb-8">
               Add an RGB Display Case to get started.
             </p>
-            <Button href="/products/led-retail-display-showcase" variant="primary" size="lg">
-              Shop Display Cases
+            <Button href="/collections/rgb-displays" variant="primary" size="lg">
+              Shop RGB Display Cases
             </Button>
           </div>
         ) : (
@@ -155,52 +147,46 @@ function CartContent() {
                 </div>
               </div>
 
-              {/* Upsells - "Maximize Your ROI" Section */}
-              <div className="mt-8 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <div className="flex items-center gap-2 mb-2">
-                  <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                  </svg>
-                  <h2 className="font-semibold text-lg">Maximize Your ROI</h2>
-                </div>
-                <p className="text-sm text-gray-600 mb-6">
-                  Stores using these upgrades see +35% more impulse purchases and +25% higher perceived value.
-                </p>
-                <div className="grid md:grid-cols-2 gap-4">
-                  {UPSSELL_PRODUCTS.map((upsell) => (
-                    <button
-                      key={upsell.id}
-                      onClick={() => handleAddUpsell(upsell)}
-                      disabled={addingUpsell === upsell.id}
-                      className="flex gap-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors text-left w-full disabled:opacity-50"
-                    >
-                      <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
-                        {upsell.id === 'assembly-upgrade' ? (
-                          <svg className="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                          </svg>
-                        ) : (
-                          <svg className="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                          </svg>
-                        )}
+          {/* Upsells - "Maximize Your ROI" Section */}
+          <div className="mt-8 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div className="flex items-center gap-2 mb-2">
+              <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+              </svg>
+              <h2 className="font-semibold text-lg">Enhance Your Display Case</h2>
+            </div>
+            <p className="text-sm text-gray-600 mb-6">
+              Add a premium plunger lock for extra security and peace of mind.
+            </p>
+            <div className="grid gap-4">
+              {UPSSELL_PRODUCTS.map((upsell) => (
+                <button
+                  key={upsell.id}
+                  onClick={() => handleAddUpsell(upsell)}
+                  disabled={addingUpsell === upsell.id}
+                  className="flex gap-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors text-left w-full disabled:opacity-50"
+                >
+                  <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <svg className="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="font-semibold">{upsell.name}</h3>
+                        <p className="text-sm text-gray-500">{upsell.description}</p>
                       </div>
-                      <div className="flex-1">
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <h3 className="font-semibold">{upsell.name}</h3>
-                            <p className="text-sm text-gray-500">{upsell.description}</p>
-                          </div>
-                          <p className="text-sm font-semibold text-green-600">+${upsell.price}</p>
-                        </div>
-                        {addingUpsell === upsell.id && (
-                          <p className="text-xs text-green-600 mt-1">✓ Added to cart!</p>
-                        )}
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
+                      <p className="text-sm font-semibold text-green-600">+${upsell.price}</p>
+                    </div>
+                    {addingUpsell === upsell.id && (
+                      <p className="text-xs text-green-600 mt-1">✓ Added to cart!</p>
+                    )}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
             </div>
 
             {/* Order Summary */}

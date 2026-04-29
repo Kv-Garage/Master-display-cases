@@ -4,7 +4,9 @@
  * Hybrid approach: Fetch from Shopify, local cart management, direct checkout
  */
 
-const SHOPIFY_DOMAIN = process.env.NEXT_PUBLIC_SHOPIFY_DOMAIN || 'masterdisplaycases.myshopify.com';
+import { debugRedirect } from './debugRedirect';
+import { SHOPIFY_DOMAIN } from './config';
+
 const SHOPIFY_STOREFRONT_TOKEN = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_TOKEN;
 
 /**
@@ -23,7 +25,8 @@ export async function shopifyFetch(query: string, variables = {}) {
     throw new Error('Shopify Storefront Token is missing. Set NEXT_PUBLIC_SHOPIFY_STOREFRONT_TOKEN in .env.local');
   }
 
-  const endpoint = `https://${SHOPIFY_DOMAIN}/api/2024-01/graphql.json`;
+  const domain = getCheckoutDomain();
+  const endpoint = `https://${domain}/api/2024-01/graphql.json`;
 
   const res = await fetch(endpoint, {
     method: "POST",
@@ -113,22 +116,43 @@ export async function getProducts() {
           handle
           title
           description
-          images(first: 1) {
+          productType
+          vendor
+          tags
+          images(first: 5) {
             edges {
               node {
                 url
+                altText
+                width
+                height
               }
             }
           }
-          variants(first: 1) {
+          variants(first: 10) {
             edges {
               node {
                 id
+                title
                 price {
                   amount
                   currencyCode
                 }
+                compareAtPrice {
+                  amount
+                }
+                availableForSale
               }
+            }
+          }
+          priceRange {
+            minVariantPrice {
+              amount
+              currencyCode
+            }
+            maxVariantPrice {
+              amount
+              currencyCode
             }
           }
         }
@@ -140,7 +164,7 @@ export async function getProducts() {
 }
 
 /**
- * Get a single product by handle (CRITICAL - with normalization)
+ * Get a single product by handle (CRITICAL - with full data for checkout)
  */
 export async function getProduct(handle: string) {
   const data = await shopifyFetch(`query getProduct($handle: String!) {
@@ -149,26 +173,52 @@ export async function getProduct(handle: string) {
       handle
       title
       description
-      images(first: 1) {
+      productType
+      vendor
+      tags
+      createdAt
+      images(first: 10) {
         edges {
           node {
             url
+            altText
+            width
+            height
           }
         }
       }
-      variants(first: 1) {
+      variants(first: 20) {
         edges {
           node {
             id
+            title
             price {
               amount
               currencyCode
             }
+            compareAtPrice {
+              amount
+            }
+            availableForSale
           }
+        }
+      }
+      priceRange {
+        minVariantPrice {
+          amount
+          currencyCode
+        }
+        maxVariantPrice {
+          amount
+          currencyCode
         }
       }
     }
   }`, { handle });
+
+  if (!data.product) {
+    return null;
+  }
 
   return normalizeProduct(data.product);
 }
@@ -222,22 +272,43 @@ export async function getCollectionProducts(handle: string) {
             handle
             title
             description
-            images(first: 1) {
+            productType
+            vendor
+            tags
+            images(first: 5) {
               edges {
                 node {
                   url
+                  altText
+                  width
+                  height
                 }
               }
             }
-            variants(first: 1) {
+            variants(first: 10) {
               edges {
                 node {
                   id
+                  title
                   price {
                     amount
                     currencyCode
                   }
+                  compareAtPrice {
+                    amount
+                  }
+                  availableForSale
                 }
+              }
+            }
+            priceRange {
+              minVariantPrice {
+                amount
+                currencyCode
+              }
+              maxVariantPrice {
+                amount
+                currencyCode
               }
             }
           }
@@ -246,23 +317,82 @@ export async function getCollectionProducts(handle: string) {
     }
   }`, { handle });
 
+  if (!data.collection || !data.collection.products) {
+    return [];
+  }
+
   return data.collection.products.edges.map(({ node }: any) => normalizeProduct(node));
 }
 
 /**
  * Extract numeric ID from Shopify GID
  * Example: "gid://shopify/ProductVariant/123456789" -> "123456789"
+ * 
+ * SAFE VERSION: Validates that the result is ONLY numbers
  */
-export function getNumericId(gid: string): string {
-  return gid.split("/").pop() || "";
+export function getNumericId(gid: string | number): string | null {
+  if (!gid) {
+    console.error('[getNumericId] Input is null or undefined');
+    return null;
+  }
+  
+  // If already a number, convert to string
+  if (typeof gid === 'number') {
+    return gid.toString();
+  }
+  
+  // If it's already a numeric string, return it
+  if (/^\d+$/.test(gid)) {
+    return gid;
+  }
+  
+  // Extract from GID format
+  const parts = gid.split('/');
+  const id = parts[parts.length - 1];
+  
+  // Validate: must be ONLY numbers
+  if (!/^\d+$/.test(id)) {
+    console.error('[getNumericId] Invalid GID format:', gid);
+    console.error('[getNumericId] Extracted ID:', id);
+    return null;
+  }
+  
+  return id;
+}
+
+/**
+ * Get the checkout domain - MUST be set via environment variable
+ * NO fallbacks - will throw error if not configured
+ */
+export function getCheckoutDomain(): string {
+  return SHOPIFY_DOMAIN;
 }
 
 /**
  * Buy Now - Direct checkout (no cart)
+ * Redirects directly to Shopify checkout with SINGLE item only
+ * 
+ * Uses window.location.assign() for reliable redirect (not Next.js router)
  */
 export function buyNow(variantId: string) {
   const id = getNumericId(variantId);
-  window.location.href = `https://${SHOPIFY_DOMAIN}/cart/${id}:1`;
+  const domain = getCheckoutDomain();
+
+  if (!id) {
+    console.error('[Shopify Buy Now] Invalid variant ID:', variantId);
+    return;
+  }
+
+  const url = `https://${domain}/cart/${id}:1`;
+
+  console.log('[Shopify Buy Now]');
+  console.log('  - Variant ID:', variantId);
+  console.log('  - Numeric ID:', id);
+  console.log('  - Domain:', domain);
+  console.log('  - CHECKOUT URL:', url);
+
+  // Use debug redirect to trace the URL
+  debugRedirect(url);
 }
 
 /**
@@ -314,19 +444,27 @@ export function clearCart() {
 }
 
 /**
- * Checkout - Redirect to Shopify with cart items
+ * Checkout - Redirect to Shopify with ALL cart items
+ * Uses window.location.assign() for reliable redirect (not Next.js router)
  */
 export function checkout() {
   const cart = JSON.parse(localStorage.getItem("cart") || "[]");
 
-  if (!cart.length) {
-    alert("Cart is empty");
-    return;
-  }
+  if (!cart.length) return;
+
+  const domain = getCheckoutDomain();
 
   const items = cart.map((i: any) => `${i.id}:${i.quantity}`).join(",");
 
-  window.location.href = `https://${SHOPIFY_DOMAIN}/cart/${items}`;
+  const url = `https://${domain}/cart/${items}`;
+
+  console.log('[Shopify Checkout]');
+  console.log('  - Cart items:', cart);
+  console.log('  - Domain:', domain);
+  console.log('  - CHECKOUT URL:', url);
+
+  // Use debug redirect to trace the URL
+  debugRedirect(url);
 }
 
 /**

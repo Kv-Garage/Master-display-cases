@@ -109,7 +109,13 @@ export function BuyNowLink({
   children = 'Buy Now',
 }: BuyNowButtonProps) {
   const numericId = convertToNumericId(variantId);
-  const checkoutUrl = `https://masterdisplaycases.myshopify.com/cart/${numericId}:${quantity}`;
+  // Use the Shopify domain from environment variable - NO fallback
+  const shopifyDomain = process.env.NEXT_PUBLIC_SHOPIFY_DOMAIN;
+  if (!shopifyDomain) {
+    console.error('NEXT_PUBLIC_SHOPIFY_DOMAIN environment variable is not set');
+    return null;
+  }
+  const checkoutUrl = `https://${shopifyDomain}/cart/${numericId}:${quantity}`;
 
   return (
     <a
