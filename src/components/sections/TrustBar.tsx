@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 export default function TrustBar() {
   const trustItems = [
     {
@@ -62,9 +64,19 @@ export default function TrustBar() {
   return (
     <section className="bg-gray-50 border-y border-gray-200">
       <div className="container-custom">
+        {/* Logo centered above trust items */}
+        <div className="flex justify-center pb-8">
+          <Image
+            src="/New logo.png"
+            alt="Master Display Cases"
+            width={200}
+            height={60}
+            className="h-10 w-auto opacity-60"
+          />
+        </div>
         {/* Centered grid with equal spacing - fixed alignment */}
         <div className="flex justify-center">
-          <div className="grid grid-cols-3 gap-8 lg:gap-12 py-12 max-w-4xl">
+          <div className="grid grid-cols-3 gap-8 lg:gap-12 py-8 max-w-4xl">
             {trustItems.map((item, index) => (
               <div
                 key={index}

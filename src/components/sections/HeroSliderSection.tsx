@@ -2,6 +2,7 @@
 
 import BeforeAfterSlider from '@/components/ui/BeforeAfterSlider';
 import Button from '@/components/ui/Button';
+import Image from 'next/image';
 
 export default function HeroSliderSection() {
   return (
@@ -135,6 +136,17 @@ export default function HeroSliderSection() {
             <div className="w-1 h-2 bg-gray-400 rounded-full animate-bounce" />
           </div>
         </div>
+      </div>
+
+      {/* Brand Logo Watermark - Monumental Placement */}
+      <div className="absolute bottom-8 right-8 lg:bottom-12 lg:right-12 opacity-20 lg:opacity-30 pointer-events-none">
+        <Image
+          src="/New logo.png"
+          alt="Master Display Cases"
+          width={200}
+          height={60}
+          className="h-12 lg:h-16 w-auto"
+        />
       </div>
     </section>
   );

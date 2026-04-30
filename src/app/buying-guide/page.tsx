@@ -100,7 +100,7 @@ export default async function BuyingGuidePage() {
             ].map((store, index) => (
               <Link
                 key={index}
-                href="/rgb-display-cases"
+                href={`/display-cases-for-${store.name.toLowerCase().replace(/\s+/g, '-')}`}
                 className="group block p-8 bg-gray-50 rounded-lg border-2 border-transparent hover:border-black transition-all duration-300 hover:shadow-lg"
               >
                 <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-black text-white flex items-center justify-center group-hover:scale-110 transition-transform">

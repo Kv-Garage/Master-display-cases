@@ -229,12 +229,17 @@ export default function Header() {
         }`}
       >
         <div className="container-custom">
-          <div className="flex items-center justify-between h-[96px]">
+          <div className="flex items-center justify-between h-[120px]">
             {/* Logo - LEFT (Brand Anchor) */}
             <Link href="/" className="flex items-center mr-12 flex-shrink-0">
-              <span className="text-xl lg:text-2xl font-extrabold tracking-tight text-black uppercase">
-                MASTER DISPLAY CASES
-              </span>
+              <Image
+                src="/New logo.png"
+                alt="Master Display Cases"
+                width={400}
+                height={120}
+                className="h-24 w-auto"
+                priority
+              />
             </Link>
 
             {/* Desktop Navigation - CENTER (Simplified for conversion) */}

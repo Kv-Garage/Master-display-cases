@@ -81,15 +81,13 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 py-16">
           {/* Column 1: Logo + Statement */}
           <div className="lg:col-span-1 space-y-6">
-            <div className="bg-white rounded p-3 inline-block">
-              <Image
-                src="/Master-display-cases-logo.png"
-                alt="Master Display Cases"
-                width={200}
-                height={50}
-                className="h-10 w-auto object-contain"
-              />
-            </div>
+            <Image
+              src="/Footer logo.png"
+              alt="Master Display Cases"
+              width={300}
+              height={100}
+              className="h-20 w-auto object-contain"
+            />
             <p className="text-gray-400 text-sm leading-relaxed">
               Commercial display systems engineered to increase retail revenue.
             </p>

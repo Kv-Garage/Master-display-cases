@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import Button from '@/components/ui/Button';
+import { ROUTES } from '@/lib/routes';
 import { Metadata } from 'next';
 
 interface BlogPostPageProps {
@@ -272,10 +273,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               your store revenue with premium LED lighting and robust security.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button href="/collections/display-cases" className="bg-white text-black hover:bg-gray-200">
+              <Button href={ROUTES.COLLECTION} className="bg-white text-black hover:bg-gray-200">
                 View Products
               </Button>
-              <Button href="/contact" variant="outline" className="border-white text-white hover:bg-white hover:text-black">
+              <Button href={ROUTES.CONTACT} variant="outline" className="border-white text-white hover:bg-white hover:text-black">
                 Get a Quote
               </Button>
             </div>
