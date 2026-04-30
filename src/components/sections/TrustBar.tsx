@@ -62,21 +62,24 @@ export default function TrustBar() {
   return (
     <section className="bg-gray-50 border-y border-gray-200">
       <div className="container-custom">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 py-12">
-          {trustItems.map((item, index) => (
-            <div
-              key={index}
-              className="flex flex-col items-center text-center space-y-3"
-            >
-              <div className="text-gray-400">{item.icon}</div>
-              <div>
-                <h3 className="text-sm font-semibold uppercase tracking-wider text-black mb-1">
-                  {item.title}
-                </h3>
-                <p className="text-xs text-gray-500">{item.description}</p>
+        {/* Centered grid with equal spacing - fixed alignment */}
+        <div className="flex justify-center">
+          <div className="grid grid-cols-3 gap-8 lg:gap-12 py-12 max-w-4xl">
+            {trustItems.map((item, index) => (
+              <div
+                key={index}
+                className="flex flex-col items-center text-center space-y-3"
+              >
+                <div className="text-gray-400">{item.icon}</div>
+                <div>
+                  <h3 className="text-sm font-semibold uppercase tracking-wider text-black mb-1">
+                    {item.title}
+                  </h3>
+                  <p className="text-xs text-gray-500">{item.description}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>

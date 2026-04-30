@@ -6,9 +6,26 @@ This is a complete cart and checkout system for a Next.js Shopify storefront usi
 
 ## Store Configuration
 
-- **Store Domain**: Configured via `NEXT_PUBLIC_SHOPIFY_DOMAIN` environment variable
-- **Current Domain**: `mraze2-ra.myshopify.com` (from `.env.local`)
-- **Checkout URL Format**: `https://{domain}/cart/VARIANT_ID:QUANTITY`
+- **Checkout Domain**: HARDCODED to `mraze2-ra.myshopify.com` (NO environment variables)
+- **IMPORTANT**: Checkout ONLY works on the `.myshopify.com` domain unless Shopify Payments + custom domain are fully configured
+- **Checkout URL Format**: `https://mraze2-ra.myshopify.com/cart/VARIANT_ID:QUANTITY`
+
+### Why Hardcoded Domain?
+
+The checkout domain is hardcoded (not from environment variables) because:
+
+1. **Reliability**: Environment variables can be misconfigured or missing at build time
+2. **Consistency**: All checkout URLs use the same domain regardless of deployment
+3. **Headless Architecture**: The frontend is on Netlify (masterdisplaycases.com), but checkout must go to Shopify's myshopify.com domain
+4. **Avoids DNS Conflicts**: Using the custom domain for both frontend and checkout creates conflicts
+
+### Domain Separation
+
+| Purpose | Domain | Configured In |
+|---------|--------|---------------|
+| Frontend (Netlify) | `masterdisplaycases.com` | DNS A record → Netlify |
+| API Calls | `mraze2-ra.myshopify.com` | `src/lib/shopify.ts` |
+| Checkout | `mraze2-ra.myshopify.com` | Hardcoded in all checkout functions |
 
 ## Architecture
 

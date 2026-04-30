@@ -2,7 +2,6 @@
 
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useCart } from '@/lib/cart-context';
-import { convertToNumericId } from '@/lib/cart-utils';
 
 // Inline checkout reviews component for order summary
 const CHECKOUT_REVIEWS = [
@@ -174,7 +173,7 @@ function DiscountTierTooltip({ text, children }: { text: string; children: React
 }
 
 export default function ProductConfigurator({ products, currentProductHandle, baseProduct }: ProductConfiguratorProps) {
-  const { addItem, checkoutUrl } = useCart();
+  const { addItem, goToCheckout } = useCart();
   
   // State for bundle items
   const [bundleItems, setBundleItems] = useState<BundleItem[]>([]);
@@ -361,8 +360,9 @@ export default function ProductConfigurator({ products, currentProductHandle, ba
           ? item.product.variants?.find(v => v.id === item.selectedVariantId)?.price || item.product.price
           : item.product.price;
 
+        // Use full GID format directly - no numeric conversion needed
         addItem({
-          variantId: convertToNumericId(item.selectedVariantId || item.product.variantId),
+          variantId: item.selectedVariantId || item.product.variantId,
           productId: item.product.id,
           title: item.product.name,
           productHandle: item.product.handle,
@@ -375,7 +375,7 @@ export default function ProductConfigurator({ products, currentProductHandle, ba
       for (const addonId of selectedAddons) {
         const addon = ADDON_OPTIONS.find(a => a.id === addonId);
         if (addon) {
-          // Skip addons for now as they don't have numeric variant IDs
+          // Skip addons for now as they don't have variant IDs
           // They would need to be added as separate products in Shopify
         }
       }
@@ -396,8 +396,9 @@ export default function ProductConfigurator({ products, currentProductHandle, ba
           ? item.product.variants?.find(v => v.id === item.selectedVariantId)?.price || item.product.price
           : item.product.price;
 
+        // Use full GID format directly - no numeric conversion needed
         addItem({
-          variantId: convertToNumericId(item.selectedVariantId || item.product.variantId),
+          variantId: item.selectedVariantId || item.product.variantId,
           productId: item.product.id,
           title: item.product.name,
           productHandle: item.product.handle,
@@ -410,17 +411,13 @@ export default function ProductConfigurator({ products, currentProductHandle, ba
       for (const addonId of selectedAddons) {
         const addon = ADDON_OPTIONS.find(a => a.id === addonId);
         if (addon) {
-          // Skip addons for now as they don't have numeric variant IDs
+          // Skip addons for now as they don't have variant IDs
           // They would need to be added as separate products in Shopify
         }
       }
 
-      // Redirect to checkout after a short delay to ensure cart is updated
-      setTimeout(() => {
-        if (checkoutUrl && checkoutUrl !== '#') {
-          window.location.href = checkoutUrl;
-        }
-      }, 300);
+      // Redirect to checkout using the new API-based checkout
+      await goToCheckout();
     } catch (error) {
       console.error('Error in buy now:', error);
       setIsAdding(false);

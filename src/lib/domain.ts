@@ -1,5 +1,6 @@
 /**
  * Hardcoded Shopify domain constant
- * NO environment variables - this ensures the correct domain is always used
+ * Uses the custom domain for direct checkout URLs (avoids redirect issues)
+ * The myshopify.com subdomain redirects to this custom domain
  */
-export const SHOPIFY_DOMAIN = "mraze2-ra.myshopify.com";
+export const SHOPIFY_DOMAIN = "masterdisplaycases.com";

@@ -137,9 +137,9 @@ export default function EmailCapturePopup({ onDismiss }: EmailCapturePopupProps)
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h2 className="heading-lg mb-4">Get Wholesale Pricing</h2>
+              <h2 className="heading-lg mb-4">Get 10% Off Your Display System</h2>
               <p className="text-gray-600">
-                Join our wholesale program and save up to <strong>25%</strong> on display cases. 
+                Enter your email and receive your checkout code instantly. 
                 Perfect for multi-location retailers and store remodels.
               </p>
             </div>
@@ -148,7 +148,7 @@ export default function EmailCapturePopup({ onDismiss }: EmailCapturePopupProps)
             <div className="bg-gray-50 rounded-lg p-4 mb-8">
               <ul className="space-y-3">
                 {[
-                  'Volume discounts up to 25%',
+                  'Instant 10% off discount code',
                   'Dedicated account manager',
                   'Priority shipping & support',
                   'Net 30 terms available',

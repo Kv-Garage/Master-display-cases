@@ -1,64 +1,31 @@
 /**
- * Cart utilities for Shopify storefront using cart URL method
- * No Storefront API required - uses localStorage and direct Shopify checkout URLs
+ * Cart utilities for local storage based cart management
  * 
- * IMPORTANT: Uses the Shopify domain from environment variable for checkout
+ * NOTE: Checkout functionality has been moved to:
+ * - src/lib/cart.ts (Shopify Storefront API cart mutations)
+ * - src/lib/buy-now.ts (checkout redirect using API)
+ * 
+ * This file now only handles local cart state management for UI purposes.
+ * Actual checkout uses Shopify Storefront API.
  */
-
-/**
- * Get the checkout domain - MUST be set via environment variable
- * NO fallbacks - will throw error if not configured
- */
-function getCheckoutDomain(): string {
-  const domain = process.env.NEXT_PUBLIC_SHOPIFY_DOMAIN;
-
-  if (!domain) {
-    throw new Error('NEXT_PUBLIC_SHOPIFY_DOMAIN environment variable is not set');
-  }
-
-  console.log('[DOMAIN USED]:', domain);
-
-  return domain;
-}
 
 const CART_STORAGE_KEY = 'cart';
 
 export interface CartItem {
-  variantId: number; // Numeric ID only (not GID format)
+  variantId: string; // Full GID format: gid://shopify/ProductVariant/123456789
   quantity: number;
 }
 
-/**
- * Convert GraphQL GID format to numeric ID
- * Examples:
- *   "gid://shopify/ProductVariant/12345" -> 12345
- *   "12345" -> 12345
- */
-export function convertToNumericId(id: string | number): number {
-  if (typeof id === 'number') {
-    return id;
-  }
-
-  if (typeof id === 'string') {
-    // Check if it's in GID format
-    if (id.startsWith('gid://shopify/ProductVariant/')) {
-      const numericPart = id.split('/').pop();
-      const numericId = parseInt(numericPart || '', 10);
-      if (isNaN(numericId)) {
-        throw new Error(`Invalid variant ID format: ${id}`);
-      }
-      return numericId;
-    }
-
-    // Try to parse as number
-    const numericId = parseInt(id, 10);
-    if (isNaN(numericId)) {
-      throw new Error(`Invalid variant ID: ${id}`);
-    }
-    return numericId;
-  }
-
-  throw new Error(`Invalid variant ID type: ${typeof id}`);
+export interface CartItemWithDetails extends CartItem {
+  title?: string;
+  variantTitle?: string;
+  price?: number;
+  image?: {
+    url: string;
+    altText?: string;
+  };
+  productHandle?: string;
+  productId?: string;
 }
 
 /**
@@ -84,7 +51,7 @@ export function getCart(): CartItem[] {
     // Validate cart items
     return cart.filter(
       (item) =>
-        typeof item.variantId === 'number' &&
+        typeof item.variantId === 'string' &&
         typeof item.quantity === 'number' &&
         item.quantity > 0
     );
@@ -109,20 +76,19 @@ function saveCart(cart: CartItem[]): void {
  * Add item to cart
  * If item already exists, increases quantity
  */
-export function addToCart(variantId: string | number, quantity: number = 1): CartItem[] {
+export function addToCart(variantId: string, quantity: number = 1): CartItem[] {
   try {
-    const numericId = convertToNumericId(variantId);
     const cart = getCart();
 
     // Check if item already exists
-    const existingIndex = cart.findIndex((item) => item.variantId === numericId);
+    const existingIndex = cart.findIndex((item) => item.variantId === variantId);
 
     if (existingIndex !== -1) {
       // Increase quantity
       cart[existingIndex].quantity += quantity;
     } else {
       // Add new item
-      cart.push({ variantId: numericId, quantity });
+      cart.push({ variantId, quantity });
     }
 
     saveCart(cart);
@@ -136,10 +102,9 @@ export function addToCart(variantId: string | number, quantity: number = 1): Car
 /**
  * Remove item from cart
  */
-export function removeFromCart(variantId: string | number): CartItem[] {
-  const numericId = convertToNumericId(variantId);
+export function removeFromCart(variantId: string): CartItem[] {
   const cart = getCart();
-  const updatedCart = cart.filter((item) => item.variantId !== numericId);
+  const updatedCart = cart.filter((item) => item.variantId !== variantId);
   saveCart(updatedCart);
   return updatedCart;
 }
@@ -147,13 +112,12 @@ export function removeFromCart(variantId: string | number): CartItem[] {
 /**
  * Update item quantity in cart
  */
-export function updateCartQuantity(variantId: string | number, quantity: number): CartItem[] {
-  const numericId = convertToNumericId(variantId);
+export function updateCartQuantity(variantId: string, quantity: number): CartItem[] {
   const cart = getCart();
 
   const updatedCart = cart
     .map((item) =>
-      item.variantId === numericId ? { ...item, quantity: Math.max(0, quantity) } : item
+      item.variantId === variantId ? { ...item, quantity: Math.max(0, quantity) } : item
     )
     .filter((item) => item.quantity > 0);
 
@@ -189,135 +153,28 @@ export function isCartEmpty(): boolean {
 }
 
 /**
- * Build Shopify checkout URL from cart items
- * Format: https://domain.com/cart/variantId1:qty,variantId2:qty
- * 
- * Uses the myshopify.com domain for reliable checkout
+ * Get cart with details from localStorage
  */
-export function buildCheckoutUrl(): string | null {
+export function getCartWithDetails(): CartItemWithDetails[] {
   const cart = getCart();
 
-  if (cart.length === 0) {
-    console.warn('[Shopify Checkout] Cart is empty - cannot build checkout URL');
-    return null;
+  if (typeof window === 'undefined') {
+    return cart;
   }
 
-  // Validate all cart items
-  for (const item of cart) {
-    if (!item.variantId || item.variantId <= 0) {
-      console.error('[Shopify Checkout] Invalid variant ID:', item.variantId);
-      return null;
-    }
-    if (!item.quantity || item.quantity <= 0) {
-      console.error('[Shopify Checkout] Invalid quantity for variant', item.variantId, ':', item.quantity);
-      return null;
-    }
-  }
-
-  const variantLine = cart
-    .map((item) => `${item.variantId}:${item.quantity}`)
-    .join(',');
-
-  // Use domain from environment variable for checkout
-  const domain = getCheckoutDomain();
-  const checkoutUrl = `https://${domain}/cart/${variantLine}`;
-  
-  console.log('[Shopify Checkout] Built checkout URL:', checkoutUrl);
-  console.log('[Shopify Checkout] Cart items:', cart);
-
-  return checkoutUrl;
-}
-
-/**
- * Redirect to Shopify checkout
- * Uses window.location.href for reliable redirect
- */
-export function goToCheckout(): void {
-  const checkoutUrl = buildCheckoutUrl();
-
-  if (!checkoutUrl) {
-    console.error('[Shopify Checkout] Cannot checkout: cart is empty or invalid');
-    return;
-  }
-
-  console.log('[Shopify Checkout] Redirecting to:', checkoutUrl);
-  
-  // Use window.location.href for reliable redirect
-  window.location.href = checkoutUrl;
-}
-
-/**
- * Buy now - redirect directly to checkout with single item
- * Bypasses the cart and goes straight to checkout
- * 
- * @param variantId - Shopify variant ID (numeric or GID format)
- * @param quantity - Quantity to purchase (default: 1)
- */
-export function buyNow(variantId: string | number, quantity: number = 1): void {
   try {
-    const numericId = convertToNumericId(variantId);
-    
-    // Validate variant ID
-    if (!numericId || numericId <= 0) {
-      console.error('[Shopify Checkout] Buy Now: Invalid variant ID:', variantId);
-      return;
-    }
-    
-    // Validate quantity
-    if (!quantity || quantity <= 0) {
-      console.error('[Shopify Checkout] Buy Now: Invalid quantity:', quantity);
-      quantity = 1;
-    }
+    const detailsKey = `${CART_STORAGE_KEY}_details`;
+    const detailsJson = localStorage.getItem(detailsKey);
+    const allDetails: Record<string, any> = detailsJson ? JSON.parse(detailsJson) : {};
 
-    // Use domain from environment variable for checkout
-    const domain = getCheckoutDomain();
-    const checkoutUrl = `https://${domain}/cart/${numericId}:${quantity}`;
-    
-    console.log('[Shopify Checkout] Buy Now:');
-    console.log('  - Original variant ID:', variantId);
-    console.log('  - Numeric ID:', numericId);
-    console.log('  - Quantity:', quantity);
-    console.log('  - Checkout URL:', checkoutUrl);
-    console.log('  - Domain:', domain);
-
-    // Use window.location.href for reliable redirect
-    window.location.href = checkoutUrl;
-  } catch (error) {
-    console.error('[Shopify Checkout] Buy Now failed:', error);
-    throw error;
-  }
-}
-
-/**
- * Get cart items with full details (for display purposes)
- * This is a client-side only function that combines cart data with product information
- */
-export interface CartItemWithDetails extends CartItem {
-  title?: string;
-  variantTitle?: string;
-  price?: number;
-  image?: {
-    url: string;
-    altText?: string;
-  };
-  productHandle?: string;
-  productId?: string;
-}
-
-/**
- * Sync cart details from localStorage
- * This function helps maintain compatibility with the existing CartContext
- */
-export function syncCartDetails(details: Map<number, Omit<CartItemWithDetails, 'variantId' | 'quantity'>>): CartItemWithDetails[] {
-  const cart = getCart();
-
-  return cart.map((item) => {
-    const itemDetails = details.get(item.variantId) || {};
-    return {
+    return cart.map((item) => ({
       ...item,
-      ...itemDetails,
-    };
-  });
+      ...(allDetails[item.variantId] || {}),
+    }));
+  } catch (error) {
+    console.error('Failed to load cart details:', error);
+    return cart;
+  }
 }
 
 /**
@@ -325,26 +182,25 @@ export function syncCartDetails(details: Map<number, Omit<CartItemWithDetails, '
  * Stores both the basic cart item and optional details for display
  */
 export function addToCartWithDetails(
-  variantId: string | number,
+  variantId: string,
   quantity: number = 1,
   details?: Partial<Omit<CartItemWithDetails, 'variantId' | 'quantity'>>
 ): CartItem[] {
-  const numericId = convertToNumericId(variantId);
-  const cart = addToCart(numericId, quantity);
+  const cart = addToCart(variantId, quantity);
 
   // Store details in a separate localStorage key if provided
   if (details && typeof window !== 'undefined') {
     try {
       const detailsKey = `${CART_STORAGE_KEY}_details`;
-      let allDetails: Record<number, any> = {};
+      let allDetails: Record<string, any> = {};
 
       const existingDetails = localStorage.getItem(detailsKey);
       if (existingDetails) {
         allDetails = JSON.parse(existingDetails);
       }
 
-      allDetails[numericId] = {
-        ...allDetails[numericId],
+      allDetails[variantId] = {
+        ...allDetails[variantId],
         ...details,
       };
 
@@ -358,36 +214,10 @@ export function addToCartWithDetails(
 }
 
 /**
- * Get cart with details
+ * Remove item from cart and its details
  */
-export function getCartWithDetails(): CartItemWithDetails[] {
-  const cart = getCart();
-
-  if (typeof window === 'undefined') {
-    return cart;
-  }
-
-  try {
-    const detailsKey = `${CART_STORAGE_KEY}_details`;
-    const detailsJson = localStorage.getItem(detailsKey);
-    const allDetails: Record<number, any> = detailsJson ? JSON.parse(detailsJson) : {};
-
-    return cart.map((item) => ({
-      ...item,
-      ...(allDetails[item.variantId] || {}),
-    }));
-  } catch (error) {
-    console.error('Failed to load cart details:', error);
-    return cart;
-  }
-}
-
-/**
- * Remove item details when removing from cart
- */
-export function removeFromCartWithDetails(variantId: string | number): CartItem[] {
-  const numericId = convertToNumericId(variantId);
-  const cart = removeFromCart(numericId);
+export function removeFromCartWithDetails(variantId: string): CartItem[] {
+  const cart = removeFromCart(variantId);
 
   // Remove details as well
   if (typeof window !== 'undefined') {
@@ -396,8 +226,8 @@ export function removeFromCartWithDetails(variantId: string | number): CartItem[
       const detailsJson = localStorage.getItem(detailsKey);
 
       if (detailsJson) {
-        const allDetails: Record<number, any> = JSON.parse(detailsJson);
-        delete allDetails[numericId];
+        const allDetails: Record<string, any> = JSON.parse(detailsJson);
+        delete allDetails[variantId];
         localStorage.setItem(detailsKey, JSON.stringify(allDetails));
       }
     } catch (error) {
@@ -421,4 +251,14 @@ export function clearCartWithDetails(): void {
       console.error('Failed to clear cart details:', error);
     }
   }
+}
+
+/**
+ * Get all cart items with their details for syncing with Shopify API
+ */
+export function getCartItemsForApi(): { variantId: string; quantity: number }[] {
+  return getCart().map(item => ({
+    variantId: item.variantId,
+    quantity: item.quantity
+  }));
 }

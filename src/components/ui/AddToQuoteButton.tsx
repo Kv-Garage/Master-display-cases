@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useCart } from '@/lib/cart-context';
-import { convertToNumericId } from '@/lib/cart-utils';
 
 // Accept partial product data from Shopify (supports both raw and normalized formats)
 interface PartialProduct {
@@ -51,7 +50,7 @@ export default function AddToQuoteButton({ product, fullWidth = false, size = 'l
     const imageUrl = product.image || product.featuredImage?.url;
     
     addItem({
-      variantId: convertToNumericId(realVariantId),
+      variantId: realVariantId, // Use full GID format directly
       productId: product.id,
       title: product.title,
       productHandle: product.handle,

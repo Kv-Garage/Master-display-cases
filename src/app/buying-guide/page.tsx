@@ -35,7 +35,7 @@ export default async function BuyingGuidePage() {
               Whether you run a smoke shop, jewelry store, or boutique — get expert guidance on choosing display cases that boost sales and elevate your brand.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button href="/collections/all" variant="primary" size="lg">
+              <Button href="/rgb-display-cases" variant="primary" size="lg">
                 Shop Displays
               </Button>
               <Button href="/contact" variant="secondary" size="lg" className="border-white text-white hover:bg-white hover:text-black">
@@ -100,7 +100,7 @@ export default async function BuyingGuidePage() {
             ].map((store, index) => (
               <Link
                 key={index}
-                href="/collections/all"
+                href="/rgb-display-cases"
                 className="group block p-8 bg-gray-50 rounded-lg border-2 border-transparent hover:border-black transition-all duration-300 hover:shadow-lg"
               >
                 <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-black text-white flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -134,14 +134,14 @@ export default async function BuyingGuidePage() {
                 description: 'Perfect for checkout areas. RGB lighting increases impulse purchases by 35%. Ideal for vape shops, jewelry stores, and boutiques.',
                 roi: '+35% impulse purchases',
                 image: '/SEO 1.jpeg',
-                link: '/products/48-led-counter-display',
+                link: '/products/products-48-led-retail-wrap-counter-rgb',
               },
               {
                 title: '70" Full Showcase (RGB)',
                 description: 'Full-height showcase with maximum visibility. Commands attention and stores your entire premium collection.',
                 roi: '+40% perceived value',
                 image: '/In-store Shop Display 2.jpeg',
-                link: '/products/70-led-retail-display-showcase',
+                link: '/products/products-70-led-retail-display-showcase-rgb',
               },
               {
                 title: 'Assembly Options (Save Time or Save Money)',
@@ -403,7 +403,7 @@ export default async function BuyingGuidePage() {
           </div>
 
           <div className="text-center mt-12">
-            <Button href="/collections/all" variant="secondary" size="lg">
+            <Button href="/rgb-display-cases" variant="secondary" size="lg">
               View All Display Cases
             </Button>
           </div>
@@ -486,7 +486,7 @@ export default async function BuyingGuidePage() {
               Join thousands of retailers who have increased sales with professional display cases. Shipping calculated at checkout.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button href="/collections/all" variant="primary" size="lg">
+              <Button href="/rgb-display-cases" variant="primary" size="lg">
                 Shop All Displays
               </Button>
               <Button href="/contact" variant="secondary" size="lg">

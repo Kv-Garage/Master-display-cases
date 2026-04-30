@@ -1,4 +1,5 @@
-import { blogPosts } from '@/data/blog-posts';
+import { getBlogPosts } from '@/lib/shopify';
+import { blogPosts as fallbackPosts } from '@/data/blog-posts';
 import BlogListing from '@/components/blog/BlogListing';
 import { Metadata } from 'next';
 
@@ -23,10 +24,17 @@ const categories = [
   'Shipping & Logistics',
 ];
 
-export default function BlogPage() {
+export default async function BlogPage() {
+  // Fetch from Shopify first (no arguments needed)
+  const shopifyPosts = await getBlogPosts();
+  const localPosts = fallbackPosts || [];
+  
+  // Merge: local posts first, then Shopify posts
+  const posts = [...localPosts, ...shopifyPosts];
+
   return (
     <div className="bg-white">
-      <BlogListing posts={blogPosts} categories={categories} />
+      <BlogListing posts={posts} categories={categories} />
     </div>
   );
 }

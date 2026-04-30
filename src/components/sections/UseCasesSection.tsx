@@ -9,7 +9,7 @@ export default function UseCasesSection() {
         'Secure, well-lit displays perfect for premium tobacco products, vaping supplies, and accessories. Lockable cases protect high-value inventory while showcasing products beautifully.',
       image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80',
       features: ['Lockable security', 'UV-protected glass', 'Custom lighting'],
-      href: '/collections/smoke-shop',
+      href: '/solutions/smoke-shops',
     },
     {
       title: 'Boutiques',
@@ -17,7 +17,7 @@ export default function UseCasesSection() {
         'Elegant display solutions that elevate jewelry, accessories, and fashion items. Create an upscale shopping experience that justifies premium pricing.',
       image: 'https://images.unsplash.com/photo-1528698827591-e19ccd7bc23d?auto=format&fit=crop&w=800&q=80',
       features: ['Minimal design', 'LED accent lighting', 'Velvet interiors'],
-      href: '/collections/boutique',
+      href: '/solutions/boutiques',
     },
     {
       title: 'Electronics Stores',
@@ -25,7 +25,7 @@ export default function UseCasesSection() {
         'Heavy-duty cases designed for high-traffic electronics retail. Protect valuable devices while allowing customers to view products from every angle.',
       image: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80',
       features: ['Anti-theft design', 'Cable management', 'RGB lighting'],
-      href: '/collections/electronics',
+      href: '/solutions/electronics',
     },
   ];
 

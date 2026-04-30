@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useCart } from '@/lib/cart-context';
 import { formatPrice } from '@/lib/shopify';
 import Image from 'next/image';
@@ -14,15 +15,22 @@ export default function CartDrawer() {
     updateQuantity,
     totalPrice,
     totalItems,
-    checkoutUrl,
     goToCheckout,
   } = useCart();
 
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+
   if (!isOpen) return null;
 
-  const handleCheckout = () => {
-    if (checkoutUrl && checkoutUrl !== '#') {
-      goToCheckout();
+  const handleCheckout = async () => {
+    if (items.length === 0) return;
+    
+    setIsCheckingOut(true);
+    try {
+      await goToCheckout();
+    } catch (error) {
+      console.error('Checkout failed:', error);
+      setIsCheckingOut(false);
     }
   };
 
@@ -39,7 +47,7 @@ export default function CartDrawer() {
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <h2 className="text-lg font-semibold">
-            Your Quote Cart ({totalItems} item{totalItems !== 1 ? 's' : ''})
+            Your Cart ({totalItems} item{totalItems !== 1 ? 's' : ''})
           </h2>
           <button
             onClick={() => setIsOpen(false)}
@@ -79,7 +87,7 @@ export default function CartDrawer() {
                   d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
                 />
               </svg>
-              <p className="text-gray-500">Your quote cart is empty</p>
+              <p className="text-gray-500">Your cart is empty</p>
               <Link
                 href="/"
                 className="text-black font-medium mt-2 inline-block hover:underline"
@@ -158,9 +166,34 @@ export default function CartDrawer() {
             <button
               onClick={handleCheckout}
               className="btn-primary w-full text-center block"
-              disabled={!checkoutUrl || checkoutUrl === '#'}
+              disabled={isCheckingOut}
             >
-              Proceed to Checkout
+              {isCheckingOut ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg
+                    className="animate-spin h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    />
+                  </svg>
+                  Processing...
+                </span>
+              ) : (
+                'Proceed to Checkout'
+              )}
             </button>
             <Link
               href="/contact"

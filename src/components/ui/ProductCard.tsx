@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { formatPrice, buyNow } from '@/lib/shopify';
+import { formatPrice } from '@/lib/shopify';
 import { useCart } from '@/lib/cart-context';
 import { useState } from 'react';
 
@@ -110,7 +110,10 @@ export default function ProductCard({ product, variant = 'default' }: ProductCar
       return;
     }
     
-    buyNow(realVariantId);
+    // Use the new buyNow function from buy-now.ts
+    import('@/lib/buy-now').then(({ buyNow }) => {
+      buyNow(realVariantId);
+    });
   };
 
   return (

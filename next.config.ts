@@ -66,17 +66,38 @@ const nextConfig: NextConfig = {
     ];
   },
 
-  // Redirects for SEO
+  // Redirects for SEO and funnel consolidation
   async redirects() {
     return [
       {
         source: '/display-cases',
-        destination: '/collections/display-cases',
+        destination: '/collections/rgb-displays',
         permanent: true,
       },
       {
         source: '/store-packages',
         destination: '/collections/store-packages',
+        permanent: true,
+      },
+      // Funnel consolidation - ALL paths point to master funnel
+      {
+        source: '/rgb-display-cases',
+        destination: '/collections/rgb-displays',
+        permanent: true,
+      },
+      {
+        source: '/collections/rgb-display-cases',
+        destination: '/collections/rgb-displays',
+        permanent: true,
+      },
+      {
+        source: '/collections/display-cases',
+        destination: '/collections/rgb-displays',
+        permanent: true,
+      },
+      {
+        source: '/collections/all',
+        destination: '/collections/rgb-displays',
         permanent: true,
       },
     ];

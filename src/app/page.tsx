@@ -11,11 +11,16 @@ import { getProducts } from '@/lib/shopify';
 import Image from 'next/image';
 import Link from 'next/link';
 
-// Fetch products for homepage
+// Fetch products for homepage with debug logging
 async function getHomePageProducts() {
   try {
     const products = await getProducts();
-    return products;
+    console.log("PRODUCTS:", products);
+    console.log("PRODUCTS COUNT:", products?.length || 0);
+    if (products && products.length > 0) {
+      console.log("FIRST PRODUCT:", JSON.stringify(products[0], null, 2));
+    }
+    return products || [];
   } catch (error) {
     console.error('Shopify fetch failed:', error);
     return [];

@@ -168,124 +168,50 @@ export default function LockSecurityUpgradePage() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {/* Keyed Lock */}
-            <div className="bg-gray-50 rounded-lg overflow-hidden border-2 border-gray-200">
+            {/* Plunger Lock - The Only Upgrade Option */}
+            <div className="bg-white rounded-lg overflow-hidden border-2 border-black shadow-lg md:col-span-3 md:max-w-2xl md:mx-auto">
+              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-black text-white px-4 py-1 text-xs font-semibold uppercase tracking-wider z-10">
+                Only Lock Upgrade Available
+              </div>
               <div className="aspect-video bg-gray-200 relative">
                 <img
                   src="/SEO 3.jpeg"
-                  alt="Keyed Lock"
+                  alt="Plunger Lock with 2 Keys"
                   className="w-full h-full object-cover"
                 />
               </div>
               <div className="p-6">
-                <h3 className="heading-sm mb-3">Keyed Lock</h3>
+                <h3 className="heading-sm mb-3">Plunger Lock with 2 Keys</h3>
                 <p className="text-gray-600 mb-4 text-sm">
-                  Traditional keyed cylinder lock with reinforced housing. Best for stores with dedicated staff managing keys.
+                  Commercial-grade plunger lock with reinforced housing. This is our only lock upgrade option — a heavy-duty keyed lock designed for high-traffic retail environments.
                 </p>
                 <ul className="space-y-2 mb-6">
                   <li className="flex items-start space-x-2 text-sm text-gray-600">
                     <svg className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
-                    <span>2 keys included</span>
+                    <span><strong>2 keys included</strong> — one for daily use, one as backup</span>
                   </li>
                   <li className="flex items-start space-x-2 text-sm text-gray-600">
                     <svg className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
-                    <span>High-security cylinder</span>
+                    <span>High-security plunger mechanism</span>
                   </li>
                   <li className="flex items-start space-x-2 text-sm text-gray-600">
                     <svg className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
-                    <span>Drill-resistant</span>
+                    <span>Drill-resistant and tamper-proof</span>
+                  </li>
+                  <li className="flex items-start space-x-2 text-sm text-gray-600">
+                    <svg className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                    <span>Reinforced mounting hardware included</span>
                   </li>
                 </ul>
-                <Link href="/products/48-led-counter-display" className="inline-flex items-center text-sm font-semibold uppercase tracking-wider hover:underline">
-                  Add to Order →
-                </Link>
-              </div>
-            </div>
-
-            {/* Combination Lock */}
-            <div className="bg-white rounded-lg overflow-hidden border-2 border-black shadow-lg">
-              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-black text-white px-4 py-1 text-xs font-semibold uppercase tracking-wider z-10">
-                Most Versatile
-              </div>
-              <div className="aspect-video bg-gray-200 relative">
-                <img
-                  src="/UGC content.jpeg"
-                  alt="Combination Lock"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="p-6">
-                <h3 className="heading-sm mb-3">Combination Lock</h3>
-                <p className="text-gray-600 mb-4 text-sm">
-                  Resettable combination mechanism. No keys to lose or copy. Perfect for multi-staff environments.
-                </p>
-                <ul className="space-y-2 mb-6">
-                  <li className="flex items-start space-x-2 text-sm text-gray-600">
-                    <svg className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                    <span>4-digit combination</span>
-                  </li>
-                  <li className="flex items-start space-x-2 text-sm text-gray-600">
-                    <svg className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                    <span>User-resettable code</span>
-                  </li>
-                  <li className="flex items-start space-x-2 text-sm text-gray-600">
-                    <svg className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                    <span>No keys to manage</span>
-                  </li>
-                </ul>
-                <Link href="/products/70-led-retail-display-showcase" className="inline-flex items-center text-sm font-semibold uppercase tracking-wider hover:underline">
-                  Add to Order →
-                </Link>
-              </div>
-            </div>
-
-            {/* Electronic Lock */}
-            <div className="bg-gray-50 rounded-lg overflow-hidden border-2 border-gray-200">
-              <div className="aspect-video bg-gray-200 relative">
-                <img
-                  src="/SEO 1.jpeg"
-                  alt="Electronic Lock"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="p-6">
-                <h3 className="heading-sm mb-3">Electronic Lock</h3>
-                <p className="text-gray-600 mb-4 text-sm">
-                  Digital keypad with audit trail. Program multiple user codes and track access history.
-                </p>
-                <ul className="space-y-2 mb-6">
-                  <li className="flex items-start space-x-2 text-sm text-gray-600">
-                    <svg className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                    <span>Multiple user codes</span>
-                  </li>
-                  <li className="flex items-start space-x-2 text-sm text-gray-600">
-                    <svg className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                    <span>Access logging</span>
-                  </li>
-                  <li className="flex items-start space-x-2 text-sm text-gray-600">
-                    <svg className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                    <span>Auto-lock timer</span>
-                  </li>
-                </ul>
-                <Link href="/products/48-led-counter-display" className="inline-flex items-center text-sm font-semibold uppercase tracking-wider hover:underline">
+                <Link href="/products/products-48-led-retail-display-showcase-rgb" className="inline-flex items-center text-sm font-semibold uppercase tracking-wider hover:underline">
                   Add to Order →
                 </Link>
               </div>
@@ -436,11 +362,8 @@ export default function LockSecurityUpgradePage() {
               Don't wait until after an incident. Upgrade your security now and protect what matters most to your business.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button href="/products/48-led-counter-display" variant="primary" size="lg">
-                Shop 48" Counter Display
-              </Button>
-              <Button href="/products/70-led-retail-display-showcase" variant="secondary" size="lg">
-                Shop 70" Full Showcase
+              <Button href="/products/products-48-led-retail-display-showcase-rgb" variant="primary" size="lg">
+                Shop Display Cases
               </Button>
             </div>
             <p className="text-sm text-gray-500 mt-8">

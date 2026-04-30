@@ -25,10 +25,21 @@ const resourcesItems: DropdownItem[] = [
   { label: 'FAQ', href: '/faq' },
 ];
 
-function CartIcon({ totalItems }: { totalItems: number }) {
+function CartIcon({ 
+  totalItems, 
+  onClick 
+}: { 
+  totalItems: number;
+  onClick?: () => void;
+}) {
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (onClick) onClick();
+  };
+
   return (
-    <Link
-      href="/cart"
+    <button
+      onClick={handleClick}
       className="relative p-2 hover:bg-gray-100 rounded-full transition-colors"
       aria-label={`Shopping cart with ${totalItems} items`}
     >
@@ -46,11 +57,11 @@ function CartIcon({ totalItems }: { totalItems: number }) {
         />
       </svg>
       {totalItems > 0 && (
-        <span className="absolute -top-1 -right-1 bg-black text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-medium">
-          {totalItems}
+        <span className="absolute -top-1 -right-1 bg-black text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-medium animate-pulse">
+          {totalItems > 99 ? '99+' : totalItems}
         </span>
       )}
-    </Link>
+    </button>
   );
 }
 
@@ -187,7 +198,7 @@ function MobileDropdown({
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { totalItems } = useCart();
+  const { totalItems, setIsOpen: setCartOpen } = useCart();
   const pathname = usePathname();
 
   useEffect(() => {
@@ -255,7 +266,7 @@ export default function Header() {
               >
                 Get Quote
               </Link>
-              <CartIcon totalItems={totalItems} />
+              <CartIcon totalItems={totalItems} onClick={() => setCartOpen(true)} />
             </div>
 
             {/* Mobile Menu Button */}
@@ -319,6 +330,23 @@ export default function Header() {
                   >
                     Get Quote
                   </Link>
+                </div>
+                {/* Mobile Cart Button */}
+                <div className="pt-2 border-t border-gray-100">
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      setCartOpen(true);
+                    }}
+                    className="w-full flex items-center justify-between py-3 text-sm font-medium text-gray-800"
+                  >
+                    <span>View Cart</span>
+                    {totalItems > 0 && (
+                      <span className="bg-black text-white text-xs w-6 h-6 rounded-full flex items-center justify-center">
+                        {totalItems}
+                      </span>
+                    )}
+                  </button>
                 </div>
               </nav>
             </div>

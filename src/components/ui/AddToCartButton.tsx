@@ -2,10 +2,9 @@
 
 import { useState } from 'react';
 import { useCart } from '@/lib/cart-context';
-import { convertToNumericId } from '@/lib/cart-utils';
 
 interface AddToCartButtonProps {
-  variantId: string | number;
+  variantId: string; // Full GID format: gid://shopify/ProductVariant/123456789
   productId?: string;
   title: string;
   productHandle?: string;
@@ -44,14 +43,17 @@ export default function AddToCartButton({
 
     if (disabled || isAdding) return;
 
+    // Validate variant ID
+    if (!variantId || typeof variantId !== 'string') {
+      console.error('[AddToCartButton] Invalid variant ID:', variantId);
+      return;
+    }
+
     setIsAdding(true);
 
     try {
-      // Convert variantId to numeric ID
-      const numericId = convertToNumericId(variantId);
-
       addItem({
-        variantId: numericId,
+        variantId, // Use full GID format directly
         productId,
         title,
         productHandle,
@@ -133,7 +135,7 @@ export function AddToCartTextButton({
   title,
   className = '',
 }: {
-  variantId: string | number;
+  variantId: string; // Full GID format
   title: string;
   className?: string;
 }) {
@@ -147,16 +149,17 @@ export function AddToCartTextButton({
     if (isAdding) return;
     setIsAdding(true);
 
-    try {
-      const numericId = convertToNumericId(variantId);
-      addItem({
-        variantId: numericId,
-        title,
-        price: 0,
-      });
-    } catch (error) {
-      console.error('Failed to add item to cart:', error);
+    if (!variantId || typeof variantId !== 'string') {
+      console.error('[AddToCartTextButton] Invalid variant ID:', variantId);
+      setIsAdding(false);
+      return;
     }
+
+    addItem({
+      variantId, // Use full GID format directly
+      title,
+      price: 0,
+    });
 
     setTimeout(() => setIsAdding(false), 500);
   };

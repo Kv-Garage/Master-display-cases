@@ -55,7 +55,7 @@ const faqCategories = [
       {
         question: 'How do I check the status of my order?',
         answer:
-          'Once your order ships, you\'ll receive tracking information via email. For order status updates or questions, contact our customer service team at info@masterdisplaycases.com or 1-800-555-0123.',
+          'Once your order ships, you\'ll receive tracking information via email. For order status updates or questions, contact our customer service team at info@masterdisplaycases.com.',
       },
     ],
   },
@@ -120,7 +120,7 @@ const faqCategories = [
       {
         question: 'How do I request a bulk quote?',
         answer:
-          'Use our Contact page or email info@masterdisplaycases.com with your desired quantities and models. Our sales team will provide a detailed quote within 24 business hours. You can also call 1-800-555-0123 for immediate assistance.',
+          'Use our Contact page or email info@masterdisplaycases.com with your desired quantities and models. Our sales team will provide a detailed quote within 24 business hours.',
       },
       {
         question: 'Do bulk orders ship together?',
@@ -253,8 +253,8 @@ export default function FAQPage() {
               <Button href="/contact" size="lg">
                 Contact Us
               </Button>
-              <Button href="tel:1-800-555-0123" variant="secondary" size="lg">
-                Call 1-800-555-0123
+              <Button href="mailto:info@masterdisplaycases.com" variant="secondary" size="lg">
+                Email Us
               </Button>
             </div>
           </div>

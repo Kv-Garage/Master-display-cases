@@ -14,8 +14,8 @@
 // CONFIGURATION - REPLACE WITH YOUR ACTUAL VARIANT ID
 const TEST_VARIANT_ID = 'YOUR_VARIANT_ID_HERE'; // e.g., '12345678901'
 const TEST_QUANTITY = 1;
-// Use the correct Shopify domain from environment variable
-const SHOPIFY_DOMAIN = process.env.NEXT_PUBLIC_SHOPIFY_DOMAIN || 'mraze2-ra.myshopify.com';
+// HARDCODED checkout domain - MUST use myshopify.com for checkout
+const SHOPIFY_DOMAIN = "mraze2-ra.myshopify.com";
 
 console.log('=== Shopify Cart URL Verification ===\n');
 

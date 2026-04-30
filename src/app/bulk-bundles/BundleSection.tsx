@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import Button from '@/components/ui/Button';
 import { useCart } from '@/lib/cart-context';
-import { convertToNumericId } from '@/lib/cart-utils';
 import { useState, useCallback } from 'react';
 
 interface BundleItem {
@@ -53,7 +52,7 @@ interface BundleSectionProps {
 }
 
 export default function BundleSection({ bundles, addOns, featuredProducts }: BundleSectionProps) {
-  const { addItem, checkoutUrl } = useCart();
+  const { addItem, goToCheckout } = useCart();
   const [addingBundle, setAddingBundle] = useState<string | null>(null);
   const [addingAddon, setAddingAddon] = useState<string | null>(null);
 
@@ -63,7 +62,7 @@ export default function BundleSection({ bundles, addOns, featuredProducts }: Bun
     
     setAddingBundle(bundle.id);
     addItem({
-      variantId: convertToNumericId(bundle.variantId),
+      variantId: bundle.variantId, // Use full GID format directly
       productId: bundle.productId,
       title: bundle.name,
       productHandle: 'bundles',
@@ -80,7 +79,7 @@ export default function BundleSection({ bundles, addOns, featuredProducts }: Bun
     
     setAddingAddon(addon.id);
     addItem({
-      variantId: convertToNumericId(addon.variantId),
+      variantId: addon.variantId, // Use full GID format directly
       productId: addon.id,
       title: addon.name,
       productHandle: 'addons',
@@ -91,12 +90,10 @@ export default function BundleSection({ bundles, addOns, featuredProducts }: Bun
     setTimeout(() => setAddingAddon(null), 500);
   }, [addItem]);
 
-  // Handle checkout redirect - use the checkoutUrl from cart context
-  const handleCheckout = useCallback(() => {
-    if (checkoutUrl && checkoutUrl !== '#') {
-      window.location.href = checkoutUrl;
-    }
-  }, [checkoutUrl]);
+  // Handle checkout redirect - use the goToCheckout function from cart context
+  const handleCheckout = useCallback(async () => {
+    await goToCheckout();
+  }, [goToCheckout]);
 
   return (
     <>

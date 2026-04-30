@@ -2,7 +2,6 @@
 
 import { useState, useMemo } from 'react';
 import { useCart } from '@/lib/cart-context';
-import { convertToNumericId } from '@/lib/cart-utils';
 
 interface ProductOption {
   id: string;
@@ -74,7 +73,7 @@ export default function BundleConfigurator({ products }: BundleConfiguratorProps
 
   const handleAddToQuote = () => {
     addItem({
-      variantId: convertToNumericId(selectedProduct.variantId),
+      variantId: selectedProduct.variantId, // Use full GID format directly
       productId: selectedProduct.id,
       title: `${selectedProduct.name} (${selectedBundle.name})`,
       productHandle: selectedProduct.handle,

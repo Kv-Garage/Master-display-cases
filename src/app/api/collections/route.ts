@@ -1,15 +1,15 @@
 import { NextResponse } from 'next/server';
-import { getCollections } from '@/lib/shopify';
+import { getProducts } from '@/lib/shopify';
 
-// Cache collections for 1 hour to reduce API calls
+// Cache products for 1 hour to reduce API calls
 export const revalidate = 3600;
 
 export async function GET() {
   try {
-    const collections = await getCollections();
-    return NextResponse.json(collections);
+    const products = await getProducts();
+    return NextResponse.json({ products });
   } catch (error) {
-    console.error('Error fetching collections:', error);
-    return NextResponse.json([]);
+    console.error('Error fetching products:', error);
+    return NextResponse.json({ products: [] });
   }
 }

@@ -65,7 +65,7 @@ export default function HeroSliderSection() {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button href="/collections/rgb-display-cases" variant="primary" size="lg">
+              <Button href="/rgb-display-cases" variant="primary" size="lg">
                 Explore All Display Cases
               </Button>
               <Button href="/contact" variant="secondary" size="lg">

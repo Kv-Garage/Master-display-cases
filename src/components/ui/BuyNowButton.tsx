@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { buyNow, convertToNumericId } from '@/lib/cart-utils';
+import { buyNow } from '@/lib/buy-now';
 
 interface BuyNowButtonProps {
-  variantId: string | number;
+  variantId: string; // Must be full GID format: gid://shopify/ProductVariant/123456789
   quantity?: number;
   className?: string;
   disabled?: boolean;
@@ -26,20 +26,25 @@ export default function BuyNowButton({
 
     if (disabled || isRedirecting) return;
 
+    // Validate variant ID format
+    if (!variantId || typeof variantId !== 'string') {
+      console.error('[BuyNowButton] Invalid variant ID:', variantId);
+      alert('Unable to process purchase. Please try again.');
+      return;
+    }
+
     try {
-      // Validate variant ID
-      convertToNumericId(variantId);
-      
       setIsRedirecting(true);
       
       // Small delay to show loading state before redirect
       await new Promise(resolve => setTimeout(resolve, 300));
       
-      // Use the buyNow function which redirects directly to Shopify checkout
-      buyNow(variantId, quantity);
+      // Use the new buyNow function that uses Shopify Storefront API
+      await buyNow(variantId);
     } catch (error) {
       console.error('Failed to buy now:', error);
       setIsRedirecting(false);
+      alert('Checkout failed. Please try again.');
     }
   };
 
@@ -101,29 +106,5 @@ export function ExpressCheckoutButton({
   );
 }
 
-// Direct link version (for non-JS environments or SEO)
-export function BuyNowLink({
-  variantId,
-  quantity = 1,
-  className = '',
-  children = 'Buy Now',
-}: BuyNowButtonProps) {
-  const numericId = convertToNumericId(variantId);
-  // Use the Shopify domain from environment variable - NO fallback
-  const shopifyDomain = process.env.NEXT_PUBLIC_SHOPIFY_DOMAIN;
-  if (!shopifyDomain) {
-    console.error('NEXT_PUBLIC_SHOPIFY_DOMAIN environment variable is not set');
-    return null;
-  }
-  const checkoutUrl = `https://${shopifyDomain}/cart/${numericId}:${quantity}`;
-
-  return (
-    <a
-      href={checkoutUrl}
-      className={`inline-block ${className}`}
-      rel="noopener noreferrer"
-    >
-      {children}
-    </a>
-  );
-}
+// Note: BuyNowLink has been removed as it used manual URL building
+// All buy now functionality now uses the Shopify Storefront API

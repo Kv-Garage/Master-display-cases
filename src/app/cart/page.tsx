@@ -1,54 +1,21 @@
 'use client';
 
 import { useCart } from '@/lib/cart-context';
-import { convertToNumericId } from '@/lib/cart-utils';
 import Button from '@/components/ui/Button';
 import Link from 'next/link';
-import { useSearchParams, useRouter } from 'next/navigation';
-import { Suspense, useState, useCallback } from 'react';
-
-// Upsell products that can be added directly from cart
-const UPSSELL_PRODUCTS = [
-  {
-    id: 'lock-upgrade',
-    variantId: 'lock-plunger',
-    name: 'Plunger Lock Upgrade',
-    description: 'Premium keyed plunger lock with reinforced strike plate',
-    price: 149,
-    image: null,
-  },
-];
+import { Suspense } from 'react';
 
 function CartContent() {
-  const { items, totalPrice, removeItem, updateQuantity, addItem, checkoutUrl } = useCart();
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const [addingUpsell, setAddingUpsell] = useState<string | null>(null);
+  const { items, totalPrice, removeItem, updateQuantity, goToCheckout } = useCart();
 
   const shippingNote = "Shipping calculated at checkout";
 
-  // Handle adding upsell products directly from cart
-  const handleAddUpsell = useCallback((upsell: typeof UPSSELL_PRODUCTS[0]) => {
-    setAddingUpsell(upsell.id);
-    addItem({
-      variantId: convertToNumericId(upsell.variantId),
-      productId: upsell.id,
-      title: upsell.name,
-      productHandle: 'addons',
-      variantTitle: upsell.name,
-      price: upsell.price,
-      image: { url: '/placeholder.jpg' },
-    });
-    setTimeout(() => setAddingUpsell(null), 500);
-  }, [addItem]);
-
   // Handle checkout redirect - use the goToCheckout function from cart context
-  const handleCheckout = useCallback(() => {
+  const handleCheckout = async () => {
     if (items.length > 0) {
-      // Use the goToCheckout function which handles the redirect
-      window.location.href = checkoutUrl;
+      await goToCheckout();
     }
-  }, [checkoutUrl, items.length]);
+  };
 
   return (
     <main className="min-h-screen bg-gray-50">
@@ -146,47 +113,6 @@ function CartContent() {
                   ))}
                 </div>
               </div>
-
-          {/* Upsells - "Maximize Your ROI" Section */}
-          <div className="mt-8 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center gap-2 mb-2">
-              <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-              </svg>
-              <h2 className="font-semibold text-lg">Enhance Your Display Case</h2>
-            </div>
-            <p className="text-sm text-gray-600 mb-6">
-              Add a premium plunger lock for extra security and peace of mind.
-            </p>
-            <div className="grid gap-4">
-              {UPSSELL_PRODUCTS.map((upsell) => (
-                <button
-                  key={upsell.id}
-                  onClick={() => handleAddUpsell(upsell)}
-                  disabled={addingUpsell === upsell.id}
-                  className="flex gap-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors text-left w-full disabled:opacity-50"
-                >
-                  <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <svg className="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                    </svg>
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h3 className="font-semibold">{upsell.name}</h3>
-                        <p className="text-sm text-gray-500">{upsell.description}</p>
-                      </div>
-                      <p className="text-sm font-semibold text-green-600">+${upsell.price}</p>
-                    </div>
-                    {addingUpsell === upsell.id && (
-                      <p className="text-xs text-green-600 mt-1">✓ Added to cart!</p>
-                    )}
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
             </div>
 
             {/* Order Summary */}

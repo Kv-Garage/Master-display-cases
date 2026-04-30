@@ -105,7 +105,8 @@ export default async function CollectionPage({ params, searchParams }: Collectio
   let apiError = null;
 
   try {
-    products = await getCollectionProducts(resolvedParams.handle);
+    const collectionProducts = await getCollectionProducts(resolvedParams.handle);
+    products = collectionProducts || [];
     console.log(`Loaded ${products.length} products for collection: ${resolvedParams.handle}`);
   } catch (error: any) {
     apiError = error.message;
@@ -113,11 +114,13 @@ export default async function CollectionPage({ params, searchParams }: Collectio
     
     // Fallback to general products
     try {
-      products = await getProducts();
+      const generalProducts = await getProducts();
+      products = generalProducts || [];
       console.log(`Fallback: Loaded ${products.length} general products`);
     } catch (fallbackError: any) {
       console.error('Fallback products fetch error:', fallbackError);
       apiError = fallbackError.message;
+      products = []; // Ensure products is always an array
     }
   }
 

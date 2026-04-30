@@ -1,3 +1,4 @@
+import { getBlogPost, getBlogPosts } from '@/lib/shopify';
 import { getBlogPostByHandle, getRelatedPosts, blogPosts } from '@/data/blog-posts';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
@@ -9,8 +10,9 @@ interface BlogPostPageProps {
   params: Promise<{ handle: string }>;
 }
 
-// Generate static params for all blog posts
+// Generate static params for all blog posts (fallback for SEO)
 export async function generateStaticParams() {
+  // Use hardcoded posts for static generation (fallback)
   return blogPosts.map((post) => ({
     handle: post.handle,
   }));
@@ -19,7 +21,19 @@ export async function generateStaticParams() {
 // Generate metadata for SEO
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   const resolvedParams = await params;
-  const post = getBlogPostByHandle(resolvedParams.handle);
+  
+  // Try Shopify first, then fallback to hardcoded data
+  let post: any = await getBlogPost(resolvedParams.handle);
+  if (!post) {
+    const fallback = getBlogPostByHandle(resolvedParams.handle);
+    if (fallback) {
+      // Add missing fields from local post
+      post = {
+        ...fallback,
+        source: 'local'
+      };
+    }
+  }
 
   if (!post) {
     return {
@@ -28,8 +42,8 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   }
 
   return {
-    title: `${post.metaTitle}`,
-    description: post.metaDescription,
+    title: `${post.metaTitle || post.title}`,
+    description: post.metaDescription || post.excerpt,
     openGraph: {
       type: 'article',
       title: post.title,
@@ -77,13 +91,36 @@ function generateStructuredData(post: any) {
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const resolvedParams = await params;
-  const post = getBlogPostByHandle(resolvedParams.handle);
+  
+  // Try Shopify first, then fallback to hardcoded data
+  let post: any = await getBlogPost(resolvedParams.handle);
+  if (!post) {
+    const fallback = getBlogPostByHandle(resolvedParams.handle);
+    if (fallback) {
+      // Add missing fields from local post
+      post = {
+        ...fallback,
+        source: 'local'
+      };
+    }
+  }
 
   if (!post) {
     notFound();
   }
 
-  const relatedPosts = getRelatedPosts(post.handle, 3);
+  // Get related posts (merge Shopify + local)
+  let relatedPosts: any[] = [];
+  try {
+    const shopifyPosts = await getBlogPosts();
+    const localPosts = getRelatedPosts(post.handle, 3);
+    const allPosts = [...localPosts, ...(shopifyPosts || [])];
+    relatedPosts = allPosts
+      .filter((p: any) => p.handle !== post.handle && p.category === post.category)
+      .slice(0, 3);
+  } catch {
+    relatedPosts = getRelatedPosts(post.handle, 3);
+  }
 
   const publishedDate = new Date(post.publishedAt).toLocaleDateString('en-US', {
     month: 'long',
