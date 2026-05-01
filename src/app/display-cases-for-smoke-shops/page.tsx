@@ -40,16 +40,20 @@ export default async function DisplayCasesForSmokeShops() {
   // Fetch products from Shopify server-side
   const allProducts = await getProducts();
   
-  // Select recommended products for smoke shops
-  // Prioritize 48" counter display and 70" showcase
-  const recommendedProducts = allProducts
+  // Display all products from Shopify (including any test products)
+  // Prioritize 48" and 70" displays for smoke shops, but show all available products
+  const prioritizedProducts = allProducts
     .filter((p: Product) => p.title.includes('48') || p.title.includes('70'))
     .slice(0, 2);
   
-  // Fallback: if we don't have 2 products, use the first 2 from all products
-  const displayProducts = recommendedProducts.length >= 2 
-    ? recommendedProducts 
-    : allProducts.slice(0, 2);
+  // Get remaining products (including any test/demo products)
+  const remainingProducts = allProducts.filter((p: Product) => 
+    !p.title.includes('48') && !p.title.includes('70')
+  );
+  
+  // Combine: prioritized products first, then remaining products
+  // Display up to 4 products total
+  const displayProducts = [...prioritizedProducts, ...remainingProducts].slice(0, 4);
 
   return (
     <main className="min-h-screen">

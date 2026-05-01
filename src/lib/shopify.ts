@@ -55,7 +55,7 @@ export function normalizeProduct(product: any) {
 export async function getProducts() {
   const data = await shopifyFetch(`
     query {
-      products(first: 6) {
+      products(first: 20) {
         edges {
           node {
             id
