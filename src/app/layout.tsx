@@ -110,18 +110,24 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} scroll-smooth`}>
-      {/* Google Ads Tag */}
+      {/* Google Analytics & Ads Tags */}
       <Script
-        id="google-ads-tag"
+        id="google-gtag"
         strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: `
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
+            gtag('config', 'G-3EVFYMRM32');
             gtag('config', 'AW-18131039337');
           `,
         }}
+      />
+      <Script
+        id="google-analytics-script"
+        src="https://www.googletagmanager.com/gtag/js?id=G-3EVFYMRM32"
+        strategy="afterInteractive"
       />
       <Script
         id="google-ads-script"
