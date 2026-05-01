@@ -54,16 +54,11 @@ export default async function DisplayCasesForSmokeShops() {
   return (
     <main className="min-h-screen">
       {/* ============================================
-          HERO SECTION - Above the Fold (CRITICAL FOR CONVERSION)
+          HERO SECTION - Above the Fold (CRITICAL)
           ============================================ */}
-      <section className="relative bg-black text-white py-16 lg:py-24">
+      <section className="relative bg-black text-white py-16 lg:py-20">
         <div className="container-custom">
           <div className="max-w-4xl">
-            {/* Target Audience Identifier */}
-            <p className="text-blue-400 font-semibold mb-4 uppercase tracking-wider text-sm">
-              Designed Specifically for Smoke Shop Owners
-            </p>
-            
             {/* H1 - Main Headline */}
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
               Display Cases Built for Smoke Shops That Increase Sales & Security
@@ -71,12 +66,12 @@ export default async function DisplayCasesForSmokeShops() {
             
             {/* Subheadline */}
             <p className="text-xl text-gray-300 max-w-2xl mb-6 leading-relaxed">
-              Upgrade your store with premium LED display cases designed to improve product visibility, reduce theft, and increase customer spending.
+              Upgrade your store with premium LED display cases designed to boost product visibility, reduce theft, and increase customer spending.
             </p>
             
-            {/* Target Audience Reinforcement */}
-            <p className="text-lg text-gray-400 max-w-2xl mb-8">
-              Designed specifically for smoke shop owners who want to boost sales and stand out from competitors.
+            {/* Targeting Line */}
+            <p className="text-lg text-blue-400 max-w-2xl mb-8 font-medium">
+              Built specifically for smoke shop owners who want to improve store performance and stand out from competitors.
             </p>
             
             {/* Quick Benefit Bullets */}
@@ -97,65 +92,38 @@ export default async function DisplayCasesForSmokeShops() {
                 <svg className="w-6 h-6 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <span className="text-lg text-gray-300">Create a modern, high-end store experience</span>
+                <span className="text-lg text-gray-300">Create a modern, high-end shopping experience</span>
               </li>
             </ul>
             
             {/* Primary CTA */}
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-4 mb-6">
               <Button href={ROUTES.COLLECTION} variant="primary" size="lg" className="text-lg px-10 py-5">
-                Shop Smoke Shop Display Cases
+                Shop Display Cases
               </Button>
               <Button href={ROUTES.CONTACT} variant="secondary" size="lg" className="text-lg px-10 py-5">
-                Get a Free Quote
+                Get a Quote
               </Button>
             </div>
             
-            {/* Urgency Trigger */}
-            <p className="mt-8 text-gray-500 text-sm italic">
-              ⚡ Retailers upgrading their display cases often see immediate improvements in product visibility and customer engagement.
+            {/* Urgency Line */}
+            <p className="text-red-400 text-sm font-medium flex items-center gap-2">
+              <span className="inline-block w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+              Limited inventory available due to high demand from retail store owners.
             </p>
           </div>
         </div>
       </section>
 
       {/* ============================================
-          TRUST BAR - Quick Social Proof
-          ============================================ */}
-      <section className="bg-gray-900 py-4 border-b border-gray-800">
-        <div className="container-custom">
-          <div className="flex flex-wrap justify-center gap-4 md:gap-8 text-gray-400 text-xs md:text-sm">
-            <span className="flex items-center gap-1">
-              <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              Trusted by 500+ stores nationwide
-            </span>
-            <span className="flex items-center gap-1">
-              <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              Commercial-grade quality
-            </span>
-            <span className="flex items-center gap-1">
-              <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              5-Year Warranty
-            </span>
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================
-          PRODUCT SECTION - MOVED UP (CRITICAL FOR CONVERSION)
+          PRODUCT SECTION - IMMEDIATE (CRITICAL FOR CONVERSION)
           ============================================ */}
       <section className="section-padding bg-gray-50">
         <div className="container-custom">
           <div className="max-w-3xl mx-auto text-center mb-12">
-            <h2 className="heading-lg mb-4">Best Display Cases for Smoke Shops</h2>
+            <h2 className="heading-lg mb-4">Top Display Cases for Smoke Shops</h2>
             <p className="text-gray-600 text-lg">
-              Choose the perfect display case for your store. All cases feature RGB lighting, secure locking, and commercial-grade construction.
+              Professional-grade display cases with RGB lighting, secure locking, and commercial construction.
             </p>
           </div>
 
@@ -187,34 +155,12 @@ export default async function DisplayCasesForSmokeShops() {
                     <h3 className="text-2xl font-bold mb-3">{product.title}</h3>
                     <p className="text-gray-600 mb-6">
                       {product.title.includes('48') 
-                        ? 'Perfect for checkout counters. RGB lighting drives impulse buys. Ideal for vape products, accessories, and small items.'
+                        ? 'Perfect for checkout counters. RGB lighting drives impulse buys. Ideal for vape products and accessories.'
                         : product.title.includes('70')
                         ? 'Full-height showcase that commands attention. Store your entire premium collection with maximum visibility.'
                         : 'Professional LED display case with RGB lighting for maximum product visibility and security.'
                       }
                     </p>
-                    
-                    {/* Quick Features */}
-                    <ul className="mb-8 space-y-2">
-                      <li className="flex items-center gap-2 text-gray-700">
-                        <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        RGB LED lighting
-                      </li>
-                      <li className="flex items-center gap-2 text-gray-700">
-                        <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        Lockable security
-                      </li>
-                      <li className="flex items-center gap-2 text-gray-700">
-                        <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        Commercial-grade
-                      </li>
-                    </ul>
                     
                     {/* View Product Button */}
                     <Button href={getProductUrl(product.handle)} variant="primary" size="lg" fullWidth className="text-lg">
@@ -224,7 +170,6 @@ export default async function DisplayCasesForSmokeShops() {
                 </div>
               ))
             ) : (
-              // Fallback if no products available
               <div className="col-span-2 text-center py-12">
                 <p className="text-gray-600 mb-6">Loading products...</p>
                 <Button href={ROUTES.COLLECTION} variant="primary" size="lg">
@@ -244,120 +189,112 @@ export default async function DisplayCasesForSmokeShops() {
       </section>
 
       {/* ============================================
-          PROBLEM SECTION - Pain Points (Tightened)
+          TRUST + AUTHORITY SECTION
           ============================================ */}
       <section className="section-padding bg-white">
         <div className="container-custom">
-          <div className="max-w-3xl mx-auto text-center mb-12">
-            <h2 className="heading-lg mb-4">Are These Problems Costing You Sales?</h2>
-            <p className="text-gray-600 text-lg">
-              Most smoke shops lose sales daily due to poor display setup.
-            </p>
-          </div>
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="heading-lg mb-4">Trusted by 500+ Retail Stores</h2>
+              <p className="text-gray-600 text-lg">
+                Join hundreds of smoke shop owners who have transformed their stores with our display cases.
+              </p>
+            </div>
 
-          <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-            {[
-              {
-                title: 'Products Not Standing Out',
-                description: 'Small vape products and colorful e-liquids get lost on dark shelves. Without proper lighting, the vibrant colors that attract customers are invisible.',
-              },
-              {
-                title: 'Poor Lighting = Lower Prices',
-                description: "Products without proper lighting look cheap. Customers won't pay premium prices for products that don't look premium.",
-              },
-              {
-                title: 'Theft Eating Your Profits',
-                description: 'High-value vape devices are easy targets. Open displays invite shoplifters and shrink your inventory.',
-              },
-              {
-                title: 'Cluttered = Unprofessional',
-                description: 'Piled products look messy and unprofessional. Customers associate messy displays with low-quality products.',
-              },
-            ].map((item, index) => (
-              <div key={index} className="bg-gray-50 border-l-4 border-red-500 p-6 rounded-r-lg">
-                <h3 className="font-bold text-lg mb-2 text-gray-900">{item.title}</h3>
-                <p className="text-gray-600">{item.description}</p>
+            {/* Trust Stats */}
+            <div className="grid md:grid-cols-3 gap-8 mb-12">
+              <div className="text-center p-6 bg-gray-50 rounded-xl">
+                <p className="text-4xl font-bold text-blue-600 mb-2">500+</p>
+                <p className="text-gray-600 font-medium">Stores Trust Us</p>
               </div>
-            ))}
+              <div className="text-center p-6 bg-gray-50 rounded-xl">
+                <p className="text-4xl font-bold text-blue-600 mb-2">5-Year</p>
+                <p className="text-gray-600 font-medium">Warranty Included</p>
+              </div>
+              <div className="text-center p-6 bg-gray-50 rounded-xl">
+                <p className="text-4xl font-bold text-blue-600 mb-2">Nationwide</p>
+                <p className="text-gray-600 font-medium">Freight Shipping</p>
+              </div>
+            </div>
+
+            {/* Testimonial */}
+            <div className="bg-black text-white rounded-2xl p-8 md:p-12 text-center max-w-3xl mx-auto">
+              <div className="flex justify-center mb-6">
+                {[1,2,3,4,5].map(i => (
+                  <svg key={i} className="w-6 h-6 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                ))}
+              </div>
+              <p className="text-xl md:text-2xl italic mb-6">
+                "These display cases completely transformed our store. Sales are up 40% and customers constantly comment on how professional everything looks."
+              </p>
+              <p className="text-gray-400 font-medium">— Mike R., Smoke Shop Owner, Texas</p>
+            </div>
           </div>
         </div>
       </section>
 
       {/* ============================================
-          SOLUTION SECTION - Benefits (Tightened)
+          PROBLEM → SOLUTION SECTION
           ============================================ */}
       <section className="section-padding bg-gray-50">
         <div className="container-custom">
+          {/* Problems */}
           <div className="max-w-3xl mx-auto text-center mb-12">
-            <h2 className="heading-lg mb-4">How Our Display Cases Fix These Problems</h2>
+            <h2 className="heading-lg mb-4">The Problem: Most Smoke Shops Are Losing Sales</h2>
+            <p className="text-gray-600 text-lg">
+              Poor display setup is costing you customers and revenue every single day.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto mb-16">
+            {[
+              { title: 'Poor Product Visibility', desc: 'Products get lost on dark shelves. Customers cannot see what you have.' },
+              { title: 'Theft Risk', desc: 'Open displays invite shoplifters. High-value items disappear.' },
+              { title: 'Cluttered Displays', desc: 'Messy setups look unprofessional. Customers lose trust.' },
+              { title: 'Low Perceived Value', desc: 'Poor presentation makes products look cheap. You cannot charge premium prices.' },
+            ].map((item, index) => (
+              <div key={index} className="bg-white border-l-4 border-red-500 p-6 rounded-r-lg">
+                <h3 className="font-bold text-lg mb-2 text-gray-900">{item.title}</h3>
+                <p className="text-gray-600">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Solutions */}
+          <div className="max-w-3xl mx-auto text-center mb-12">
+            <h2 className="heading-lg mb-4">The Solution: Professional LED Display Cases</h2>
+            <p className="text-gray-600 text-lg">
+              Transform your store with display cases designed to sell more.
+            </p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             {[
-              {
-                title: 'LED Lighting = Instant Visibility',
-                description: 'RGB lighting makes e-liquid colors pop. Customers spot their favorites instantly from across the store.',
-                icon: (
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                  </svg>
-                ),
-              },
-              {
-                title: 'Lockable Glass = Theft Protection',
-                description: 'Commercial locks keep high-value items secure. Staff access is easy, shoplifters are blocked.',
-                icon: (
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                  </svg>
-                ),
-              },
-              {
-                title: 'Premium Design = Higher Prices',
-                description: 'Professional displays make products look expensive. Customers happily pay more for premium presentation.',
-                icon: (
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                  </svg>
-                ),
-              },
-              {
-                title: 'Organized Layout = More Sales',
-                description: 'Adjustable shelves fit any product size. Easy comparison means faster decisions and bigger baskets.',
-                icon: (
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                  </svg>
-                ),
-              },
+              { title: 'LED Lighting = Attention + Sales', desc: 'RGB lighting makes products pop. Customers notice, engage, and buy more.', icon: '💡' },
+              { title: 'Lockable Glass = Security', desc: 'Commercial locks protect inventory. Staff access is easy, thieves are blocked.', icon: '🔒' },
+              { title: 'Clean Layout = Better Experience', desc: 'Organized displays make shopping easy. Customers stay longer and spend more.', icon: '✨' },
             ].map((item, index) => (
-              <div key={index} className="bg-white rounded-lg p-8 shadow-sm">
-                <div className="text-blue-600 mb-4">{item.icon}</div>
-                <h3 className="heading-sm mb-3">{item.title}</h3>
-                <p className="text-gray-600">{item.description}</p>
+              <div key={index} className="bg-white rounded-xl p-8 shadow-sm text-center">
+                <div className="text-4xl mb-4">{item.icon}</div>
+                <h3 className="font-bold text-xl mb-3 text-gray-900">{item.title}</h3>
+                <p className="text-gray-600">{item.desc}</p>
               </div>
             ))}
-          </div>
-          
-          {/* Mid-Page CTA */}
-          <div className="text-center mt-16">
-            <h3 className="text-2xl font-bold mb-6">Ready to upgrade your store setup?</h3>
-            <Button href={ROUTES.COLLECTION} variant="primary" size="lg" className="text-lg px-10">
-              Browse Display Cases
-            </Button>
           </div>
         </div>
       </section>
 
       {/* ============================================
-          ROI / VALUE SECTION (Tightened)
+          ROI SECTION
           ============================================ */}
       <section className="section-padding bg-white">
         <div className="container-custom">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="heading-lg mb-4">A Better Display Pays for Itself</h2>
+            <h2 className="heading-lg mb-4">Your Display Case Isn't Just Furniture — It's a Sales Tool</h2>
             <p className="text-xl text-gray-600 mb-12">
-              Professional display cases aren't an expense — they're an investment that increases every customer's spending.
+              Professional display cases pay for themselves through increased sales and higher average orders.
             </p>
 
             <div className="grid md:grid-cols-3 gap-8 mb-12">
@@ -375,36 +312,18 @@ export default async function DisplayCasesForSmokeShops() {
               </div>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-6">
-              <div className="text-center p-4">
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                  </svg>
-                </div>
-                <h4 className="font-semibold mb-1">Increased Visibility</h4>
-                <p className="text-sm text-gray-600">LED lighting makes products impossible to miss</p>
+            <div className="grid md:grid-cols-3 gap-6 text-left">
+              <div className="bg-gray-50 rounded-xl p-6">
+                <h4 className="font-bold text-lg mb-2">Increased Visibility</h4>
+                <p className="text-gray-600 text-sm">LED lighting makes products impossible to miss, leading to more purchases.</p>
               </div>
-
-              <div className="text-center p-4">
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <h4 className="font-semibold mb-1">Higher Perceived Value</h4>
-                <p className="text-sm text-gray-600">Premium presentation justifies premium pricing</p>
+              <div className="bg-gray-50 rounded-xl p-6">
+                <h4 className="font-bold text-lg mb-2">Higher Perceived Value</h4>
+                <p className="text-gray-600 text-sm">Premium presentation justifies premium pricing. Customers pay more.</p>
               </div>
-
-              <div className="text-center p-4">
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <h4 className="font-semibold mb-1">Longer Browsing</h4>
-                <p className="text-sm text-gray-600">Attractive displays keep customers shopping longer</p>
+              <div className="bg-gray-50 rounded-xl p-6">
+                <h4 className="font-bold text-lg mb-2">Longer Browsing Time</h4>
+                <p className="text-gray-600 text-sm">Organized displays keep customers shopping longer, increasing basket size.</p>
               </div>
             </div>
           </div>
@@ -412,7 +331,49 @@ export default async function DisplayCasesForSmokeShops() {
       </section>
 
       {/* ============================================
-          FINAL CTA SECTION (Strong Close)
+          BEFORE / AFTER SECTION
+          ============================================ */}
+      <section className="section-padding bg-gray-900 text-white">
+        <div className="container-custom">
+          <div className="max-w-4xl mx-auto text-center mb-12">
+            <h2 className="heading-lg mb-4">Upgrade Your Store Experience Instantly</h2>
+            <p className="text-gray-400 text-lg">
+              See the difference professional display cases make.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            <div className="bg-gray-800 rounded-xl p-8 text-center border border-gray-700">
+              <span className="text-sm font-semibold text-red-400 uppercase tracking-wider mb-4 block">Before</span>
+              <p className="text-gray-300 text-lg">Products lost on standard shelves. Low perceived value. Missed impulse sales. Customers rush through.</p>
+            </div>
+            <div className="bg-gradient-to-br from-blue-900 to-gray-800 rounded-xl p-8 text-center border border-blue-700">
+              <span className="text-sm font-semibold text-green-400 uppercase tracking-wider mb-4 block">After</span>
+              <p className="text-white text-lg">Products command attention. 40% higher perceived value. 35% more impulse purchases. Customers linger and buy more.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================
+          MID-PAGE CTA
+          ============================================ */}
+      <section className="section-padding bg-gray-50">
+        <div className="container-custom">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="heading-lg mb-6">Ready to upgrade your store?</h2>
+            <p className="text-xl text-gray-600 mb-8">
+              Join hundreds of smoke shop owners who have already made the switch to professional display cases.
+            </p>
+            <Button href={ROUTES.COLLECTION} variant="primary" size="lg" className="text-lg px-10 py-5">
+              Browse Display Cases
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================
+          FINAL CTA - STRONG CLOSE
           ============================================ */}
       <section className="section-padding bg-black text-white">
         <div className="container-custom">
@@ -421,14 +382,14 @@ export default async function DisplayCasesForSmokeShops() {
               Upgrade Your Smoke Shop Today
             </h2>
             <p className="text-xl text-gray-300 mb-10 max-w-2xl mx-auto">
-              Turn your display into a sales-driving asset with premium LED cases. Join hundreds of smoke shop owners who've already made the switch.
+              Turn your display into a high-converting sales tool. Increase visibility, improve security, and boost revenue with professional LED display cases.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button href={ROUTES.COLLECTION} variant="primary" size="lg" className="text-lg px-10 py-5 bg-white text-black hover:bg-gray-200">
                 Shop Now
               </Button>
               <Button href={ROUTES.CONTACT} variant="secondary" size="lg" className="text-lg px-10 py-5 border-white text-white hover:bg-white hover:text-black">
-                Get a Free Quote
+                Get a Quote
               </Button>
             </div>
             <p className="mt-8 text-gray-500 text-sm">

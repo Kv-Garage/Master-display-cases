@@ -41,6 +41,16 @@ export const metadata: Metadata = {
   authors: [{ name: "Master Display Cases" }],
   creator: "Master Display Cases",
   publisher: "Master Display Cases",
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/New logo.png', sizes: '192x192', type: 'image/png' },
+      { url: '/New logo.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/New logo.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
   formatDetection: {
     email: false,
     address: false,
