@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/Header";
@@ -109,6 +110,24 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} scroll-smooth`}>
+      {/* Google Ads Tag */}
+      <Script
+        id="google-ads-tag"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'AW-18131039337');
+          `,
+        }}
+      />
+      <Script
+        id="google-ads-script"
+        src="https://www.googletagmanager.com/gtag/js?id=AW-18131039337"
+        strategy="afterInteractive"
+      />
       <body className="min-h-screen flex flex-col font-sans antialiased">
         <AnalyticsProvider />
         <CartProvider>

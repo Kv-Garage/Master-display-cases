@@ -18,6 +18,7 @@ export function isShopifyConfigured(): boolean {
 export function normalizeProduct(product: any) {
   const firstVariant = product.variants?.edges?.[0]?.node;
   const firstImage = product.images?.edges?.[0]?.node;
+  const price = parseFloat(firstVariant?.price?.amount || '0');
   
   return {
     id: product.id,
@@ -29,8 +30,8 @@ export function normalizeProduct(product: any) {
       url: node.url,
       altText: node.altText,
     })),
-    price: parseFloat(firstVariant?.price?.amount || '0'),
-    priceFormatted: formatPrice(parseFloat(firstVariant?.price?.amount || '0')),
+    price: price,
+    priceFormatted: formatPrice(price),
     compareAtPrice: firstVariant?.compareAtPrice?.amount ? parseFloat(firstVariant.compareAtPrice.amount) : null,
     currency: firstVariant?.price?.currencyCode || 'USD',
     variantId: firstVariant?.id,
