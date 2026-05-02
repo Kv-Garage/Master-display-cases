@@ -2,9 +2,13 @@
  * Buy Now functionality using Shopify Storefront API
  * Creates a cart, adds item, and redirects to checkout using checkoutUrl ONLY
  * NO manual URL building - uses checkoutUrl from API
+ * 
+ * IMPORTANT: After checkout completion, user will be redirected back to
+ * masterdisplaycases.com/thank-you via the checkout redirect parameter
  */
 
 import { createCart, addToCart } from "./cart";
+import { getCheckoutUrl } from "./checkout";
 
 export async function buyNow(variantId: string) {
   // Validate variant ID format
@@ -39,10 +43,24 @@ export async function buyNow(variantId: string) {
       return;
     }
 
-    console.log("🚀 REDIRECTING:", updated.checkoutUrl);
+    // Get the properly configured checkout URL with redirect parameters
+    const checkoutUrl = getCheckoutUrl(updated.checkoutUrl);
+    console.log("🚀 REDIRECTING:", checkoutUrl);
 
-    // Redirect to Shopify checkout using checkoutUrl ONLY
-    window.location.href = updated.checkoutUrl;
+    // Store item details for post-checkout reference
+    try {
+      localStorage.setItem('last_order', JSON.stringify({
+        items: [{ variantId, quantity: 1 }],
+        timestamp: Date.now(),
+        isBuyNow: true,
+      }));
+    } catch (e) {
+      console.warn('Could not store order details:', e);
+    }
+
+    // Redirect to Shopify checkout
+    // The URL includes redirect parameters to return to masterdisplaycases.com/thank-you
+    window.location.href = checkoutUrl;
   } catch (err) {
     console.error("❌ Checkout failed:", err);
     alert("Checkout failed. Please try again.");

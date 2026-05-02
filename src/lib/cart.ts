@@ -6,32 +6,16 @@
  * CRITICAL: Checkout URLs MUST use mraze2-ra.myshopify.com domain
  * Custom domain (masterdisplaycases.com) will cause 404 errors
  * because it's hosted on Netlify, not Shopify.
+ * 
+ * After checkout, users are redirected back to masterdisplaycases.com/thank-you
+ * via the checkout redirect parameter (handled by src/lib/checkout.ts)
  */
 
 import { shopifyFetch } from "./shopify-client";
+import { normalizeCheckoutUrl } from "./checkout";
 
-// The correct Shopify domain for checkout
-const SHOPIFY_DOMAIN = 'mraze2-ra.myshopify.com';
-
-/**
- * Normalize checkout URL to always use the correct myshopify.com domain
- * Shopify may return URLs with custom domain if domain redirection is enabled
- */
-function normalizeCheckoutUrl(url: string): string {
-  if (!url) return url;
-  
-  // If URL already uses the correct domain, return as-is
-  if (url.includes(SHOPIFY_DOMAIN)) {
-    return url;
-  }
-  
-  // Replace custom domain with correct myshopify.com domain
-  const normalized = url.replace(/https?:\/\/masterdisplaycases\.com/i, `https://${SHOPIFY_DOMAIN}`);
-  
-  console.log('🔧 Normalized checkout URL:', normalized);
-  
-  return normalized;
-}
+// The correct Shopify domain for checkout (re-exported for reference)
+export { SHOPIFY_CHECKOUT_DOMAIN as SHOPIFY_DOMAIN } from "./checkout";
 
 export interface Cart {
   id: string;

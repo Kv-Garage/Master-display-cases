@@ -12,6 +12,7 @@ import {
 } from '@/lib/cart-utils';
 import { createCart, addToCart as apiAddToCart } from '@/lib/cart';
 import { buyNow } from '@/lib/buy-now';
+import { getCheckoutUrl, STOREFRONT_URL, interceptShopifyRedirect } from '@/lib/checkout';
 
 // Re-export types for compatibility
 export type { CartItemWithDetails as CartItem };
@@ -125,6 +126,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
    * Go to checkout using Shopify Storefront API
    * Creates a cart, adds all items, and redirects to checkoutUrl ONLY
    * NO /cart/ URLs - uses Shopify's checkoutUrl from API response
+   * 
+   * IMPORTANT: After checkout completion, user will be redirected back to
+   * masterdisplaycases.com/thank-you via the checkout redirect parameter
    */
   const goToCheckout = useCallback(async () => {
     const cartItems = getCartItemsForApi();
@@ -182,14 +186,28 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      console.log('🚀 CHECKOUT URL:', updatedCart.checkoutUrl);
+      // Get the properly configured checkout URL with redirect parameters
+      const checkoutUrl = getCheckoutUrl(updatedCart.checkoutUrl);
+      console.log('🚀 CHECKOUT URL:', checkoutUrl);
+
+      // Store cart items in localStorage for post-checkout reference
+      // This helps us show order details on the thank you page
+      try {
+        localStorage.setItem('last_order', JSON.stringify({
+          items: items, // Use the full items array with details
+          timestamp: Date.now(),
+          total: totalPrice, // Use the already calculated totalPrice
+        }));
+      } catch (e) {
+        console.warn('Could not store order details:', e);
+      }
 
       // Clear local cart since we've moved to Shopify
       clearCart();
 
-      // Redirect to Shopify checkout using checkoutUrl ONLY
-      // NO /cart/ URLs - direct to Shopify's secure checkout
-      window.location.href = updatedCart.checkoutUrl;
+      // Redirect to Shopify checkout
+      // The URL includes redirect parameters to return to masterdisplaycases.com/thank-you
+      window.location.href = checkoutUrl;
     } catch (error) {
       console.error('❌ Checkout failed:', error);
       alert('Checkout failed. Please try again.');
@@ -199,10 +217,75 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   /**
    * Buy now - creates cart with single item and redirects to checkout
+   * Uses the same redirect logic as goToCheckout to ensure user returns
+   * to masterdisplaycases.com after checkout
    */
   const buyNowItem = useCallback(async (variantId: string) => {
-    await buyNow(variantId);
-  }, []);
+    // Validate variant ID format
+    if (!variantId || !variantId.includes('ProductVariant')) {
+      console.error('❌ INVALID VARIANT ID:', variantId);
+      console.error('   Expected format: gid://shopify/ProductVariant/XXXX');
+      alert('Invalid product variant. Please try again.');
+      return;
+    }
+
+    if (isCheckingOut) {
+      console.log('[Buy Now] Already processing checkout');
+      return;
+    }
+
+    try {
+      setIsCheckingOut(true);
+      console.log('🚀 Buy Now initiated for variant:', variantId);
+
+      // Create a new cart
+      const cart = await createCart();
+
+      if (!cart?.id) {
+        console.error('❌ Cart creation failed');
+        alert('Unable to create cart. Please try again.');
+        setIsCheckingOut(false);
+        return;
+      }
+
+      console.log('✅ Cart created:', cart.id);
+
+      // Add item to cart
+      const updated = await apiAddToCart(cart.id, variantId, 1);
+
+      if (!updated?.checkoutUrl) {
+        console.error('❌ Checkout URL missing');
+        alert('Unable to proceed to checkout. Please try again.');
+        setIsCheckingOut(false);
+        return;
+      }
+
+      // Get the properly configured checkout URL with redirect parameters
+      const checkoutUrl = getCheckoutUrl(updated.checkoutUrl);
+      console.log('🚀 REDIRECTING:', checkoutUrl);
+
+      // Store item details for post-checkout reference
+      try {
+        localStorage.setItem('last_order', JSON.stringify({
+          items: [{ variantId, quantity: 1 }],
+          timestamp: Date.now(),
+          isBuyNow: true,
+        }));
+      } catch (e) {
+        console.warn('Could not store order details:', e);
+      }
+
+      // Clear local cart
+      clearCart();
+
+      // Redirect to Shopify checkout
+      window.location.href = checkoutUrl;
+    } catch (err) {
+      console.error('❌ Buy Now failed:', err);
+      alert('Checkout failed. Please try again.');
+      setIsCheckingOut(false);
+    }
+  }, [isCheckingOut, clearCart, apiAddToCart]);
 
   return (
     <CartContext.Provider
