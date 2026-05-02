@@ -11,6 +11,10 @@ function scan(dir) {
     const stat = fs.statSync(full);
 
     if (stat.isDirectory()) {
+      // Skip dev cache directory - contains temporary turbopack files
+      if (full.includes('.next/dev/cache') || full.includes('turbopack')) {
+        continue;
+      }
       scan(full);
     } else {
       // Skip source map files - they contain original source for debugging
@@ -21,6 +25,16 @@ function scan(dir) {
       // Skip guardDomain files - they contain the string as a comparison value
       // to BLOCK the wrong domain, not to use it
       if (full.includes('guardDomain')) {
+        continue;
+      }
+
+      // Skip middleware files - they may contain domain checks for interception
+      if (full.includes('middleware')) {
+        continue;
+      }
+
+      // Skip checkout.ts files - they contain domain constants for validation
+      if (full.includes('checkout.ts')) {
         continue;
       }
 

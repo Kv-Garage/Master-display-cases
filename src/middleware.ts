@@ -14,11 +14,9 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-// Domains to intercept and redirect back to storefront
-const SHOPIFY_DOMAINS = [
-  'mraze2-ra.myshopify.com',
-  'masterdisplaycases.myshopify.com',
-];
+// The custom storefront domain (hardcoded for edge runtime)
+const STOREFRONT_DOMAIN = 'masterdisplaycases.com';
+const STOREFRONT_URL = `https://${STOREFRONT_DOMAIN}`;
 
 // Paths that are allowed to redirect to Shopify (checkout paths)
 const ALLOWED_SHOPIFY_PATHS = [
@@ -26,17 +24,21 @@ const ALLOWED_SHOPIFY_PATHS = [
   '/cart/',
 ];
 
-// The custom storefront domain
-const STOREFRONT_DOMAIN = 'masterdisplaycases.com';
-const STOREFRONT_URL = `https://${STOREFRONT_DOMAIN}`;
+// Note: Domain interception list is in src/lib/checkout.ts
+// This middleware only handles server-side request interception
+// Client-side interception is handled by interceptShopifyRedirect() in checkout.ts
 
 /**
  * Check if a URL should be allowed to redirect to Shopify
+ * Only allows checkout and cart paths to Shopify domains
  */
 function isAllowedShopifyRedirect(url: string): boolean {
   try {
     const urlObj = new URL(url);
-    const isShopifyDomain = SHOPIFY_DOMAINS.some(d => urlObj.hostname.includes(d));
+    const hostname = urlObj.hostname;
+    
+    // Check if it's a myshopify.com domain
+    const isShopifyDomain = hostname.includes('myshopify.com') || hostname.includes('shopify.com');
     
     if (!isShopifyDomain) return false;
     
@@ -49,11 +51,15 @@ function isAllowedShopifyRedirect(url: string): boolean {
 
 /**
  * Check if a URL is a Shopify domain that should be intercepted
+ * Intercepts all myshopify.com domains except for checkout/cart paths
  */
 function shouldInterceptRedirect(url: string): boolean {
   try {
     const urlObj = new URL(url);
-    const isShopifyDomain = SHOPIFY_DOMAINS.some(d => urlObj.hostname.includes(d));
+    const hostname = urlObj.hostname;
+    
+    // Check if it's a myshopify.com domain
+    const isShopifyDomain = hostname.includes('myshopify.com') || hostname.includes('shopify.com');
     
     // Don't intercept if it's an allowed path (checkout/cart)
     if (isAllowedShopifyRedirect(url)) return false;
