@@ -1,77 +1,21 @@
 /**
- * Middleware for Domain Redirect Interception
+ * Middleware for Security Headers Only
  * 
- * This middleware runs on every request and:
- * 1. Intercepts any redirects to Shopify domains (except checkout)
- * 2. Ensures all navigation stays on masterdisplaycases.com
- * 3. Handles post-checkout redirects back to the storefront
+ * This middleware runs on every request and adds security headers.
  * 
- * IMPORTANT: This middleware CANNOT intercept redirects that happen
- * client-side (e.g., window.location.href changes). For those,
- * see the client-side interceptors in src/lib/checkout.ts
+ * NOTE: Product links to Shopify are now direct and should NOT be intercepted.
+ * The previous middleware was incorrectly redirecting all Shopify URLs to homepage,
+ * which broke product links in blog posts and other pages.
+ * 
+ * Product links like https://mraze2-ra.myshopify.com/products/{handle}
+ * should pass through directly to Shopify without any interception.
  */
 
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-// The custom storefront domain (hardcoded for edge runtime)
-const STOREFRONT_DOMAIN = 'masterdisplaycases.com';
-const STOREFRONT_URL = `https://${STOREFRONT_DOMAIN}`;
-
-// Paths that are allowed to redirect to Shopify (checkout paths)
-const ALLOWED_SHOPIFY_PATHS = [
-  '/checkouts/',
-  '/cart/',
-];
-
-// Note: Domain interception list is in src/lib/checkout.ts
-// This middleware only handles server-side request interception
-// Client-side interception is handled by interceptShopifyRedirect() in checkout.ts
-
 /**
- * Check if a URL should be allowed to redirect to Shopify
- * Only allows checkout and cart paths to Shopify domains
- */
-function isAllowedShopifyRedirect(url: string): boolean {
-  try {
-    const urlObj = new URL(url);
-    const hostname = urlObj.hostname;
-    
-    // Check if it's a myshopify.com domain
-    const isShopifyDomain = hostname.includes('myshopify.com') || hostname.includes('shopify.com');
-    
-    if (!isShopifyDomain) return false;
-    
-    // Allow checkout and cart paths
-    return ALLOWED_SHOPIFY_PATHS.some(path => urlObj.pathname.includes(path));
-  } catch {
-    return false;
-  }
-}
-
-/**
- * Check if a URL is a Shopify domain that should be intercepted
- * Intercepts all myshopify.com domains except for checkout/cart paths
- */
-function shouldInterceptRedirect(url: string): boolean {
-  try {
-    const urlObj = new URL(url);
-    const hostname = urlObj.hostname;
-    
-    // Check if it's a myshopify.com domain
-    const isShopifyDomain = hostname.includes('myshopify.com') || hostname.includes('shopify.com');
-    
-    // Don't intercept if it's an allowed path (checkout/cart)
-    if (isAllowedShopifyRedirect(url)) return false;
-    
-    return isShopifyDomain;
-  } catch {
-    return false;
-  }
-}
-
-/**
- * Main middleware function
+ * Main middleware function - only adds security headers
  */
 export function middleware(request: NextRequest) {
   const response = NextResponse.next();
@@ -80,22 +24,6 @@ export function middleware(request: NextRequest) {
   response.headers.set('X-Content-Type-Options', 'nosniff');
   response.headers.set('X-Frame-Options', 'SAMEORIGIN');
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
-  
-  // Check the Referer header for Shopify domains (indicates user came from checkout)
-  const referer = request.headers.get('referer');
-  if (referer && shouldInterceptRedirect(referer)) {
-    // User is coming from a Shopify page that's not checkout
-    // Redirect them to the storefront
-    console.log('🔄 Middleware intercepting referer:', referer);
-    return NextResponse.redirect(new URL('/', request.url));
-  }
-  
-  // Check for Shopify redirect attempts in the request URL
-  const url = request.url;
-  if (shouldInterceptRedirect(url)) {
-    console.log('🔄 Middleware intercepting URL:', url);
-    return NextResponse.redirect(new URL('/', request.url));
-  }
   
   return response;
 }

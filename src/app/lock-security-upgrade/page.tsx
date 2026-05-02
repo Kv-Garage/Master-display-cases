@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Button from '@/components/ui/Button';
+import { getShopifyProductUrl } from '@/lib/shopify-urls';
 
 // SEO Metadata
 export const metadata = {
@@ -211,7 +212,7 @@ export default function LockSecurityUpgradePage() {
                     <span>Reinforced mounting hardware included</span>
                   </li>
                 </ul>
-                <Link href="/products/products-48-led-retail-display-showcase-rgb" className="inline-flex items-center text-sm font-semibold uppercase tracking-wider hover:underline">
+                <Link href={getShopifyProductUrl('products-48-led-retail-display-showcase-rgb')} className="inline-flex items-center text-sm font-semibold uppercase tracking-wider hover:underline">
                   Add to Order →
                 </Link>
               </div>
@@ -362,7 +363,7 @@ export default function LockSecurityUpgradePage() {
               Don't wait until after an incident. Upgrade your security now and protect what matters most to your business.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button href="/products/products-48-led-retail-display-showcase-rgb" variant="primary" size="lg">
+              <Button href={getShopifyProductUrl('products-48-led-retail-display-showcase-rgb')} variant="primary" size="lg">
                 Shop Display Cases
               </Button>
             </div>

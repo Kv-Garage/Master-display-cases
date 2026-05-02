@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Button from '@/components/ui/Button';
 import { ROUTES } from '@/lib/routes';
 import { Metadata } from 'next';
+import { processProductLinks } from '@/lib/shopify-urls';
 
 interface BlogPostPageProps {
   params: Promise<{ handle: string }>;
@@ -202,7 +203,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <article
             className="prose prose-lg max-w-none"
             style={{ maxWidth: '800px', margin: '0 auto' }}
-            dangerouslySetInnerHTML={{ __html: post.content }}
+            dangerouslySetInnerHTML={{ __html: processProductLinks(post.content) }}
           />
 
           {/* Author Box */}

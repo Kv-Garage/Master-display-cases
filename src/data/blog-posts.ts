@@ -41,7 +41,7 @@ export const blogPosts: BlogPost[] = [
       
       <p class="lead">In today's competitive retail landscape, standing out isn't just about what you sell—it's about how you present it. RGB LED lighting has revolutionized the way retailers showcase their products, offering unprecedented flexibility to create atmosphere, influence customer behavior, and dramatically increase perceived product value. This comprehensive guide explores how RGB lighting transforms retail display cases from simple storage into powerful sales tools that captivate customers and drive revenue.</p>
 
-      <p>Whether you operate a smoke shop, vape store, jewelry boutique, or general retail establishment, understanding and implementing RGB LED lighting can be the difference between a store that survives and one that thrives. Our <a href="/products/70-led-retail-display-showcase-rgb">70 LED retail display showcase with RGB lighting</a> represents just one example of how modern retailers are leveraging this technology to create stunning visual experiences.</p>
+      <p>Whether you operate a smoke shop, vape store, jewelry boutique, or general retail establishment, understanding and implementing RGB LED lighting can be the difference between a store that survives and one that thrives. Our <a href="https://mraze2-ra.myshopify.com/products/products-70-led-retail-display-showcase-rgb">70 LED retail display showcase with RGB lighting</a> represents just one example of how modern retailers are leveraging this technology to create stunning visual experiences.</p>
 
       <h2>Why RGB Lighting Matters More Than You Think</h2>
       
@@ -70,7 +70,7 @@ export const blogPosts: BlogPost[] = [
       
       <p><strong>Orange:</strong> Friendly and energetic without the aggression of red. Orange creates a welcoming atmosphere while still encouraging action. It works exceptionally well for lifestyle products and casual brands, making it ideal for vape shops targeting younger demographics.</p>
       
-      <p><strong>Yellow:</strong> Optimistic and attention-grabbing. Yellow is the most visible color to the human eye, making it excellent for drawing attention to specific products or areas. Use yellow lighting to highlight new arrivals or featured products in your <a href="/products/48-rgb-wrap-counter-display-case">RGB wrap counter display case</a>.</p>
+      <p><strong>Yellow:</strong> Optimistic and attention-grabbing. Yellow is the most visible color to the human eye, making it excellent for drawing attention to specific products or areas. Use yellow lighting to highlight new arrivals or featured products in your <a href="https://mraze2-ra.myshopify.com/products/products-48-led-retail-wrap-counter-rgb">RGB wrap counter display case</a>.</p>
 
       <h3>Cool Colors (Blues, Greens, Purples)</h3>
       
@@ -82,7 +82,7 @@ export const blogPosts: BlogPost[] = [
 
       <h3>Neutral Colors (White, Black, Gray)</h3>
       
-      <p><strong>White:</strong> Clean and modern. White lighting (especially cool white around 5000K) provides excellent color accuracy and is ideal for products where true color representation matters—like clothing, cosmetics, or art. Our <a href="/products/glass-countertop-display-case-led">glass countertop display case with LED lighting</a> offers adjustable white temperature settings.</p>
+      <p><strong>White:</strong> Clean and modern. White lighting (especially cool white around 5000K) provides excellent color accuracy and is ideal for products where true color representation matters—like clothing, cosmetics, or art. Our <a href="https://mraze2-ra.myshopify.com/products/products-48-led-retail-wrap-counter-rgb">glass countertop display case with LED lighting</a> offers adjustable white temperature settings.</p>
       
       <p><strong>Warm White:</strong> Inviting and comfortable. Around 2700-3000K, warm white creates a cozy, premium atmosphere perfect for jewelry, wood products, and luxury goods. This is the go-to choice for creating an upscale shopping experience.</p>
 
@@ -137,7 +137,7 @@ export const blogPosts: BlogPost[] = [
         <li><strong>Color Rendering Index (CRI):</strong> Aim for CRI 90+ for accurate product color representation</li>
       </ul>
 
-      <p>Our <a href="/products/70-led-retail-display-showcase-rgb">70 LED retail display showcase</a> features premium RGB LEDs with high CRI ratings and exceptional color accuracy.</p>
+      <p>Our <a href="https://mraze2-ra.myshopify.com/products/products-70-led-retail-display-showcase-rgb">70 LED retail display showcase</a> features premium RGB LEDs with high CRI ratings and exceptional color accuracy.</p>
 
       <h3>Control Systems</h3>
       
@@ -165,7 +165,7 @@ export const blogPosts: BlogPost[] = [
         <li>Use vibrant colors to create an energetic, youthful atmosphere</li>
         <li>Highlight specific product categories with dedicated colors (e.g., green for CBD products)</li>
         <li>Create dynamic light shows during peak hours to draw attention</li>
-        <li>Use our <a href="/products/48-rgb-wrap-counter-display-case">48 RGB wrap counter display case</a> for maximum visual impact at the point of sale</li>
+        <li>Use our <a href="https://mraze2-ra.myshopify.com/products/products-48-led-retail-wrap-counter-rgb">48 RGB wrap counter display case</a> for maximum visual impact at the point of sale</li>
         <li>Program color transitions that match your store's music or events</li>
       </ul>
 
@@ -178,7 +178,7 @@ export const blogPosts: BlogPost[] = [
         <li>Add subtle blue accents to enhance silver and white gold</li>
         <li>Use warm accents for gold pieces</li>
         <li>Implement dimming for intimate, high-end consultations</li>
-        <li>Consider our <a href="/products/glass-countertop-display-case-led">glass countertop display case</a> with precision LED placement</li>
+        <li>Consider our <a href="https://mraze2-ra.myshopify.com/products/products-48-led-retail-wrap-counter-rgb">glass countertop display case</a> with precision LED placement</li>
       </ul>
 
       <h3>General Retail and Boutiques</h3>
@@ -189,7 +189,7 @@ export const blogPosts: BlogPost[] = [
         <li>Use neutral white as your base for accurate product representation</li>
         <li>Add RGB accents for seasonal promotions</li>
         <li>Program color schemes that match your brand identity</li>
-        <li>Use our <a href="/products/floor-standing-led-display-case">floor standing LED display case</a> for dramatic focal points</li>
+        <li>Use our <a href="https://mraze2-ra.myshopify.com/products/products-70-led-retail-display-showcase-rgb">floor standing LED display case</a> for dramatic focal points</li>
       </ul>
 
       <h2>Common RGB Lighting Mistakes to Avoid</h2>
@@ -261,7 +261,7 @@ export const blogPosts: BlogPost[] = [
 
       <h3>Size and Configuration</h3>
       
-      <p>Choose sizes that fit your space and product needs. Our <a href="/products/70-led-retail-display-showcase-rgb">70 LED retail display showcase</a> offers generous display space for larger products, while our <a href="/products/48-rgb-wrap-counter-display-case">48 RGB wrap counter display case</a> is perfect for checkout areas and smaller spaces.</p>
+      <p>Choose sizes that fit your space and product needs. Our <a href="https://mraze2-ra.myshopify.com/products/products-70-led-retail-display-showcase-rgb">70 LED retail display showcase</a> offers generous display space for larger products, while our <a href="https://mraze2-ra.myshopify.com/products/products-48-led-retail-wrap-counter-rgb">48 RGB wrap counter display case</a> is perfect for checkout areas and smaller spaces.</p>
 
       <h3>Lighting Quality</h3>
       
@@ -283,7 +283,7 @@ export const blogPosts: BlogPost[] = [
 
       <p>At Master Display Cases, all our premium display cases feature high-quality RGB LED lighting systems with intuitive controls. Our team can help you design a lighting strategy that maximizes your retail impact and ROI.</p>
 
-      <p><a href="/products/70-led-retail-display-showcase-rgb">Explore our RGB display case collection</a> or <a href="/contact">contact our team</a> to learn how RGB lighting can transform your retail space. We offer personalized consultations to help you create the perfect lighting strategy for your unique needs.</p>
+      <p><a href="https://mraze2-ra.myshopify.com/products/products-70-led-retail-display-showcase-rgb">Explore our RGB display case collection</a> or <a href="/contact">contact our team</a> to learn how RGB lighting can transform your retail space. We offer personalized consultations to help you create the perfect lighting strategy for your unique needs.</p>
 
       <p>For more insights on retail display strategies, check out our guides on <a href="/blogs/visual-merchandising-guide">visual merchandising strategies</a> and <a href="/blogs/smoke-shop-display-strategies">smoke shop display optimization</a>.</p>
 
@@ -319,7 +319,7 @@ export const blogPosts: BlogPost[] = [
       
       <p class="lead">Smoke shops and vape stores face unique retail challenges that most other retailers never encounter. Your products are small, high-value, easily concealable, and unfortunately targeted by organized retail crime. At the same time, customers need to see and understand your products to make informed purchases. The solution? Display strategies that balance robust security with compelling product presentation. This comprehensive guide shows you how to achieve both—protecting your inventory while maximizing your sales potential.</p>
 
-      <p>Whether you're opening a new smoke shop, upgrading your existing displays, or expanding to multiple locations, understanding the intersection of security and sales is critical to your success. Our <a href="/products/48-rgb-wrap-counter-display-case">48 RGB wrap counter display case</a> exemplifies how modern display solutions can provide both security and visual appeal.</p>
+      <p>Whether you're opening a new smoke shop, upgrading your existing displays, or expanding to multiple locations, understanding the intersection of security and sales is critical to your success. Our <a href="https://mraze2-ra.myshopify.com/products/products-48-led-retail-wrap-counter-rgb">48 RGB wrap counter display case</a> exemplifies how modern display solutions can provide both security and visual appeal.</p>
 
       <h2>The Unique Challenges of Smoke Shop Retail</h2>
       
@@ -347,7 +347,7 @@ export const blogPosts: BlogPost[] = [
         <li><strong>Laminated glass:</strong> Two layers of glass with a plastic interlayer. Even if broken, the glass stays intact, making it extremely difficult to reach through. This is ideal for your highest-value products and provides an additional layer of security that can deter determined thieves.</li>
       </ul>
 
-      <p>Both options provide excellent visibility while offering superior protection. The key is choosing the right thickness—typically 6mm to 10mm for smoke shop applications. Our <a href="/products/glass-countertop-display-case-led">glass countertop display case with LED lighting</a> features premium tempered glass that provides both security and crystal-clear product visibility.</p>
+      <p>Both options provide excellent visibility while offering superior protection. The key is choosing the right thickness—typically 6mm to 10mm for smoke shop applications. Our <a href="https://mraze2-ra.myshopify.com/products/products-48-led-retail-wrap-counter-rgb">glass countertop display case with LED lighting</a> features premium tempered glass that provides both security and crystal-clear product visibility.</p>
 
       <h3>2. Advanced Locking Systems</h3>
       
@@ -391,7 +391,7 @@ export const blogPosts: BlogPost[] = [
         <li><strong>RGB options:</strong> Create atmosphere and highlight specific product categories with dynamic colors</li>
       </ul>
 
-      <p>Consider RGB LED systems for flexibility. You can use different colors to highlight specific product categories—green for CBD products, blue for vape devices, warm white for premium glassware. Our <a href="/products/70-led-retail-display-showcase-rgb">70 LED retail display showcase with RGB lighting</a> provides the perfect platform for this approach.</p>
+      <p>Consider RGB LED systems for flexibility. You can use different colors to highlight specific product categories—green for CBD products, blue for vape devices, warm white for premium glassware. Our <a href="https://mraze2-ra.myshopify.com/products/products-70-led-retail-display-showcase-rgb">70 LED retail display showcase with RGB lighting</a> provides the perfect platform for this approach.</p>
 
       <h3>Adjustable Shelving</h3>
       
@@ -429,7 +429,7 @@ export const blogPosts: BlogPost[] = [
         <li>Include product information cards visible through the glass—customers need to understand features and specifications</li>
         <li>Keep best-sellers at eye level for maximum visibility and accessibility</li>
         <li>Use tiered shelving to maximize visibility of small items like cartridges and pods</li>
-        <li>Consider our <a href="/products/48-rgb-wrap-counter-display-case">48 RGB wrap counter display case</a> for maximum impact at the point of sale</li>
+        <li>Consider our <a href="https://mraze2-ra.myshopify.com/products/products-48-led-retail-wrap-counter-rgb">48 RGB wrap counter display case</a> for maximum impact at the point of sale</li>
       </ul>
 
       <h3>Glassware and Pipes</h3>
@@ -453,7 +453,7 @@ export const blogPosts: BlogPost[] = [
         <li>Floor-standing cases with wider dimensions accommodate larger hookah bases and stems</li>
         <li>Disassemble hookahs to show components—this helps customers understand quality and features</li>
         <li>Include accessory bundles displayed together to encourage larger purchases</li>
-        <li>Use our <a href="/products/floor-standing-led-display-case">floor standing LED display case</a> for dramatic presentation of premium pieces</li>
+        <li>Use our <a href="https://mraze2-ra.myshopify.com/products/products-70-led-retail-display-showcase-rgb">floor standing LED display case</a> for dramatic presentation of premium pieces</li>
         <li>Include detailed product specifications visible through the glass</li>
       </ul>
 
@@ -575,7 +575,7 @@ export const blogPosts: BlogPost[] = [
 
       <p>At Master Display Cases, we specialize in secure, attractive display solutions for smoke shops and vape stores. Our cases feature tempered glass, quality locking systems, and premium LED lighting that showcases your products beautifully while keeping them safe.</p>
 
-      <p><a href="/products/48-rgb-wrap-counter-display-case">Explore our smoke shop display solutions</a> or <a href="/contact">contact our team</a> for recommendations tailored to your store's specific needs. We offer free consultations to help you design the perfect display strategy.</p>
+      <p><a href="https://mraze2-ra.myshopify.com/products/products-48-led-retail-wrap-counter-rgb">Explore our smoke shop display solutions</a> or <a href="/contact">contact our team</a> for recommendations tailored to your store's specific needs. We offer free consultations to help you design the perfect display strategy.</p>
 
       <p>For more insights on retail display optimization, check out our guides on <a href="/blogs/rgb-retail-lighting-guide">RGB lighting strategies</a> and <a href="/blogs/visual-merchandising-guide">visual merchandising fundamentals</a>.</p>
 
@@ -611,7 +611,7 @@ export const blogPosts: BlogPost[] = [
       
       <p class="lead">Visual merchandising is the art and science of presenting products in a way that attracts customers, tells a story, and drives sales. It's the difference between a store that customers walk through and one they explore, remember, and return to. In display cases—where your most valuable products live—visual merchandising becomes even more critical. This comprehensive guide will teach you how to create display case presentations that captivate customers and convert browsers into buyers.</p>
 
-      <p>Whether you operate a smoke shop, vape store, jewelry boutique, or general retail establishment, the principles in this guide apply universally. Our <a href="/products/70-led-retail-display-showcase-rgb">70 LED retail display showcase</a> and <a href="/products/glass-countertop-display-case-led">glass countertop display case</a> are designed with these visual merchandising principles in mind.</p>
+      <p>Whether you operate a smoke shop, vape store, jewelry boutique, or general retail establishment, the principles in this guide apply universally. Our <a href="https://mraze2-ra.myshopify.com/products/products-70-led-retail-display-showcase-rgb">70 LED retail display showcase</a> and <a href="https://mraze2-ra.myshopify.com/products/products-48-led-retail-wrap-counter-rgb">glass countertop display case</a> are designed with these visual merchandising principles in mind.</p>
 
       <h2>What Is Visual Merchandising and Why Does It Matter?</h2>
       
@@ -637,7 +637,7 @@ export const blogPosts: BlogPost[] = [
 
       <h3>The 7-Second Rule</h3>
       
-      <p>Customers form their first impression of your store within 7 seconds of entering. This impression is almost entirely visual. Your entrance area display cases must immediately communicate quality, relevance, and appeal. This is where your <a href="/products/floor-standing-led-display-case">floor standing LED display case</a> can make a dramatic first impression.</p>
+      <p>Customers form their first impression of your store within 7 seconds of entering. This impression is almost entirely visual. Your entrance area display cases must immediately communicate quality, relevance, and appeal. This is where your <a href="https://mraze2-ra.myshopify.com/products/products-70-led-retail-display-showcase-rgb">floor standing LED display case</a> can make a dramatic first impression.</p>
 
       <h3>The Decompression Zone</h3>
       
@@ -706,7 +706,7 @@ export const blogPosts: BlogPost[] = [
         <li><strong>Brand colors:</strong> Incorporate your brand colors for consistency and recognition</li>
       </ul>
 
-      <p>With RGB lighting in display cases like our <a href="/products/48-rgb-wrap-counter-display-case">48 RGB wrap counter display case</a>, you can change the color scheme instantly to match any strategy.</p>
+      <p>With RGB lighting in display cases like our <a href="https://mraze2-ra.myshopify.com/products/products-48-led-retail-wrap-counter-rgb">48 RGB wrap counter display case</a>, you can change the color scheme instantly to match any strategy.</p>
 
       <h3>5. Negative Space</h3>
       
@@ -734,7 +734,7 @@ export const blogPosts: BlogPost[] = [
         <li><strong>Layered lighting:</strong> Combine multiple lighting types for depth and interest</li>
       </ul>
 
-      <p>Our <a href="/products/70-led-retail-display-showcase-rgb">70 LED retail display showcase</a> features multi-zone RGB lighting that allows you to create different lighting effects within the same case.</p>
+      <p>Our <a href="https://mraze2-ra.myshopify.com/products/products-70-led-retail-display-showcase-rgb">70 LED retail display showcase</a> features multi-zone RGB lighting that allows you to create different lighting effects within the same case.</p>
 
       <h2>Product Grouping Strategies for Display Cases</h2>
 
@@ -879,7 +879,7 @@ export const blogPosts: BlogPost[] = [
 
       <p>At Master Display Cases, we design our display cases with visual merchandising principles in mind. Our cases feature optimal sight lines, premium LED lighting (including RGB options), and flexible configurations that make it easy to create stunning displays.</p>
 
-      <p><a href="/products/70-led-retail-display-showcase-rgb">Explore our display case collection</a> or <a href="/contact">contact our team</a> for guidance on creating displays that captivate customers and drive sales.</p>
+      <p><a href="https://mraze2-ra.myshopify.com/products/products-70-led-retail-display-showcase-rgb">Explore our display case collection</a> or <a href="/contact">contact our team</a> for guidance on creating displays that captivate customers and drive sales.</p>
 
       <p>For more insights on retail optimization, check out our guides on <a href="/blogs/rgb-retail-lighting-guide">RGB lighting strategies</a> and <a href="/blogs/smoke-shop-display-strategies">smoke shop display solutions</a>.</p>
 
@@ -940,7 +940,7 @@ export const blogPosts: BlogPost[] = [
       
       <p>Where you place your display cases matters immensely. The goal is to guide customers through your store while maximizing exposure to your highest-margin products.</p>
 
-      <p><strong>High-Traffic Zones:</strong> Position your most impressive display cases in areas with the heaviest foot traffic. This is typically the entrance area or along the main pathway through your store. First impressions matter, and a stunning <a href="/products/70-led-retail-display-showcase-rgb">LED retail display case</a> sets the tone for the entire shopping experience.</p>
+      <p><strong>High-Traffic Zones:</strong> Position your most impressive display cases in areas with the heaviest foot traffic. This is typically the entrance area or along the main pathway through your store. First impressions matter, and a stunning <a href="https://mraze2-ra.myshopify.com/products/products-70-led-retail-display-showcase-rgb">LED retail display case</a> sets the tone for the entire shopping experience.</p>
 
       <p><strong>Sight Lines:</strong> Consider what customers see when they walk in. Can they see your premium displays from the entrance? Are there clear sight lines that draw the eye deeper into the store? Strategic placement creates a visual journey that encourages exploration.</p>
 
@@ -948,7 +948,7 @@ export const blogPosts: BlogPost[] = [
 
       <h3>2. Lighting: The Secret Weapon of Retail</h3>
       
-      <p>Lighting is perhaps the most underrated element of retail display. Professional <a href="/products/glass-countertop-display-case-led">LED display cases with proper lighting</a> can make products appear up to 34% more valuable.</p>
+      <p>Lighting is perhaps the most underrated element of retail display. Professional <a href="https://mraze2-ra.myshopify.com/products/products-48-led-retail-wrap-counter-rgb">LED display cases with proper lighting</a> can make products appear up to 34% more valuable.</p>
 
       <p><strong>LED vs. Traditional Lighting:</strong> LED lighting has revolutionized retail displays. It produces less heat (protecting sensitive products), uses 75% less energy, and lasts 25 times longer than incandescent bulbs. More importantly, LEDs provide consistent, bright illumination that makes products pop.</p>
 
@@ -1065,7 +1065,7 @@ export const blogPosts: BlogPost[] = [
 
       <p>At Master Display Cases, we've helped hundreds of retailers increase their revenue through strategic display solutions. Our commercial-grade display cases feature premium LED lighting, robust security, and timeless designs that elevate any retail environment.</p>
 
-      <p><a href="/products/70-led-retail-display-showcase-rgb">Explore our collection of professional display cases</a> or <a href="/contact">contact our team</a> for personalized recommendations tailored to your store's unique needs.</p>
+      <p><a href="https://mraze2-ra.myshopify.com/products/products-70-led-retail-display-showcase-rgb">Explore our collection of professional display cases</a> or <a href="/contact">contact our team</a> for personalized recommendations tailored to your store's unique needs.</p>
 
       <hr>
 
@@ -1293,7 +1293,7 @@ export const blogPosts: BlogPost[] = [
 
       <p>Freight shipping doesn't have to be intimidating. With proper preparation and understanding, you can ensure your display cases arrive safely and on time. The key is communication—both with your display case provider and the freight carrier.</p>
 
-      <p>Ready to order display cases for your store? <a href="/products/70-led-retail-display-showcase-rgb">Browse our collection</a> or <a href="/contact">contact our team</a> with any questions about shipping or our products. We're here to make the entire process smooth from order to installation.</p>
+      <p>Ready to order display cases for your store? <a href="https://mraze2-ra.myshopify.com/products/products-70-led-retail-display-showcase-rgb">Browse our collection</a> or <a href="/contact">contact our team</a> with any questions about shipping or our products. We're here to make the entire process smooth from order to installation.</p>
 
       <hr>
 
@@ -1390,7 +1390,7 @@ export const blogPosts: BlogPost[] = [
 
       <p>At Master Display Cases, we specialize in premium display solutions for luxury retailers. Our cases feature museum-quality glass, sophisticated lighting options, and craftsmanship that matches the quality of the products they showcase.</p>
 
-      <p><a href="/products/glass-countertop-display-case-led">Explore our luxury display case collection</a> or <a href="/contact">contact our team</a> to discuss how we can help elevate your retail environment.</p>
+      <p><a href="https://mraze2-ra.myshopify.com/products/products-48-led-retail-wrap-counter-rgb">Explore our luxury display case collection</a> or <a href="/contact">contact our team</a> to discuss how we can help elevate your retail environment.</p>
 
       <hr>
 

@@ -3,7 +3,6 @@ import BeforeAfterGridSection from '@/components/sections/BeforeAfterGridSection
 import TrustBar from '@/components/sections/TrustBar';
 import BenefitsSection from '@/components/sections/BenefitsSection';
 import ProductGridSection from '@/components/sections/ProductGridSection';
-import UseCasesSection from '@/components/sections/UseCasesSection';
 import FAQSection from '@/components/sections/FAQSection';
 import CTASection from '@/components/sections/CTASection';
 import UGCGallery from '@/components/sections/UGCGallery';
@@ -171,8 +170,6 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-
-      <UseCasesSection />
 
       {/* UGC Gallery - Real Store Photos */}
       <UGCGallery />

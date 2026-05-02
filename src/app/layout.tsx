@@ -135,6 +135,72 @@ export default function RootLayout({
         strategy="afterInteractive"
       />
       <body className="min-h-screen flex flex-col font-sans antialiased">
+        {/* Shopify Analytics Bridge Script */}
+        {/* Passes UTM params and referrer data to Shopify when navigating to store */}
+        <Script
+          id="shopify-analytics-bridge"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              // Store UTM params and referrer in sessionStorage for Shopify to pick up
+              (function() {
+                var params = new URLSearchParams(window.location.search);
+                var utmParams = {};
+                var utmKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+                
+                utmKeys.forEach(function(key) {
+                  if (params.get(key)) {
+                    utmParams[key] = params.get(key);
+                  }
+                });
+                
+                // Store in sessionStorage for cross-domain tracking
+                if (Object.keys(utmParams).length > 0) {
+                  sessionStorage.setItem('shopify_utm_params', JSON.stringify(utmParams));
+                }
+                
+                // Store referrer info
+                if (document.referrer) {
+                  sessionStorage.setItem('shopify_referrer', document.referrer);
+                }
+                
+                // Intercept clicks on Shopify links to ensure tracking
+                document.addEventListener('click', function(e) {
+                  var link = e.target.closest('a[href*="mraze2-ra.myshopify.com"]');
+                  if (link) {
+                    var href = link.href;
+                    var url = new URL(href);
+                    var searchParams = url.searchParams;
+                    
+                    // Add UTM params if not present
+                    if (!searchParams.has('utm_source')) {
+                      searchParams.set('utm_source', 'masterdisplaycases.com');
+                    }
+                    if (!searchParams.has('utm_medium')) {
+                      searchParams.set('utm_medium', 'referral');
+                    }
+                    
+                    // Add referrer info
+                    searchParams.set('referrer', window.location.href);
+                    
+                    // Update link href with tracking params
+                    url.search = searchParams.toString();
+                    link.href = url.toString();
+                    
+                    // Track click with GA4
+                    if (typeof gtag === 'function') {
+                      gtag('event', 'shopify_redirect', {
+                        event_category: 'Navigation',
+                        event_label: url.pathname,
+                        destination: href
+                      });
+                    }
+                  }
+                });
+              })();
+            `
+          }}
+        />
         <AnalyticsProvider />
         <CartProvider>
           <Header />

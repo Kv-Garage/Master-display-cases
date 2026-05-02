@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Button from '@/components/ui/Button';
+import { getShopifyProductUrl } from '@/lib/shopify-urls';
 
 // SEO Metadata
 export const metadata = {
@@ -255,10 +256,10 @@ export default function AssemblyOptionsPage() {
               Both tiers include the same premium display case with the same warranty. The only difference is how it arrives.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button href="/products/48-led-counter-display" variant="primary" size="lg">
+              <Button href={getShopifyProductUrl('48-led-counter-display')} variant="primary" size="lg">
                 Shop 48" Counter Display
               </Button>
-              <Button href="/products/70-led-retail-display-showcase" variant="secondary" size="lg">
+              <Button href={getShopifyProductUrl('70-led-retail-display-showcase')} variant="secondary" size="lg">
                 Shop 70" Full Showcase
               </Button>
             </div>
