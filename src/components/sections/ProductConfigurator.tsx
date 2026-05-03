@@ -462,8 +462,8 @@ export default function ProductConfigurator({ products, currentProductHandle, ba
   return (
     <section className="bg-white">
       <div className="container-custom">
-        {/* Header */}
-        <div className="mb-6">
+        {/* Header - Mobile optimized */}
+        <div className="mb-4 lg:mb-6">
           <h2 className="text-xl lg:text-2xl font-bold text-black mb-1">Build Your Store Setup</h2>
           <p className="text-sm text-gray-600">Follow the steps below. Bulk discounts applied automatically.</p>
         </div>
@@ -472,10 +472,10 @@ export default function ProductConfigurator({ products, currentProductHandle, ba
           {/* Left: Configuration Steps */}
           <div className="lg:col-span-2 space-y-4 lg:space-y-5">
             
-            {/* Step 1: Product Selector */}
-            <div className="border border-gray-200 rounded-lg p-4">
-              <div className="flex items-center gap-2 mb-4">
-                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-black text-white text-xs font-semibold">1</span>
+            {/* Step 1: Product Selector - Mobile optimized with larger tap targets */}
+            <div className="border border-gray-200 rounded-lg p-3 lg:p-4">
+              <div className="flex items-center gap-2 mb-3 lg:mb-4">
+                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-black text-white text-xs font-semibold flex-shrink-0">1</span>
                 <label className="text-sm font-semibold text-black">Choose Your Display(s)</label>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
@@ -485,7 +485,7 @@ export default function ProductConfigurator({ products, currentProductHandle, ba
                     <button
                       key={product.id}
                       onClick={() => addProductToBundle(product)}
-                      className={`p-2.5 rounded-md border transition-all text-left ${
+                      className={`p-2 rounded-md border transition-all text-left min-h-[120px] active:scale-95 ${
                         isInBundle
                           ? 'border-black bg-gray-50 ring-1 ring-black'
                           : 'border-gray-200 hover:border-gray-400 hover:bg-gray-50'
@@ -581,28 +581,28 @@ export default function ProductConfigurator({ products, currentProductHandle, ba
                           </div>
                         )}
 
-                        {/* Quantity Controls */}
-                        <div className="flex items-center gap-2">
+                        {/* Quantity Controls - Mobile optimized with larger tap targets */}
+                        <div className="flex items-center gap-3">
                           <span className="text-xs text-gray-500">Qty:</span>
-                          <div className="flex items-center border border-gray-300 rounded">
+                          <div className="flex items-center border border-gray-300 rounded overflow-hidden">
                             <button
                               onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                              className="px-2.5 py-1 text-gray-600 hover:bg-gray-100 text-sm"
+                              className="px-3 py-2 text-gray-600 hover:bg-gray-100 active:bg-gray-200 text-base font-medium min-w-[44px] flex items-center justify-center"
                               disabled={item.quantity <= 1 && bundleItems.length <= 1}
                             >
                               −
                             </button>
-                            <span className="px-2.5 py-1 text-xs font-medium border-x border-gray-300 min-w-[2rem] text-center">
+                            <span className="px-3 py-2 text-sm font-semibold border-x border-gray-300 min-w-[3rem] text-center bg-gray-50">
                               {item.quantity}
                             </span>
                             <button
                               onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                              className="px-2.5 py-1 text-gray-600 hover:bg-gray-100 text-sm"
+                              className="px-3 py-2 text-gray-600 hover:bg-gray-100 active:bg-gray-200 text-base font-medium min-w-[44px] flex items-center justify-center"
                             >
                               +
                             </button>
                           </div>
-                          <span className="text-xs font-medium text-black ml-auto">
+                          <span className="text-sm font-semibold text-black ml-auto">
                             ${(() => {
                               const vPrice = item.selectedVariantId 
                                 ? item.product.variants?.find(v => v.id === item.selectedVariantId)?.price || item.product.price
@@ -763,28 +763,28 @@ export default function ProductConfigurator({ products, currentProductHandle, ba
                 </p>
               </div>
 
-              {/* Primary CTA: Add to Quote */}
+              {/* Primary CTA: Add to Quote - Mobile optimized with larger touch target */}
               <button
                 onClick={handleAddToQuote}
                 disabled={isAdding || bundleItems.length === 0}
-                className="w-full bg-black text-white py-3 rounded-md font-semibold hover:bg-gray-800 transition-colors mb-3 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-black text-white py-4 rounded-lg font-semibold hover:bg-gray-800 active:scale-[0.98] transition-all mb-3 text-sm disabled:opacity-50 disabled:cursor-not-allowed min-h-[48px]"
               >
                 {isAdding ? 'Adding...' : 'Add to Quote'}
               </button>
 
-              {/* Secondary CTA: Buy Now (Express Checkout) */}
+              {/* Secondary CTA: Buy Now (Express Checkout) - Mobile optimized */}
               <button
                 onClick={handleBuyNow}
                 disabled={isAdding || bundleItems.length === 0}
-                className="w-full bg-green-600 text-white py-3 rounded-md font-semibold hover:bg-green-700 transition-colors mb-3 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-green-600 text-white py-4 rounded-lg font-semibold hover:bg-green-700 active:scale-[0.98] transition-all mb-3 text-sm disabled:opacity-50 disabled:cursor-not-allowed min-h-[48px]"
               >
                 Buy Now
               </button>
 
-              {/* Tertiary CTA */}
+              {/* Tertiary CTA - Mobile optimized */}
               <a
                 href="/contact"
-                className="w-full border-2 border-black text-black py-3 rounded-md font-semibold hover:bg-black hover:text-white transition-colors text-center block text-sm"
+                className="w-full border-2 border-black text-black py-4 rounded-lg font-semibold hover:bg-black hover:text-white active:scale-[0.98] transition-all text-center block text-sm min-h-[48px]"
               >
                 Talk to a Specialist
               </a>

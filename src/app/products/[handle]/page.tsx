@@ -5,6 +5,7 @@ import BeforeAfterSlider from '@/components/ui/BeforeAfterSlider';
 import FAQSection from '@/components/sections/FAQSection';
 import UGCGallery from '@/components/sections/UGCGallery';
 import ProductPageReviews from '@/components/sections/ProductReviews';
+import StickyMobileCTA from '@/components/ui/StickyMobileCTA';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
@@ -42,15 +43,28 @@ function WhyUpgradeSection() {
           <p className="text-green-700 font-semibold text-sm bg-green-50 px-4 py-2 rounded-lg">
             💰 Most stores recover this investment in 30–60 days
           </p>
-          <Link
-            href="/collections/rgb-displays"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors text-sm"
-          >
-            View Displays
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </Link>
+          <div className="flex flex-wrap gap-3">
+            {/* Primary CTA - Scroll to configurator/bundle section */}
+            <a
+              href="#product-configurator"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors text-sm"
+            >
+              Build Your Setup
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </a>
+            {/* Secondary CTA - View collection */}
+            <Link
+              href="/collections/rgb-displays"
+              className="inline-flex items-center gap-2 px-6 py-3 border-2 border-black text-black font-semibold rounded-lg hover:bg-black hover:text-white transition-colors text-sm"
+            >
+              View Full Collection
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+          </div>
         </div>
       </div>
     </div>
@@ -266,6 +280,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 </div>
 
                 {/* Main Configurator - handles variant selection + bundle */}
+                <div id="product-configurator">
                 <ProductConfigurator
                   products={configuratorProducts}
                   currentProductHandle={productHandle}
@@ -285,6 +300,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                     })) || [],
                   }}
                 />
+                </div>
               </div>
             </div>
           </div>
@@ -342,6 +358,16 @@ export default async function ProductPage({ params }: ProductPageProps) {
             <FAQSection />
           </div>
         </section>
+
+        {/* Sticky Mobile CTA - Only visible on mobile after scrolling */}
+        <StickyMobileCTA
+          price={price}
+          compareAtPrice={product.compareAtPrice || undefined}
+          productTitle={title}
+          productHandle={productHandle}
+          variantId={variantId}
+          productId={productId}
+        />
 
         {/* Schema.org Product markup */}
         <script
