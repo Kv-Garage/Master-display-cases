@@ -26,16 +26,232 @@ async function getHomePageProducts() {
   }
 }
 
+// Fast Path Navigation Component
+function FastPathNavigation() {
+  return (
+    <section className="section-padding bg-black">
+      <div className="container-custom">
+        <div className="grid md:grid-cols-3 gap-6">
+          {/* Card 1: Shop Display Cases */}
+          <Link href="/collections/rgb-displays" className="group relative bg-gray-900 border border-gray-800 rounded-xl p-8 hover:border-gray-600 transition-all duration-300">
+            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+              <svg className="w-24 h-24 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+              </svg>
+            </div>
+            <h3 className="text-xl font-bold text-white mb-3 group-hover:text-green-400 transition-colors">
+              Shop Display Cases
+            </h3>
+            <p className="text-gray-400 text-sm mb-6">
+              Browse our full collection of LED display cases designed for smoke shops and retail stores.
+            </p>
+            <div className="flex items-center text-white font-semibold text-sm">
+              <span>Browse Collection</span>
+              <svg className="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          </Link>
+
+          {/* Card 2: Wholesale / Bulk Pricing */}
+          <Link href="/wholesale" className="group relative bg-gray-900 border border-gray-800 rounded-xl p-8 hover:border-gray-600 transition-all duration-300">
+            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+              <svg className="w-24 h-24 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h3 className="text-xl font-bold text-white mb-3 group-hover:text-green-400 transition-colors">
+              Wholesale / Bulk Pricing
+            </h3>
+            <p className="text-gray-400 text-sm mb-6">
+              Special pricing for multi-store owners and large volume orders. Save up to 25%.
+            </p>
+            <div className="flex items-center text-white font-semibold text-sm">
+              <span>Get Wholesale Pricing</span>
+              <svg className="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          </Link>
+
+          {/* Card 3: Buyer's Guide */}
+          <Link href="/buying-guide" className="group relative bg-gray-900 border border-gray-800 rounded-xl p-8 hover:border-gray-600 transition-all duration-300">
+            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+              <svg className="w-24 h-24 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+            </div>
+            <h3 className="text-xl font-bold text-white mb-3 group-hover:text-green-400 transition-colors">
+              Buyer's Guide
+            </h3>
+            <p className="text-gray-400 text-sm mb-6">
+              Everything you need to know about choosing the right display case for your store.
+            </p>
+            <div className="flex items-center text-white font-semibold text-sm">
+              <span>Read the Guide</span>
+              <svg className="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Problem → Solution Section
+function ProblemSolutionSection() {
+  return (
+    <section className="section-padding bg-white">
+      <div className="container-custom">
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <span className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+            The Challenge
+          </span>
+          <h2 className="heading-lg mt-2">Why Most Smoke Shops Lose Sales</h2>
+          <p className="text-gray-600 mt-4">
+            Without the right display strategy, you're leaving money on the table every day.
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          {/* Problem 1 */}
+          <div className="bg-gray-50 rounded-xl p-8 border border-gray-200">
+            <div className="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center mb-6">
+              <svg className="w-7 h-7 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-bold text-black mb-3">Poor Visibility</h3>
+            <p className="text-gray-600 text-sm mb-4">
+              Products lost on crowded shelves or hidden behind counters go unnoticed by customers.
+            </p>
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              <p className="text-green-800 text-sm font-medium">
+                <strong>Fix:</strong> LED display systems increase attention and make products impossible to ignore.
+              </p>
+            </div>
+          </div>
+
+          {/* Problem 2 */}
+          <div className="bg-gray-50 rounded-xl p-8 border border-gray-200">
+            <div className="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center mb-6">
+              <svg className="w-7 h-7 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-bold text-black mb-3">Theft & Shrinkage</h3>
+            <p className="text-gray-600 text-sm mb-4">
+              Open displays and unsecured products lead to inventory loss and reduced profits.
+            </p>
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              <p className="text-green-800 text-sm font-medium">
+                <strong>Fix:</strong> Lockable glass cases reduce shrinkage while maintaining accessibility.
+              </p>
+            </div>
+          </div>
+
+          {/* Problem 3 */}
+          <div className="bg-gray-50 rounded-xl p-8 border border-gray-200">
+            <div className="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center mb-6">
+              <svg className="w-7 h-7 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-bold text-black mb-3">Cheap Layout</h3>
+            <p className="text-gray-600 text-sm mb-4">
+              Basic shelving makes even premium products look ordinary and limits pricing power.
+            </p>
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              <p className="text-green-800 text-sm font-medium">
+                <strong>Fix:</strong> Premium displays increase perceived value and justify higher prices.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="text-center mt-12">
+          <Link 
+            href="/solutions/smoke-shops"
+            className="inline-flex items-center px-8 py-4 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors"
+          >
+            See Solutions
+            <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Authority / Trust Section
+function AuthorityTrustSection() {
+  return (
+    <section className="section-padding bg-gray-50">
+      <div className="container-custom">
+        <div className="text-center max-w-3xl mx-auto mb-12">
+          <span className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+            Built for Business
+          </span>
+          <h2 className="heading-lg mt-2">Commercial-Grade Quality</h2>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div className="text-center p-6">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-black/5 flex items-center justify-center">
+              <svg className="w-8 h-8 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+            </div>
+            <h3 className="font-bold text-black mb-2">Commercial-Grade Materials</h3>
+            <p className="text-gray-600 text-sm">Built to withstand high-traffic retail environments.</p>
+          </div>
+
+          <div className="text-center p-6">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-black/5 flex items-center justify-center">
+              <svg className="w-8 h-8 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h3 className="font-bold text-black mb-2">Nationwide Trust</h3>
+            <p className="text-gray-600 text-sm">Used by retail store owners across the country.</p>
+          </div>
+
+          <div className="text-center p-6">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-black/5 flex items-center justify-center">
+              <svg className="w-8 h-8 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <h3 className="font-bold text-black mb-2">High-Volume Ready</h3>
+            <p className="text-gray-600 text-sm">Engineered for busy stores with constant customer flow.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default async function HomePage() {
   const products = await getHomePageProducts();
 
   return (
     <>
       <HeroSliderSection />
+      
+      {/* Fast Path Navigation - Controls user flow immediately */}
+      <FastPathNavigation />
+
       <TrustBar />
       
       {/* Before/After Grid Section - Visual Proof */}
       <BeforeAfterGridSection />
+
+      {/* Problem → Solution Section */}
+      <ProblemSolutionSection />
 
       {/* Before/After ROI Section */}
       <section className="section-padding bg-gray-50">
@@ -109,68 +325,45 @@ export default async function HomePage() {
 
       <BenefitsSection />
       
-      {/* Product Grid */}
-      <ProductGridSection 
-        products={products} 
-        showEmptyState={products.length === 0}
-      />
-
-      {/* Why It Works - Conversion Psychology */}
+      {/* Featured Products Section - Hard Sell Area */}
       <section className="section-padding bg-white">
         <div className="container-custom">
-          <div className="text-center max-w-3xl mx-auto mb-16">
+          <div className="text-center max-w-3xl mx-auto mb-12">
             <span className="text-xs font-semibold uppercase tracking-wider text-gray-500">
-              The Science
+              Top Products
             </span>
-            <h2 className="heading-lg mt-2">Why Professional Displays Drive Sales</h2>
-            <p className="text-gray-600 mt-4">
-              It's not just about looking nice. There's real psychology behind why displayed products sell better.
+            <h2 className="heading-lg mt-2">Top Display Cases for Smoke Shops</h2>
+            <p className="text-gray-600 mt-2">
+              Our most popular commercial display cases, engineered for maximum impact.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                icon: (
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                  </svg>
-                ),
-                title: 'Visibility = Desire',
-                description: 'Products at eye level are 3x more likely to be purchased. Glass displays create a "museum effect" that elevates perceived value instantly.',
-              },
-              {
-                icon: (
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                ),
-                title: 'Premium Presentation',
-                description: 'When products are displayed in glass cases with proper lighting, customers automatically assign higher value — and are willing to pay more.',
-              },
-              {
-                icon: (
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                ),
-                title: 'RGB Lighting Effect',
-                description: 'Our RGB lighting options create an atmosphere that draws customers in. Color psychology shows warm lighting increases comfort and time spent browsing.',
-              },
-            ].map((item, index) => (
-              <div key={index} className="text-center p-6">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 text-black mb-6">
-                  {item.icon}
-                </div>
-                <h3 className="heading-sm mb-3">{item.title}</h3>
-                <p className="text-gray-600">{item.description}</p>
-              </div>
-            ))}
+          <ProductGridSection 
+            products={products} 
+            showEmptyState={products.length === 0}
+            title=""
+            subtitle=""
+          />
+
+          {/* Helper CTA */}
+          <div className="text-center mt-12">
+            <p className="text-gray-600 mb-4">Not sure what fits your store?</p>
+            <Link 
+              href="/buying-guide"
+              className="inline-flex items-center text-black font-semibold hover:text-gray-700 transition-colors border-b-2 border-black pb-1"
+            >
+              View Buyer Guide
+              <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
           </div>
         </div>
       </section>
 
+      {/* Authority / Trust Section */}
+      <AuthorityTrustSection />
+      
       {/* UGC Gallery - Real Store Photos */}
       <UGCGallery />
 
@@ -230,13 +423,13 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Email Capture Section */}
+      {/* Email Capture Section - Money Section */}
       <section className="section-padding bg-black text-white">
         <div className="container-custom">
           <div className="max-w-2xl mx-auto text-center">
-            <h2 className="heading-lg mb-4">Get Bulk Pricing & Wholesale Discounts</h2>
+            <h2 className="heading-lg mb-4">Get 10% Off + Store Setup Guide</h2>
             <p className="text-gray-400 mb-8">
-              Sign up for exclusive wholesale pricing, volume discounts, and early access to new products. Perfect for multi-location retailers.
+              Join store owners increasing revenue with better displays. We'll send setup tips + product recommendations.
             </p>
             <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
               <input
@@ -249,7 +442,7 @@ export default async function HomePage() {
                 type="submit"
                 className="px-8 py-4 bg-white text-black font-semibold uppercase tracking-wider hover:bg-gray-200 transition-colors rounded-lg whitespace-nowrap"
               >
-                Get Pricing
+                Get My Discount
               </button>
             </form>
             <p className="text-xs text-gray-500 mt-4">
@@ -259,8 +452,53 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Wholesale Push Section - High Ticket Lever */}
+      <section className="section-padding bg-gray-900">
+        <div className="container-custom">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="heading-lg text-white mb-4">Need Multiple Display Cases?</h2>
+            <p className="text-gray-400 mb-8 max-w-xl mx-auto">
+              Get bulk pricing for multi-store locations. Special rates available for orders of 3+ units.
+            </p>
+            <Link 
+              href="/wholesale"
+              className="inline-flex items-center px-8 py-4 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Request Wholesale Pricing
+              <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* FAQ Preview */}
       <FAQSection />
+
+      {/* Final Close Section */}
+      <section className="section-padding bg-black text-white text-center">
+        <div className="container-custom">
+          <h2 className="heading-xl mb-6">Upgrade Your Store Today</h2>
+          <p className="text-gray-400 mb-8 max-w-xl mx-auto">
+            Join hundreds of retailers who have transformed their stores with professional display cases.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link 
+              href="/collections/rgb-displays"
+              className="inline-flex items-center justify-center px-8 py-4 bg-white text-black font-semibold rounded-lg hover:bg-gray-200 transition-colors"
+            >
+              Shop Display Cases
+            </Link>
+            <Link 
+              href="/wholesale"
+              className="inline-flex items-center justify-center px-8 py-4 border border-white/30 text-white font-semibold rounded-lg hover:bg-white/10 transition-colors"
+            >
+              Get 10% Off
+            </Link>
+          </div>
+        </div>
+      </section>
 
       <CTASection />
     </>

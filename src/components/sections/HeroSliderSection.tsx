@@ -3,6 +3,7 @@
 import BeforeAfterSlider from '@/components/ui/BeforeAfterSlider';
 import Button from '@/components/ui/Button';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function HeroSliderSection() {
   return (
@@ -26,28 +27,50 @@ export default function HeroSliderSection() {
               </span>
             </div>
 
-            {/* Main Headline */}
+            {/* Main Headline - SEO optimized for smoke shop display cases */}
             <h1 className="heading-xl text-white mb-6">
-              Turn Your Store Into a High-Converting Sales Machine
+              Turn Your Smoke Shop Into a High-Converting Sales Machine
             </h1>
 
-            {/* Subheadline */}
-            <p className="text-gray-400 text-lg lg:text-xl mb-8 max-w-xl mx-auto lg:mx-0">
-              Premium LED display cases designed to increase visibility, boost impulse purchases, and maximize ROI.
+            {/* Subheadline - ROI focused */}
+            <p className="text-gray-400 text-lg lg:text-xl mb-6 max-w-xl mx-auto lg:mx-0">
+              Premium LED display cases engineered to increase visibility, reduce theft, and boost average order value.
             </p>
 
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-6 mb-10">
+            {/* Offer Stack - Critical trust builders */}
+            <div className="flex flex-col gap-2 mb-8 max-w-md mx-auto lg:mx-0">
+              <div className="flex items-center justify-center lg:justify-start space-x-3 text-gray-300">
+                <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span className="text-sm">Free Shipping Available</span>
+              </div>
+              <div className="flex items-center justify-center lg:justify-start space-x-3 text-gray-300">
+                <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span className="text-sm">5-Year Warranty</span>
+              </div>
+              <div className="flex items-center justify-center lg:justify-start space-x-3 text-gray-300">
+                <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span className="text-sm">Bulk Pricing for Multi-Store Owners</span>
+              </div>
+            </div>
+
+            {/* Stats - Better framed with context */}
+            <div className="grid grid-cols-3 gap-4 mb-10">
               <div className="text-center lg:text-left">
-                <div className="text-3xl lg:text-4xl font-bold text-white mb-1">
+                <div className="text-2xl lg:text-3xl font-bold text-white mb-1">
                   +30%
                 </div>
                 <div className="text-xs text-gray-500 uppercase tracking-wider">
-                  Avg. Order Value
+                  Avg Order Value
                 </div>
               </div>
               <div className="text-center lg:text-left">
-                <div className="text-3xl lg:text-4xl font-bold text-white mb-1">
+                <div className="text-2xl lg:text-3xl font-bold text-white mb-1">
                   +40%
                 </div>
                 <div className="text-xs text-gray-500 uppercase tracking-wider">
@@ -55,61 +78,65 @@ export default function HeroSliderSection() {
                 </div>
               </div>
               <div className="text-center lg:text-left">
-                <div className="text-3xl lg:text-4xl font-bold text-white mb-1">
+                <div className="text-2xl lg:text-3xl font-bold text-white mb-1">
                   3x
                 </div>
                 <div className="text-xs text-gray-500 uppercase tracking-wider">
-                  More Purchases
+                  More Engagement
                 </div>
               </div>
             </div>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button href="/rgb-display-cases" variant="primary" size="lg">
-                Explore All Display Cases
+            {/* CTA Buttons - Primary and Secondary */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-4">
+              <Button href="/collections/rgb-displays" variant="primary" size="lg">
+                Shop Display Cases
               </Button>
-              <Button href="/contact" variant="secondary" size="lg">
-                Get a Custom Quote
+              <Button href="/wholesale" variant="secondary" size="lg">
+                Get 10% Off First Order
               </Button>
             </div>
 
-            {/* Trust Indicators */}
-            <div className="mt-10 flex items-center justify-center lg:justify-start space-x-6 text-gray-500 text-xs uppercase tracking-wider">
-              <div className="flex items-center space-x-2">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                </svg>
-                <span>Commercial Grade</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span>5-Year Warranty</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 14.66V20a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2h2.34M20 14.66l-2.34 2.34A2 2 0 0017 18.34V20m3-5.34V6a2 2 0 00-2-2h-1.66M17 18.34V16a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m-6 0h12" />
-                </svg>
-                <span>Nationwide Freight</span>
-              </div>
-            </div>
+            {/* Microtext - Risk reversal */}
+            <p className="text-xs text-gray-500 mb-6">
+              No risk. Built for long-term retail performance.
+            </p>
+
+            {/* Urgency Line */}
+            <p className="text-xs text-orange-400/80 uppercase tracking-wide">
+              Limited inventory due to high demand from retail stores
+            </p>
           </div>
 
-          {/* Right Content - Interactive Slider */}
+          {/* Right Content - Interactive Slider with Buy Signal */}
           <div className="relative">
+            {/* Best Seller Badge */}
+            <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-20 bg-green-600 text-white px-4 py-1.5 text-sm font-bold uppercase tracking-wider rounded-full shadow-lg">
+              Best Seller
+            </div>
+
             <BeforeAfterSlider
               beforeImage='/Before and after of 72".png'
               afterImage='/Before and after of the 70W.png'
               beforeLabel="Standard Setup"
               afterLabel="Master Display System"
-              altText="Store display transformation"
+              altText="Smoke shop display case transformation"
               showCallout={true}
               calloutText="+30% Avg Order Value Increase Potential"
               className="shadow-2xl"
             />
             
+            {/* Overlay CTA on visual */}
+            <Link 
+              href="/products/products-70-led-retail-display-showcase-rgb"
+              className="absolute bottom-6 right-6 z-20 bg-black/80 backdrop-blur-md border border-white/20 text-white px-6 py-3 rounded-lg font-semibold text-sm hover:bg-black hover:border-white transition-all flex items-center space-x-2 group"
+            >
+              <span>View Product</span>
+              <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+
             {/* Decorative Elements */}
             <div className="absolute -bottom-6 -left-6 bg-black/80 backdrop-blur-md border border-gray-800 rounded-lg px-6 py-4">
               <div className="flex items-center space-x-3">

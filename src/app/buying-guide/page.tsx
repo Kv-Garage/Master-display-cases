@@ -65,10 +65,11 @@ export default async function BuyingGuidePage() {
                 name: 'Smoke Shops',
                 icon: (
                   <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656-.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                   </svg>
                 ),
-                description: 'Vape & CBD displays',
+                description: 'Secure vape & CBD displays',
+                benefits: ['RGB lighting for product appeal', 'Lockable security for high-value items', 'Countertop & floor options'],
               },
               {
                 name: 'Jewelry Stores',
@@ -77,7 +78,8 @@ export default async function BuyingGuidePage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
                   </svg>
                 ),
-                description: 'Luxury presentation',
+                description: 'Luxury presentation cases',
+                benefits: ['Premium lighting for sparkle', 'High-security locking systems', 'Velvet & mirror interiors'],
               },
               {
                 name: 'Convenience Stores',
@@ -86,7 +88,8 @@ export default async function BuyingGuidePage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                   </svg>
                 ),
-                description: 'High-traffic solutions',
+                description: 'High-traffic retail solutions',
+                benefits: ['Durable commercial construction', 'Impulse buy optimization', 'Quick-access checkout displays'],
               },
               {
                 name: 'Boutiques',
@@ -95,19 +98,30 @@ export default async function BuyingGuidePage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a3 3 0 00-6 0v4M5 9h14l1 12H4L5 9z" />
                   </svg>
                 ),
-                description: 'Fashion & accessories',
+                description: 'Fashion & accessory displays',
+                benefits: ['Elegant design aesthetics', 'Flexible shelving configurations', 'Brand-consistent lighting'],
               },
             ].map((store, index) => (
               <Link
                 key={index}
                 href={`/display-cases-for-${store.name.toLowerCase().replace(/\s+/g, '-')}`}
-                className="group block p-8 bg-gray-50 rounded-lg border-2 border-transparent hover:border-black transition-all duration-300 hover:shadow-lg"
+                className="group block p-6 bg-gray-50 rounded-lg border-2 border-transparent hover:border-black transition-all duration-300 hover:shadow-lg"
               >
                 <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-black text-white flex items-center justify-center group-hover:scale-110 transition-transform">
                   {store.icon}
                 </div>
-                <h3 className="text-lg font-bold text-center mb-2">{store.name}</h3>
-                <p className="text-sm text-gray-500 text-center">{store.description}</p>
+                <h3 className="text-lg font-bold text-center mb-1">{store.name}</h3>
+                <p className="text-sm text-gray-500 text-center mb-4">{store.description}</p>
+                <ul className="space-y-1.5">
+                  {store.benefits.map((benefit, i) => (
+                    <li key={i} className="flex items-start text-xs text-gray-600">
+                      <svg className="w-3.5 h-3.5 text-green-500 mr-1.5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                      {benefit}
+                    </li>
+                  ))}
+                </ul>
               </Link>
             ))}
           </div>
