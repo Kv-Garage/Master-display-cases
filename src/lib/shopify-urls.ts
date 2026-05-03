@@ -2,6 +2,24 @@
 export const SHOPIFY_DOMAIN = "https://mraze2-ra.myshopify.com";
 
 /**
+ * Get the correct product URL with proper slug formatting
+ * Ensures all product slugs include the required 'products-' prefix
+ * @param slug - The product handle/slug (with or without 'products-' prefix)
+ * @returns The correctly formatted product URL path
+ */
+export function getProductUrl(slug: string): string {
+  // Remove any existing /products/ prefix
+  const cleanSlug = slug.replace(/^\/?products\//, '');
+  
+  // Ensure slug includes required 'products-' prefix
+  if (!cleanSlug.startsWith('products-')) {
+    return `/products/products-${cleanSlug}`;
+  }
+  
+  return `/products/${cleanSlug}`;
+}
+
+/**
  * Get UTM parameters from current URL or use defaults
  * This ensures traffic source is tracked in Shopify analytics
  */

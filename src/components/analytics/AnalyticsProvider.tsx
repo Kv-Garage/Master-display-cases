@@ -304,3 +304,219 @@ export const trackCustomEvent = (eventName: string, eventData?: Record<string, a
     (window as any).ttq.track(eventName, eventData);
   }
 };
+
+// ==========================================
+// BLOG-SPECIFIC ANALYTICS TRACKING
+// ==========================================
+
+/**
+ * Track when a user clicks on a product link within a blog post
+ */
+export const trackBlogProductClick = (params: {
+  blogTitle: string;
+  blogHandle: string;
+  productUrl: string;
+  productName?: string;
+}) => {
+  // GA4
+  if (typeof window !== 'undefined' && (window as any).gtag) {
+    (window as any).gtag('event', 'blog_product_click', {
+      blog_title: params.blogTitle,
+      blog_handle: params.blogHandle,
+      link_url: params.productUrl,
+      product_name: params.productName,
+      content_type: 'blog_product_link',
+    });
+  }
+
+  // Meta Pixel
+  if (typeof window !== 'undefined' && (window as any).fbq) {
+    (window as any).fbq('track', 'ViewContent', {
+      content_name: params.productName || params.productUrl,
+      content_type: 'product',
+      content_ids: [params.productUrl],
+    });
+  }
+};
+
+/**
+ * Track when a user clicks on a CTA button within a blog post
+ */
+export const trackBlogCTAClick = (params: {
+  blogTitle: string;
+  blogHandle: string;
+  ctaLocation: 'top' | 'middle' | 'bottom' | 'inline';
+  ctaText: string;
+  ctaUrl: string;
+}) => {
+  // GA4
+  if (typeof window !== 'undefined' && (window as any).gtag) {
+    (window as any).gtag('event', 'cta_click', {
+      blog_title: params.blogTitle,
+      blog_handle: params.blogHandle,
+      cta_location: params.ctaLocation,
+      cta_text: params.ctaText,
+      cta_url: params.ctaUrl,
+      content_type: 'blog_cta',
+    });
+  }
+
+  // Meta Pixel
+  if (typeof window !== 'undefined' && (window as any).fbq) {
+    (window as any).fbq('track', 'Click', {
+      content_name: params.ctaText,
+      content_type: 'cta',
+    });
+  }
+};
+
+/**
+ * Track scroll depth on blog posts
+ * Tracks 25%, 50%, 75%, and 100% scroll milestones
+ */
+export const setupBlogScrollTracking = (params: {
+  blogTitle: string;
+  blogHandle: string;
+}) => {
+  if (typeof window === 'undefined') return;
+
+  const trackedMilestones = new Set<number>();
+  const milestones = [25, 50, 75, 100];
+
+  const handleScroll = () => {
+    const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const scrollPosition = window.scrollY;
+    const scrollPercentage = Math.round((scrollPosition / scrollHeight) * 100);
+
+    for (const milestone of milestones) {
+      if (scrollPercentage >= milestone && !trackedMilestones.has(milestone)) {
+        trackedMilestones.add(milestone);
+
+        // GA4
+        if ((window as any).gtag) {
+          (window as any).gtag('event', 'blog_scroll_depth', {
+            blog_title: params.blogTitle,
+            blog_handle: params.blogHandle,
+            scroll_depth: milestone,
+            content_type: 'blog_engagement',
+          });
+        }
+
+        // Meta Pixel - track deep engagement (75%+)
+        if ((window as any).fbq && milestone >= 75) {
+          (window as any).fbq('track', 'ReadContent', {
+            content_name: params.blogTitle,
+            content_type: 'blog',
+            scroll_depth: milestone,
+          });
+        }
+      }
+    }
+  };
+
+  // Use passive event listener for better performance
+  window.addEventListener('scroll', handleScroll, { passive: true });
+
+  // Return cleanup function
+  return () => {
+    window.removeEventListener('scroll', handleScroll);
+  };
+};
+
+/**
+ * Track email signup/lead capture from blog pages
+ */
+export const trackBlogLeadCapture = (params: {
+  blogTitle: string;
+  blogHandle: string;
+  email?: string;
+  source: 'newsletter' | 'popup' | 'inline';
+}) => {
+  // GA4
+  if (typeof window !== 'undefined' && (window as any).gtag) {
+    (window as any).gtag('event', 'lead_capture', {
+      blog_title: params.blogTitle,
+      blog_handle: params.blogHandle,
+      source: params.source,
+      content_type: 'blog_lead',
+    });
+  }
+
+  // Meta Pixel
+  if (typeof window !== 'undefined' && (window as any).fbq) {
+    (window as any).fbq('track', 'Lead', {
+      content_name: params.blogTitle,
+      content_type: 'blog_newsletter',
+      source: params.source,
+    });
+  }
+};
+
+/**
+ * Track time spent on blog post
+ */
+export const trackBlogEngagement = (params: {
+  blogTitle: string;
+  blogHandle: string;
+}) => {
+  if (typeof window === 'undefined') return;
+
+  const startTime = Date.now();
+
+  // Track at 30s, 60s, 120s intervals
+  const engagementIntervals = [30, 60, 120];
+  const trackedIntervals = new Set<number>();
+
+  const intervalId = setInterval(() => {
+    const elapsed = Math.round((Date.now() - startTime) / 1000);
+
+    for (const interval of engagementIntervals) {
+      if (elapsed >= interval && !trackedIntervals.has(interval)) {
+        trackedIntervals.add(interval);
+
+        // GA4
+        if ((window as any).gtag) {
+          (window as any).gtag('event', 'blog_time_spent', {
+            blog_title: params.blogTitle,
+            blog_handle: params.blogHandle,
+            time_seconds: interval,
+            content_type: 'blog_engagement',
+          });
+        }
+      }
+    }
+  }, 1000);
+
+  // Return cleanup function
+  return () => {
+    clearInterval(intervalId);
+    // Track final engagement time on unmount
+    const finalTime = Math.round((Date.now() - startTime) / 1000);
+    if ((window as any).gtag && finalTime > 5) {
+      (window as any).gtag('event', 'blog_engagement_complete', {
+        blog_title: params.blogTitle,
+        blog_handle: params.blogHandle,
+        total_time_seconds: finalTime,
+        content_type: 'blog_engagement',
+      });
+    }
+  };
+};
+
+/**
+ * Hook to initialize all blog analytics tracking
+ */
+export const useBlogAnalytics = (blogTitle: string, blogHandle: string) => {
+  // This would be used in a client component
+  // For server components, call the individual functions in useEffect
+  return {
+    trackProductClick: (productUrl: string, productName?: string) =>
+      trackBlogProductClick({ blogTitle, blogHandle, productUrl, productName }),
+    trackCTAClick: (location: 'top' | 'middle' | 'bottom' | 'inline', text: string, url: string) =>
+      trackBlogCTAClick({ blogTitle, blogHandle, ctaLocation: location, ctaText: text, ctaUrl: url }),
+    setupScrollTracking: () => setupBlogScrollTracking({ blogTitle, blogHandle }),
+    trackLeadCapture: (source: 'newsletter' | 'popup' | 'inline', email?: string) =>
+      trackBlogLeadCapture({ blogTitle, blogHandle, source, email }),
+    startEngagementTracking: () => trackBlogEngagement({ blogTitle, blogHandle }),
+  };
+};

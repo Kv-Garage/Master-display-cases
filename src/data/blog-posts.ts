@@ -285,14 +285,14 @@ export const blogPosts: BlogPost[] = [
 
       <p><a href="https://mraze2-ra.myshopify.com/products/products-70-led-retail-display-showcase-rgb">Explore our RGB display case collection</a> or <a href="/contact">contact our team</a> to learn how RGB lighting can transform your retail space. We offer personalized consultations to help you create the perfect lighting strategy for your unique needs.</p>
 
-      <p>For more insights on retail display strategies, check out our guides on <a href="/blogs/visual-merchandising-guide">visual merchandising strategies</a> and <a href="/blogs/smoke-shop-display-strategies">smoke shop display optimization</a>.</p>
+      <p>For more insights on retail display strategies, check out our guides on <a href="/blog/visual-merchandising-guide">visual merchandising strategies</a> and <a href="/blog/smoke-shop-display-strategies">smoke shop display optimization</a>.</p>
 
       <hr>
 
       <h3>Related Articles</h3>
       <ul>
-        <li><a href="/blogs/visual-merchandising-guide">Visual Merchandising Guide: Creating Eye-Catching Displays</a></li>
-        <li><a href="/blogs/smoke-shop-display-strategies">Smoke Shop Display Strategies: Security Meets Sales</a></li>
+        <li><a href="/blog/visual-merchandising-guide">Visual Merchandising Guide: Creating Eye-Catching Displays</a></li>
+        <li><a href="/blog/smoke-shop-display-strategies">Smoke Shop Display Strategies: Security Meets Sales</a></li>
         <li><a href="/blog/display-cases-increase-revenue">How Professional Display Cases Increase Store Revenue by 30%</a></li>
       </ul>
     `
@@ -577,14 +577,14 @@ export const blogPosts: BlogPost[] = [
 
       <p><a href="https://mraze2-ra.myshopify.com/products/products-48-led-retail-wrap-counter-rgb">Explore our smoke shop display solutions</a> or <a href="/contact">contact our team</a> for recommendations tailored to your store's specific needs. We offer free consultations to help you design the perfect display strategy.</p>
 
-      <p>For more insights on retail display optimization, check out our guides on <a href="/blogs/rgb-retail-lighting-guide">RGB lighting strategies</a> and <a href="/blogs/visual-merchandising-guide">visual merchandising fundamentals</a>.</p>
+      <p>For more insights on retail display optimization, check out our guides on <a href="/blog/rgb-retail-lighting-guide">RGB lighting strategies</a> and <a href="/blog/visual-merchandising-guide">visual merchandising fundamentals</a>.</p>
 
       <hr>
 
       <h3>Related Articles</h3>
       <ul>
-        <li><a href="/blogs/rgb-retail-lighting-guide">RGB LED Retail Lighting Guide</a></li>
-        <li><a href="/blogs/visual-merchandising-guide">Visual Merchandising Guide</a></li>
+        <li><a href="/blog/rgb-retail-lighting-guide">RGB LED Retail Lighting Guide</a></li>
+        <li><a href="/blog/visual-merchandising-guide">Visual Merchandising Guide</a></li>
         <li><a href="/blog/display-cases-increase-revenue">How Professional Display Cases Increase Store Revenue by 30%</a></li>
       </ul>
     `
@@ -881,14 +881,14 @@ export const blogPosts: BlogPost[] = [
 
       <p><a href="https://mraze2-ra.myshopify.com/products/products-70-led-retail-display-showcase-rgb">Explore our display case collection</a> or <a href="/contact">contact our team</a> for guidance on creating displays that captivate customers and drive sales.</p>
 
-      <p>For more insights on retail optimization, check out our guides on <a href="/blogs/rgb-retail-lighting-guide">RGB lighting strategies</a> and <a href="/blogs/smoke-shop-display-strategies">smoke shop display solutions</a>.</p>
+      <p>For more insights on retail optimization, check out our guides on <a href="/blog/rgb-retail-lighting-guide">RGB lighting strategies</a> and <a href="/blog/smoke-shop-display-strategies">smoke shop display solutions</a>.</p>
 
       <hr>
 
       <h3>Related Articles</h3>
       <ul>
-        <li><a href="/blogs/rgb-retail-lighting-guide">RGB LED Retail Lighting Guide</a></li>
-        <li><a href="/blogs/smoke-shop-display-strategies">Smoke Shop Display Strategies</a></li>
+        <li><a href="/blog/rgb-retail-lighting-guide">RGB LED Retail Lighting Guide</a></li>
+        <li><a href="/blog/smoke-shop-display-strategies">Smoke Shop Display Strategies</a></li>
         <li><a href="/blog/display-cases-increase-revenue">How Professional Display Cases Increase Store Revenue by 30%</a></li>
       </ul>
     `
@@ -1071,9 +1071,9 @@ export const blogPosts: BlogPost[] = [
 
       <h3>Related Articles</h3>
       <ul>
-        <li><a href="/blogs/rgb-retail-lighting-guide">The Complete Guide to RGB Lighting in Retail Displays</a></li>
-        <li><a href="/blogs/visual-merchandising-guide">Visual Merchandising Guide: Creating Eye-Catching Displays</a></li>
-        <li><a href="/blogs/smoke-shop-display-strategies">Smoke Shop Display Strategies: Security Meets Sales</a></li>
+        <li><a href="/blog/rgb-retail-lighting-guide">The Complete Guide to RGB Lighting in Retail Displays</a></li>
+        <li><a href="/blog/visual-merchandising-guide">Visual Merchandising Guide: Creating Eye-Catching Displays</a></li>
+        <li><a href="/blog/smoke-shop-display-strategies">Smoke Shop Display Strategies: Security Meets Sales</a></li>
       </ul>
     `
   },
@@ -1300,8 +1300,8 @@ export const blogPosts: BlogPost[] = [
       <h3>Related Articles</h3>
       <ul>
         <li><a href="/blog/display-cases-increase-revenue">How Professional Display Cases Increase Store Revenue by 30%</a></li>
-        <li><a href="/blogs/smoke-shop-display-strategies">Smoke Shop Display Strategies: Security Meets Sales</a></li>
-        <li><a href="/blogs/visual-merchandising-guide">Visual Merchandising Guide: Creating Eye-Catching Displays</a></li>
+        <li><a href="/blog/smoke-shop-display-strategies">Smoke Shop Display Strategies: Security Meets Sales</a></li>
+        <li><a href="/blog/visual-merchandising-guide">Visual Merchandising Guide: Creating Eye-Catching Displays</a></li>
       </ul>
     `
   },
@@ -1397,8 +1397,8 @@ export const blogPosts: BlogPost[] = [
       <h3>Related Articles</h3>
       <ul>
         <li><a href="/blog/display-cases-increase-revenue">How Professional Display Cases Increase Store Revenue by 30%</a></li>
-        <li><a href="/blogs/rgb-retail-lighting-guide">The Complete Guide to RGB Lighting in Retail Displays</a></li>
-        <li><a href="/blogs/visual-merchandising-guide">Visual Merchandising Guide: Creating Eye-Catching Displays</a></li>
+        <li><a href="/blog/rgb-retail-lighting-guide">The Complete Guide to RGB Lighting in Retail Displays</a></li>
+        <li><a href="/blog/visual-merchandising-guide">Visual Merchandising Guide: Creating Eye-Catching Displays</a></li>
       </ul>
     `
   }

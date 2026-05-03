@@ -29,8 +29,22 @@ export default async function BlogPage() {
   const shopifyPosts = await getBlogPosts();
   const localPosts = fallbackPosts || [];
   
-  // Merge: local posts first, then Shopify posts
-  const posts = [...localPosts, ...shopifyPosts];
+  // Merge: local posts first, then Shopify posts (deduplicate by handle)
+  const postsMap = new Map<string, typeof fallbackPosts[number]>();
+  
+  // Add local posts first (they take precedence)
+  for (const post of localPosts) {
+    postsMap.set(post.handle, post);
+  }
+  
+  // Add Shopify posts only if not already present
+  for (const post of shopifyPosts) {
+    if (!postsMap.has(post.handle)) {
+      postsMap.set(post.handle, post);
+    }
+  }
+  
+  const posts = Array.from(postsMap.values());
 
   return (
     <div className="bg-white">

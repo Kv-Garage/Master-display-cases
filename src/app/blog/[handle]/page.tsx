@@ -7,6 +7,8 @@ import Button from '@/components/ui/Button';
 import { ROUTES } from '@/lib/routes';
 import { Metadata } from 'next';
 import { processProductLinks } from '@/lib/shopify-urls';
+import { TrackedCTA } from '@/components/blog/BlogAnalytics';
+import BlogAnalyticsClient from '@/components/blog/BlogAnalyticsClient';
 
 interface BlogPostPageProps {
   params: Promise<{ handle: string }>;
@@ -262,6 +264,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </section>
       )}
 
+      {/* Analytics Tracking (Client Component) */}
+      <BlogAnalyticsClient 
+        blogTitle={post.title} 
+        blogHandle={post.handle}
+      />
+
       {/* CTA Section */}
       <section className="bg-black text-white section-padding">
         <div className="container-custom">
@@ -272,14 +280,23 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <p className="text-gray-400 mb-8 text-lg">
               Explore our commercial-grade display systems designed to increase
               your store revenue with premium LED lighting and robust security.
+              Limited inventory available — order now to secure your display.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button href={ROUTES.COLLECTION} className="bg-white text-black hover:bg-gray-200">
-                View Products
-              </Button>
-              <Button href={ROUTES.CONTACT} variant="outline" className="border-white text-white hover:bg-white hover:text-black">
+              <TrackedCTA 
+                href={ROUTES.COLLECTION} 
+                location="bottom"
+                className="bg-white text-black px-8 py-4 font-semibold uppercase tracking-wide hover:bg-gray-200 transition-colors rounded-none inline-flex items-center justify-center"
+              >
+                View Display Cases →
+              </TrackedCTA>
+              <TrackedCTA 
+                href={ROUTES.CONTACT} 
+                location="bottom"
+                className="border-2 border-white text-white px-8 py-4 font-semibold uppercase tracking-wide hover:bg-white hover:text-black transition-colors rounded-none inline-flex items-center justify-center"
+              >
                 Get a Quote
-              </Button>
+              </TrackedCTA>
             </div>
           </div>
         </div>
