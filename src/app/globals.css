@@ -486,106 +486,489 @@ html {
 }
 
 /* ============================================
-   MOBILE HEADER & HERO FIXES
-   Fixes logo size, header height, hero spacing
+   CRITICAL MOBILE UI FIXES
+   Homepage: overlapping elements, z-index conflicts,
+   CTA conflicts, and section bleeding
    ============================================ */
 
-@media (max-width: 767px) {
-  /* 1. LOGO FIX - Reduce logo size on mobile */
-  header img[h-24],
-  header .h-24 {
-    max-height: 36px !important;
-    height: auto !important;
+@media (max-width: 768px) {
+  /* Global Mobile Spacing System */
+  :root {
+    --mobile-section-padding: 24px;
+    --mobile-element-spacing: 16px;
+    --mobile-tight-spacing: 12px;
+    --mobile-button-height: 48px;
+    --mobile-button-padding: 16px 24px;
+    --mobile-safe-bottom: 80px;
   }
-  
-  /* Header height compression */
-  header .h-\[120px\] {
-    height: auto !important;
-    min-height: 56px;
-    padding-top: 8px;
-    padding-bottom: 8px;
-  }
-  
-  /* Reduce top bar text size */
-  .top-bar {
-    font-size: 11px;
-    padding: 4px;
-  }
-}
 
-/* ============================================
-   MOBILE HERO SPACING FIX
-   Remove excessive top padding
-   ============================================ */
-
-@media (max-width: 767px) {
-  /* Reduce hero section top padding */
-  .hero-section,
-  section:first-of-type {
-    padding-top: 1rem !important;
-  }
+  /* ============================================
+     Z-INDEX HIERARCHY (CRITICAL FIX)
+     Proper stacking order to prevent overlaps
+     ============================================ */
   
-  /* Reduce hero headline size slightly */
-  .hero-headline {
-    font-size: 1.5rem !important;
-    line-height: 1.2 !important;
+  /* Base content - lowest layer */
+  main,
+  main > *,
+  section {
+    position: relative !important;
+    z-index: 1 !important;
   }
-  
-  /* Tighter spacing in hero */
-  .hero-content > * + * {
-    margin-top: 0.5rem !important;
-  }
-}
 
-/* Touch-friendly minimum sizes */
-@media (max-width: 767px) {
-  /* All buttons minimum 44px height (Apple HIG) */
+  /* Section containers */
+  .section-padding,
+  .container-custom {
+    position: relative !important;
+    z-index: 10 !important;
+  }
+
+  /* Email popup - below chat */
+  .email-popup,
+  .popup-overlay {
+    z-index: 45 !important;
+  }
+
+  /* Sticky mobile CTA bar */
+  .fixed.bottom-0.left-0.right-0 {
+    z-index: 40 !important;
+  }
+
+  /* Chat widget - highest priority */
+  .fixed.bottom-6.right-6,
+  button[aria-label="Open chat"],
+  button[aria-label="Close chat"] {
+    z-index: 50 !important;
+  }
+
+  /* Chat window */
+  .fixed.bottom-24.right-6 {
+    z-index: 50 !important;
+  }
+
+  /* ============================================
+     SECTION SEPARATION FIX
+     Prevent section overlap and bleeding
+     ============================================ */
+  
+  /* Clear section boundaries */
+  section {
+    position: relative !important;
+    padding-left: var(--mobile-section-padding) !important;
+    padding-right: var(--mobile-section-padding) !important;
+    padding-top: 24px !important;
+    padding-bottom: 24px !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* Ensure no negative margins */
+  section [class*="-m"],
+  section [class*="negative"] {
+    margin: 0 !important;
+  }
+
+  /* Section containers must not overlap */
+  section > * {
+    position: relative !important;
+  }
+
+  /* Container width fix */
+  .container-custom,
+  .container {
+    max-width: 100% !important;
+    padding-left: var(--mobile-section-padding) !important;
+    padding-right: var(--mobile-section-padding) !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* ============================================
+     CTA OVERLAP FIX (CRITICAL)
+     Remove duplicate/floating CTAs
+     ============================================ */
+  
+  /* Remove any absolutely positioned CTAs that overlap content */
+  .absolute.bottom-0,
+  .absolute.top-0,
+  .floating-cta,
+  .overlay-cta,
+  .cta-overlay {
+    position: static !important;
+    margin: 16px 0 !important;
+  }
+
+  /* CTA buttons inside sections stay inside */
+  section .cta-button,
+  section button,
+  section a.button,
+  section a[href].inline-flex {
+    position: relative !important;
+    z-index: 1 !important;
+  }
+
+  /* Only ONE primary CTA visible per viewport */
+  section .flex.gap-4,
+  section .flex.gap-3 {
+    flex-direction: column !important;
+    width: 100% !important;
+  }
+
+  section .flex.gap-4 > *,
+  section .flex.gap-3 > * {
+    width: 100% !important;
+  }
+
+  /* ============================================
+     CHAT WIDGET FIX
+     Prevent chat from blocking content
+     ============================================ */
+  
+  /* Chat toggle button - fixed position with safe spacing */
+  button[aria-label="Open chat"],
+  button[aria-label="Close chat"] {
+    position: fixed !important;
+    bottom: 24px !important;
+    right: 16px !important;
+    width: 50px !important;
+    height: 50px !important;
+    margin: 0 !important;
+  }
+
+  /* Chat window - constrained size */
+  .fixed.bottom-24.right-6 {
+    right: 16px !important;
+    left: 16px !important;
+    width: auto !important;
+    max-width: calc(100vw - 32px) !important;
+    bottom: calc(50px + 24px) !important;
+    max-height: 45vh !important;
+  }
+
+  /* Ensure chat never covers primary CTA areas */
+  section:last-child .button,
+  section:last-child a.inline-flex {
+    margin-bottom: 60px !important;
+  }
+
+  /* ============================================
+     STICKY MOBILE CTA FIX
+     Ensure sticky bar doesn't overlap content
+     ============================================ */
+  
+  /* Sticky CTA bar */
+  .fixed.bottom-0.left-0.right-0.z-50.md\:hidden {
+    z-index: 40 !important;
+    padding-bottom: env(safe-area-inset-bottom, 0px) !important;
+  }
+
+  /* Add padding to body when sticky CTA is visible */
+  body.has-sticky-cta {
+    padding-bottom: var(--mobile-safe-bottom) !important;
+  }
+
+  /* Product page needs extra bottom padding */
+  .product-info {
+    padding-bottom: 100px !important;
+  }
+
+  /* ============================================
+     MOBILE SAFE ZONE SYSTEM
+     No interactive element within:
+     - 16px from screen edges
+     - 80px from bottom (thumb + browser UI)
+     ============================================ */
+  
+  /* Safe area padding for all interactive elements */
+  button,
+  a[href],
+  input,
+  select,
+  textarea,
+  [role="button"],
+  .clickable {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* Bottom safe zone - no content in last 80px unless it's sticky */
+  main {
+    padding-bottom: var(--mobile-safe-bottom) !important;
+  }
+
+  /* ============================================
+     SCROLL FLOW FIX
+     Each section starts/ends clean
+     ============================================ */
+  
+  /* Ensure smooth vertical flow */
+  main {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  main > * {
+    width: 100% !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* No floating elements on top of sections */
+  section::before,
+  section::after {
+    display: none !important;
+  }
+
+  /* Remove any fixed/absolute positioned elements inside sections */
+  section .fixed,
+  section .absolute {
+    position: relative !important;
+    top: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    right: auto !important;
+  }
+
+  /* ============================================
+     STATS + CTA FLOW FIX
+     Clean separation between sections
+     ============================================ */
+  
+  /* Stats section ends cleanly */
+  .stats-section,
+  .metrics-section {
+    margin-bottom: 24px !important;
+    padding-bottom: 24px !important;
+  }
+
+  /* CTA sits below stats with spacing */
+  .stats-section + section,
+  .stats-section + div {
+    margin-top: 24px !important;
+    padding-top: 24px !important;
+  }
+
+  /* ============================================
+     BUTTON CONSISTENCY FIX
+     All buttons 48px minimum height
+     ============================================ */
+  
   button,
   .btn-primary,
   .btn-secondary,
   .btn-outline,
-  a[href] {
-    min-height: 44px;
+  [role="button"],
+  a[href].button,
+  a[href].btn,
+  a.inline-flex {
+    min-height: var(--mobile-button-height) !important;
+    padding: 12px 20px !important;
+    font-size: 15px !important;
+    touch-action: manipulation !important;
   }
+
+  /* Full-width buttons on mobile */
+  .primary-cta,
+  .cta-primary,
+  .hero-cta,
+  .card-cta {
+    width: 100% !important;
+    display: block !important;
+    justify-content: center !important;
+  }
+
+  /* ============================================
+     PRODUCT CARD FIX
+     Better spacing and stacking
+     ============================================ */
   
-  /* Ensure tap targets are large enough */
+  /* Product card container */
+  .product-card,
+  .feature-card,
+  .card {
+    margin-bottom: var(--mobile-element-spacing) !important;
+    position: relative !important;
+    z-index: 1 !important;
+  }
+
+  /* Card grids become single column */
+  .grid.md\:grid-cols-2,
+  .grid.md\:grid-cols-3,
+  .grid.lg\:grid-cols-3,
+  .grid.lg\:grid-cols-4,
+  .card-grid,
+  .product-grid,
+  .feature-grid {
+    grid-template-columns: 1fr !important;
+    gap: var(--mobile-element-spacing) !important;
+  }
+
+  /* Card image aspect ratio */
+  .aspect-square {
+    aspect-ratio: 4/3 !important;
+  }
+
+  /* ============================================
+     TESTIMONIALS / REVIEWS FIX
+     Better mobile stacking
+     ============================================ */
+  
+  /* Review grid becomes single column */
+  .grid.md\:grid-cols-2,
+  .grid.md\:grid-cols-3,
+  .testimonial-grid,
+  .reviews-grid {
+    grid-template-columns: 1fr !important;
+    gap: var(--mobile-element-spacing) !important;
+  }
+
+  /* Individual review card */
+  .bg-gray-50.rounded-xl,
+  .testimonial,
+  .review-card {
+    padding: 20px !important;
+    margin-bottom: var(--mobile-element-spacing) !important;
+  }
+
+  /* ============================================
+     HERO SECTION FIX
+     Better mobile hero spacing
+     ============================================ */
+  
+  .hero-section,
+  .hero {
+    padding-top: 32px !important;
+    padding-bottom: 32px !important;
+  }
+
+  .hero-headline,
+  .hero h1 {
+    font-size: 28px !important;
+    line-height: 1.2 !important;
+    margin-bottom: 16px !important;
+  }
+
+  /* ============================================
+     EMAIL POPUP FIX
+     Don't block content
+     ============================================ */
+  
+  .email-popup,
+  .popup-overlay {
+    padding: 24px !important;
+    max-width: calc(100vw - 32px) !important;
+    margin: 16px !important;
+  }
+
+  .email-popup input,
+  .email-popup button {
+    width: 100% !important;
+    min-height: 48px !important;
+  }
+
+  /* ============================================
+     FORM FIXES
+     ============================================ */
+  
+  .form-input,
   input[type="text"],
   input[type="email"],
   input[type="password"],
-  input[type="search"],
   input[type="tel"],
+  input[type="search"],
   textarea,
   select {
-    min-height: 44px;
-    font-size: 16px; /* Prevents iOS zoom on focus */
+    min-height: 48px !important;
+    font-size: 16px !important;
+    padding: 12px 16px !important;
   }
-}
 
-/* Mobile typography optimizations */
-@media (max-width: 767px) {
-  body {
-    font-size: 16px; /* Base readable size */
-    line-height: 1.6;
-  }
+  /* ============================================
+     IMAGE & MEDIA FIXES
+     Prevent overflow
+     ============================================ */
   
-  h1 {
-    font-size: 1.75rem !important;
-    line-height: 1.2;
+  img,
+  video,
+  iframe,
+  canvas {
+    max-width: 100% !important;
+    height: auto !important;
   }
-  
-  h2 {
-    font-size: 1.5rem !important;
-    line-height: 1.25;
+
+  /* Ensure images don't cause horizontal scroll */
+  .product-gallery,
+  .hero-image,
+  .card-image {
+    overflow: hidden !important;
   }
+
+  /* ============================================
+     PREVENT HORIZONTAL SCROLL
+     ============================================ */
   
-  h3 {
-    font-size: 1.25rem !important;
-    line-height: 1.3;
+  html, body {
+    overflow-x: hidden !important;
+    width: 100% !important;
   }
+
+  /* ============================================
+     NAVIGATION FIX
+     ============================================ */
   
-  h4 {
-    font-size: 1.125rem !important;
-    line-height: 1.35;
+  header,
+  nav {
+    min-height: 56px !important;
+    position: relative !important;
+    z-index: 30 !important;
+  }
+
+  /* Logo size */
+  header img,
+  .logo {
+    max-height: 36px !important;
+    width: auto !important;
+  }
+
+  /* ============================================
+     SCROLL FLOW - SMOOTH PROGRESSION
+     ============================================ */
+  
+  /* Ensure sections flow naturally */
+  section {
+    position: relative !important;
+    clear: both !important;
+  }
+
+  /* Safe area for notched devices */
+  .safe-area-bottom {
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 16px) !important;
+  }
+
+  /* ============================================
+     ANIMATION PRESERVATION
+     Keep transitions smooth but fast
+     ============================================ */
+  
+  * {
+    transition-duration: 200ms !important;
+  }
+
+  /* Touch feedback */
+  button:active,
+  a:active,
+  [role="button"]:active {
+    transform: scale(0.97) !important;
+    transition: transform 100ms ease !important;
+  }
+
+  /* Remove hover states on touch devices */
+  @media (hover: none) {
+    .hover\:bg-black:hover {
+      background-color: transparent !important;
+    }
+    
+    .hover\:text-white:hover {
+      color: inherit !important;
+    }
   }
 }
 
