@@ -2,6 +2,7 @@ import Button from '@/components/ui/Button';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ROUTES } from '@/lib/routes';
+import FeaturedProductAd from '@/components/sections/FeaturedProductAd';
 
 // SEO Metadata
 export const metadata = {
@@ -46,6 +47,22 @@ export default function DisplayCasesForConvenienceStores() {
               </Button>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Product Ad - AFTER HERO (Critical Placement) */}
+      <section className="section-padding bg-white">
+        <div className="container-custom">
+          <div className="text-center max-w-3xl mx-auto mb-10">
+            <span className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+              High-Traffic Retail Display
+            </span>
+            <h2 className="heading-lg mt-2">48" LED Retail Wrap Counter (RGB)</h2>
+            <p className="text-gray-600 mt-3">
+              Commercial-grade display case perfect for checkout areas and high-traffic convenience store environments.
+            </p>
+          </div>
+          <FeaturedProductAd variant="large" />
         </div>
       </section>
 
@@ -205,6 +222,19 @@ export default function DisplayCasesForConvenienceStores() {
         </div>
       </section>
 
+      {/* Product Ad - MID PAGE (After Benefits) */}
+      <section className="section-padding bg-white">
+        <div className="container-custom">
+          <div className="text-center max-w-3xl mx-auto mb-10">
+            <h2 className="heading-lg">Maximize Your Checkout Area</h2>
+            <p className="text-gray-600 mt-3">
+              Increase impulse purchases with strategic product placement near the register.
+            </p>
+          </div>
+          <FeaturedProductAd variant="default" />
+        </div>
+      </section>
+
       {/* Use Cases Section */}
       <section className="section-padding bg-white">
         <div className="container-custom">
@@ -312,6 +342,31 @@ export default function DisplayCasesForConvenienceStores() {
             >
               Browse All Display Cases
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Product Ad - END (Final CTA) */}
+      <section className="section-padding bg-gray-50">
+        <div className="container-custom">
+          <div className="text-center max-w-3xl mx-auto mb-10">
+            <h2 className="heading-lg">Ready to Upgrade Your Convenience Store?</h2>
+            <p className="text-gray-600 mt-3 mb-8">
+              Professional display cases that increase sales, improve organization, 
+              and withstand the demands of high-traffic retail.
+            </p>
+          </div>
+          <FeaturedProductAd variant="compact" />
+          <div className="text-center mt-8">
+            <Link 
+              href={ROUTES.PRODUCTS.DISPLAY_48}
+              className="inline-flex items-center px-8 py-4 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors text-lg"
+            >
+              View Product Details
+              <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </Link>

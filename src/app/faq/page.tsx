@@ -1,166 +1,139 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import Button from '@/components/ui/Button';
+import FeaturedProductAd from '@/components/sections/FeaturedProductAd';
 
 export const metadata: Metadata = {
-  title: 'FAQ | Shipping, Lead Times & Warranty | Master Display Cases',
+  title: 'FAQ | Display Cases for Smoke Shops & Retail Stores | Master Display Cases',
   description:
-    'Frequently asked questions about shipping, lead times, assembly, warranty, and bulk pricing for commercial display cases.',
+    'Frequently asked questions about our LED display cases for smoke shops, vape stores, and retail businesses. Learn about shipping, returns, product details, and more.',
+  keywords:
+    'display cases for smoke shops, LED display cases, retail display cases, commercial display cases, vape shop displays, glass display cabinets',
 };
 
-const faqCategories = [
+const faqSections = [
   {
-    name: 'Shipping',
+    title: 'General Questions',
+    id: 'general',
     questions: [
       {
-        question: 'How does freight shipping work?',
+        question: 'What types of display cases do you offer?',
         answer:
-          'Freight shipping is used for all display cases due to their size and weight. Your case will be securely crated and shipped via LTL (Less Than Truckload) freight. Delivery is to your business address with curbside drop-off. The freight carrier will call to schedule a delivery appointment. For an additional fee, you can add liftgate service (for locations without a loading dock) and inside delivery.',
+          'We offer premium LED display cases, glass display cabinets, countertop displays, and lockable retail showcases designed specifically for smoke shops, vape stores, and retail environments.',
       },
       {
-        question: 'How much does freight shipping cost?',
+        question: 'Who are your display cases designed for?',
         answer:
-          'Freight costs vary based on distance, weight, and any additional services (liftgate, inside delivery). Shipping is calculated at checkout based on your location. Typical shipping costs range from $149-$399 for single cases. Bulk orders may qualify for discounted freight rates — contact us for a custom quote.',
+          'Our display cases are built for retail business owners, including smoke shops, vape stores, jewelry stores, and specialty retailers who want to improve product visibility and increase sales.',
       },
+      {
+        question: 'Are your display cases commercial grade?',
+        answer:
+          'Yes. All of our display cases are designed for commercial use, built with durable materials, and made to handle daily retail environments.',
+      },
+    ],
+  },
+  {
+    title: 'Shipping & Delivery',
+    id: 'shipping-delivery',
+    questions: [
       {
         question: 'How long does shipping take?',
         answer:
-          'Standard freight shipping typically takes 7-14 business days from the time your order ships. Expedited options (3-5 business days) are available for an additional cost. You\'ll receive tracking information and the freight carrier will contact you to schedule a delivery appointment.',
+          'Most orders are processed within 1–3 business days and delivered within 5–10 business days depending on location and freight scheduling.',
       },
       {
-        question: 'Do you ship internationally?',
+        question: 'How are display cases shipped?',
         answer:
-          'Currently, we ship to addresses within the continental United States. For international orders or shipments to Hawaii, Alaska, or Puerto Rico, please contact our sales team for a custom quote.',
+          'Due to size and weight, most display cases are shipped via freight carriers. Delivery is typically curbside, and the carrier will contact you to schedule delivery.',
       },
       {
-        question: 'What if my case arrives damaged?',
+        question: 'Do I need to be present for delivery?',
         answer:
-          'All shipments are fully insured. If your case arrives damaged, note the damage on the delivery receipt before signing, take photos, and contact us within 24 hours. We\'ll arrange for a replacement or repair at no additional cost to you.',
-      },
-    ],
-  },
-  {
-    name: 'Lead Times',
-    questions: [
-      {
-        question: 'Are display cases in stock or made to order?',
-        answer:
-          'Most of our popular display cases are kept in stock and ship within 1-3 business days. Custom configurations or large bulk orders may require additional lead time (typically 2-4 weeks). Product pages will indicate current availability.',
+          'Yes. A signature is required for most freight deliveries, and we recommend inspecting your order upon arrival.',
       },
       {
-        question: 'Can I expedite my order?',
+        question: 'Do you offer liftgate or inside delivery?',
         answer:
-          'Yes, expedited processing is available for in-stock items. Contact our sales team to discuss rush order options. Expedited freight shipping is also available for faster delivery once your order ships.',
-      },
-      {
-        question: 'How do I check the status of my order?',
-        answer:
-          'Once your order ships, you\'ll receive tracking information via email. For order status updates or questions, contact our customer service team at info@masterdisplaycases.com.',
+          'Additional delivery services such as liftgate or inside delivery may be available. Contact us before placing your order for special arrangements.',
       },
     ],
   },
   {
-    name: 'Assembly',
+    title: 'Returns & Damage',
+    id: 'returns-damage',
     questions: [
       {
-        question: 'How difficult is assembly?',
+        question: 'What if my display case arrives damaged?',
         answer:
-          'Most display cases arrive 90% assembled and require minimal setup. Typical assembly involves attaching the base, installing shelves, and connecting the lighting. Most customers complete assembly in 30-45 minutes with basic tools (Phillips head screwdriver, level).',
+          'Please inspect your order upon delivery. If there is damage, note it with the carrier and contact us within 48 hours with photos so we can assist you with a replacement or claim.',
       },
       {
-        question: 'Are assembly instructions included?',
+        question: 'Do you accept returns?',
         answer:
-          'Yes, detailed step-by-step instructions with diagrams are included with every display case. We also provide video assembly guides on our YouTube channel. If you need additional support, our customer service team can walk you through any step.',
-      },
-      {
-        question: 'Do you offer professional assembly?',
-        answer:
-          'For bulk orders (3+ cases), we can arrange professional assembly services in most areas. This is particularly popular for multi-location retailers or store remodels. Contact our sales team for pricing and availability.',
-      },
-      {
-        question: 'What tools do I need?',
-        answer:
-          'Basic assembly requires a Phillips head screwdriver and a level. All necessary hardware (screws, bolts, anchors) is included. For wall-mounted cases, you may need a drill for mounting into studs or masonry.',
+          'Due to the size and nature of our products, returns may be subject to approval and restocking fees. Contact us for details before initiating a return.',
       },
     ],
   },
   {
-    name: 'Warranty',
+    title: 'Product Details',
+    id: 'product-details',
     questions: [
       {
-        question: 'What does the warranty cover?',
+        question: 'Are your display cases lockable?',
         answer:
-          'All display cases come with a 5-year structural warranty covering the frame, glass, and shelving. LED/RGB lighting components are covered for 2 years. The warranty covers defects in materials and workmanship under normal commercial use.',
+          'Yes. Many of our display cases include built-in locking systems to help secure high-value inventory.',
       },
       {
-        question: 'What is not covered?',
+        question: 'Do your display cases include lighting?',
         answer:
-          'The warranty does not cover damage from misuse, accidents, improper installation, or normal wear and tear. Glass breakage due to impact is not covered. Lighting components that fail due to power surges or improper voltage are not covered.',
+          'Yes. Many of our models feature integrated LED lighting designed to improve product visibility and enhance store presentation.',
       },
       {
-        question: 'How do I make a warranty claim?',
+        question: 'Can I use these display cases for high-value items?',
         answer:
-          'Contact our customer service team with photos of the defect and your order number. We\'ll evaluate the claim and, if approved, ship replacement parts or arrange for a replacement unit. Most warranty claims are processed within 5 business days.',
-      },
-      {
-        question: 'Is the warranty transferable?',
-        answer:
-          'Yes, the warranty is transferable to a new owner if the display case is sold or the business changes ownership. Proof of original purchase is required.',
+          'Absolutely. Our display cases are commonly used for high-value products such as vape devices, glass pieces, jewelry, and collectibles.',
       },
     ],
   },
   {
-    name: 'Bulk Pricing',
+    title: 'Ordering & Payments',
+    id: 'ordering-payments',
     questions: [
       {
-        question: 'What quantity qualifies for bulk pricing?',
+        question: 'Do you offer bulk or wholesale pricing?',
         answer:
-          'Bulk pricing starts at 3 units of the same display case model. Discounts increase with quantity: 3-5 units (10% off), 6-10 units (15% off), 11-20 units (20% off), 21+ units (25% off). Custom quotes are available for larger orders.',
+          'Yes. We offer bulk pricing for multi-store owners and larger orders. Contact us for a custom quote.',
       },
       {
-        question: 'How do I request a bulk quote?',
+        question: 'What payment methods do you accept?',
         answer:
-          'Use our Contact page or email info@masterdisplaycases.com with your desired quantities and models. Our sales team will provide a detailed quote within 24 business hours.',
-      },
-      {
-        question: 'Do bulk orders ship together?',
-        answer:
-          'Yes, we coordinate shipments to ensure all cases arrive together when possible. For very large orders, we may ship in multiple trucks but will coordinate delivery timing. Freight costs for bulk orders are often lower per unit due to better freight class rates.',
-      },
-      {
-        question: 'Can I mix and match different display case models?',
-        answer:
-          'Yes, bulk discounts apply to mixed orders as well. The discount tier is based on total units ordered. For example, ordering 3 floor-standing cases and 3 countertop cases would qualify for the 6-unit discount tier.',
-      },
-      {
-        question: 'Do you offer Net 30 terms for business accounts?',
-        answer:
-          'Yes, qualified businesses can apply for Net 30 payment terms. This requires a credit application and approval. Net 30 terms are typically available for orders over $2,500. Contact our sales team for details.',
+          'We accept all major payment methods available at checkout.',
       },
     ],
   },
   {
-    name: 'Products',
+    title: 'Business & Trust',
+    id: 'business-trust',
     questions: [
       {
-        question: 'Can I customize the display case dimensions?',
-        answer:
-          'Yes, we offer custom sizing for orders of 5+ units. Custom dimensions may affect pricing and lead time. Contact our sales team with your specifications for a quote.',
+        question: 'Why should I choose your display cases?',
+        answer: (
+          <>
+            Our display cases are designed to:
+            <ul className="list-disc pl-5 mt-2 space-y-1">
+              <li>Increase product visibility</li>
+              <li>Improve store aesthetics</li>
+              <li>Help drive higher sales</li>
+              <li>Secure high-value inventory</li>
+            </ul>
+          </>
+        ),
       },
       {
-        question: 'What lighting options are available?',
+        question: 'How do display cases increase sales?',
         answer:
-          'All display cases include integrated LED lighting. RGB (color-changing) lighting is available as an upgrade on most models. RGB systems include a remote control with 16 color options and multiple modes (fade, flash, strobe). You can also set a static color to match your brand.',
-      },
-      {
-        question: 'Are display cases lockable?',
-        answer:
-          'Yes, all display cases include lockable doors or access panels. Two keys are included with each case. Additional keys can be ordered if needed. For high-security applications, we can install upgraded locking mechanisms.',
-      },
-      {
-        question: 'Can shelves be adjusted?',
-        answer:
-          'Yes, all display cases feature adjustable glass shelves. Shelf positions can be modified without tools in most models. Additional shelves can be purchased separately if needed.',
+          'Well-designed display cases improve product visibility and perceived value, leading to more customer engagement and higher average order value.',
       },
     ],
   },
@@ -176,11 +149,13 @@ export default function FAQPage() {
             <span className="text-xs font-semibold uppercase tracking-wider text-gray-500">
               Help Center
             </span>
-            <h1 className="heading-lg mt-4 mb-6">Frequently Asked Questions</h1>
+            <h1 className="heading-lg mt-4 mb-6">
+              Frequently Asked Questions About Display Cases
+            </h1>
             <p className="body-lg text-gray-600">
-              Everything you need to know about ordering, shipping, and owning 
-              Master Display Cases products. Can't find what you're looking for? 
-              Contact our team.
+              Everything you need to know about our LED display cases for smoke
+              shops, vape stores, and retail businesses. Can't find what
+              you're looking for? Contact our team.
             </p>
           </div>
         </div>
@@ -190,36 +165,35 @@ export default function FAQPage() {
       <section className="border-b border-gray-200">
         <div className="container-custom">
           <div className="flex flex-wrap gap-4 py-8">
-            <Link href="#shipping" className="text-sm font-medium text-black hover:text-gray-600">
-              Shipping
-            </Link>
-            <Link href="#lead-times" className="text-sm font-medium text-black hover:text-gray-600">
-              Lead Times
-            </Link>
-            <Link href="#assembly" className="text-sm font-medium text-black hover:text-gray-600">
-              Assembly
-            </Link>
-            <Link href="#warranty" className="text-sm font-medium text-black hover:text-gray-600">
-              Warranty
-            </Link>
-            <Link href="#bulk-pricing" className="text-sm font-medium text-black hover:text-gray-600">
-              Bulk Pricing
-            </Link>
-            <Link href="#products" className="text-sm font-medium text-black hover:text-gray-600">
-              Products
-            </Link>
+            {faqSections.map((section) => (
+              <Link
+                key={section.id}
+                href={`#${section.id}`}
+                className="text-sm font-medium text-black hover:text-gray-600"
+              >
+                {section.title}
+              </Link>
+            ))}
           </div>
         </div>
       </section>
 
       {/* FAQ Content */}
-      {faqCategories.map((category) => (
-        <section key={category.name} id={category.name.toLowerCase().replace(' ', '-')} className="section-padding border-b border-gray-100">
+      {faqSections.map((section) => (
+        <section
+          key={section.id}
+          id={section.id}
+          className="section-padding border-b border-gray-100"
+        >
           <div className="container-custom max-w-4xl">
-            <h2 className="heading-md mb-8">{category.name}</h2>
+            <h2 className="heading-md mb-8">{section.title}</h2>
             <div className="space-y-4">
-              {category.questions.map((faq, index) => (
-                <details key={index} className="bg-gray-50 rounded-lg group">
+              {section.questions.map((faq, index) => (
+                <details
+                  key={index}
+                  className="bg-gray-50 rounded-lg group"
+                  id={`faq-${section.id}-${index}`}
+                >
                   <summary className="p-6 font-medium cursor-pointer hover:bg-gray-100 transition-colors flex items-center justify-between">
                     {faq.question}
                     <svg
@@ -228,11 +202,16 @@ export default function FAQPage() {
                       stroke="currentColor"
                       viewBox="0 0 24 24"
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
                     </svg>
                   </summary>
                   <div className="px-6 pb-6 text-gray-600">
-                    {faq.answer}
+                    {typeof faq.answer === 'string' ? faq.answer : faq.answer}
                   </div>
                 </details>
               ))}
@@ -241,25 +220,98 @@ export default function FAQPage() {
         </section>
       ))}
 
-      {/* Contact CTA */}
+      {/* Shop Our Most Popular Display - BOTTOM SECTION */}
+      <section className="section-padding bg-gray-50">
+        <div className="container-custom">
+          <div className="text-center max-w-3xl mx-auto mb-10">
+            <span className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+              Shop Our Most Popular Display
+            </span>
+            <h2 className="heading-lg mt-2">48" LED Retail Wrap Counter (RGB)</h2>
+            <p className="text-gray-600 mt-3">
+              The display case trusted by hundreds of retailers for its quality, durability, and visual impact.
+            </p>
+          </div>
+          <FeaturedProductAd variant="default" />
+          <div className="text-center mt-8">
+            <Link 
+              href="/products/products-48-led-retail-wrap-counter-rgb"
+              className="inline-flex items-center px-8 py-4 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors text-lg"
+            >
+              View Product Details
+              <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA */}
       <section className="section-padding bg-black text-white">
         <div className="container-custom">
           <div className="max-w-2xl mx-auto text-center">
             <h2 className="heading-lg mb-4">Still Have Questions?</h2>
             <p className="text-gray-400 mb-8">
-              Our team is here to help. Contact us for personalized assistance with your display case needs.
+              Our team is here to help you choose the right display setup for
+              your store.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button href="/contact" size="lg">
                 Contact Us
               </Button>
-              <Button href="mailto:info@masterdisplaycases.com" variant="secondary" size="lg">
-                Email Us
+              <Button href="/collections/retail-displays" variant="secondary" size="lg">
+                Shop Display Cases
               </Button>
             </div>
           </div>
         </div>
       </section>
+
+      {/* Structured Data for SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: faqSections.flatMap((section) =>
+              section.questions.map((faq) => ({
+                '@type': 'Question',
+                name: faq.question,
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text:
+                    typeof faq.answer === 'string'
+                      ? faq.answer
+                      : extractTextFromReact(faq.answer),
+                },
+              }))
+            ),
+          }),
+        }}
+      />
     </div>
   );
+}
+
+// Helper function to extract plain text from React elements for JSON-LD
+function extractTextFromReact(element: any): string {
+  if (typeof element === 'string') return element;
+  if (Array.isArray(element))
+    return element.map(extractTextFromReact).join(' ');
+  if (element?.props?.children) {
+    if (element.props.children.props?.className?.includes('list-disc')) {
+      // Extract list items
+      const items = element.props.children.props.children;
+      if (Array.isArray(items)) {
+        return items
+          .map((item: any) => extractTextFromReact(item.props?.children))
+          .join(', ');
+      }
+      return extractTextFromReact(items.props?.children);
+    }
+    return extractTextFromReact(element.props.children);
+  }
+  return '';
 }

@@ -1,5 +1,8 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
+import { useState } from 'react';
 
 // Trust badge data
 const trustBadges = [
@@ -56,6 +59,104 @@ const supportLinks = [
   { label: 'Terms', href: '/policies/terms' },
   { label: 'Privacy', href: '/policies/privacy' },
 ];
+
+function NewsletterForm({ variant = 'footer' }: { variant?: 'footer' | 'inline' }) {
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || status === 'loading') return;
+
+    setStatus('loading');
+
+    try {
+      // Submit to Shopify Customer API via our contact endpoint
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          type: 'newsletter',
+        }),
+      });
+
+      if (response.ok) {
+        setStatus('success');
+        setEmail('');
+      } else {
+        setStatus('error');
+      }
+    } catch {
+      setStatus('error');
+    }
+  };
+
+  if (status === 'success') {
+    return (
+      <div className="bg-green-900/30 border border-green-800 rounded-lg p-4 text-center">
+        <p className="text-green-400 text-sm font-medium">
+          ✓ Thanks for subscribing! Check your email for your discount code.
+        </p>
+      </div>
+    );
+  }
+
+  if (variant === 'inline') {
+    return (
+      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Enter your business email"
+          className="flex-1 px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50 text-sm"
+          required
+          disabled={status === 'loading'}
+        />
+        <button
+          type="submit"
+          disabled={status === 'loading'}
+          className="px-6 py-3 bg-white text-black font-semibold text-sm uppercase tracking-wider hover:bg-gray-200 transition-colors rounded-lg whitespace-nowrap disabled:opacity-50"
+        >
+          {status === 'loading' ? 'Subscribing...' : 'Subscribe'}
+        </button>
+      </form>
+    );
+  }
+
+  // Footer variant - compact
+  return (
+    <form onSubmit={handleSubmit} className="space-y-3">
+      <input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Enter your email"
+        className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50 text-sm"
+        required
+        disabled={status === 'loading'}
+      />
+      <button
+        type="submit"
+        disabled={status === 'loading'}
+        className="w-full px-4 py-3 bg-white text-black font-semibold text-sm uppercase tracking-wider hover:bg-gray-200 transition-colors rounded-lg whitespace-nowrap disabled:opacity-50"
+      >
+        {status === 'loading' ? 'Subscribing...' : 'Get Discount'}
+      </button>
+      {status === 'error' && (
+        <p className="text-red-400 text-xs mt-2">
+          Something went wrong. Please try again.
+        </p>
+      )}
+      <p className="text-gray-500 text-xs">
+        By subscribing, you agree to receive marketing emails. Unsubscribe anytime.
+      </p>
+    </form>
+  );
+}
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -150,7 +251,18 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 5: Contact */}
+          {/* Column 5: Newsletter */}
+          <div>
+            <h3 className="text-sm font-semibold uppercase tracking-wider mb-4 text-white">
+              Get 10% Off
+            </h3>
+            <p className="text-gray-400 text-sm mb-4">
+              Subscribe for store setup tips and product recommendations.
+            </p>
+            <NewsletterForm />
+          </div>
+
+          {/* Column 6: Contact */}
           <div>
             <h3 className="text-sm font-semibold uppercase tracking-wider mb-6 text-white">
               Contact

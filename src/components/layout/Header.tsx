@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { useCart } from '@/lib/cart-context';
+import PromoBar from './PromoBar';
 
 // Dropdown menu item type
 interface DropdownItem {
@@ -221,6 +222,9 @@ export default function Header() {
       <div className="bg-gray-100 text-gray-600 text-xs font-medium py-2 px-4 text-center">
         Commercial-Grade Display Systems | Designed for High-Conversion Retail
       </div>
+
+      {/* Promotional Bar - Drives traffic to primary product */}
+      <PromoBar />
 
       {/* Main Header */}
       <header

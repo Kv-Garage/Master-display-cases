@@ -6,6 +6,7 @@ import ProductGridSection from '@/components/sections/ProductGridSection';
 import FAQSection from '@/components/sections/FAQSection';
 import CTASection from '@/components/sections/CTASection';
 import UGCGallery from '@/components/sections/UGCGallery';
+import FeaturedProductAd from '@/components/sections/FeaturedProductAd';
 import { getProducts } from '@/lib/shopify';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -242,6 +243,22 @@ export default async function HomePage() {
     <>
       <HeroSliderSection />
       
+      {/* Featured Display Setup - AFTER HERO (Placement 1) */}
+      <section className="section-padding bg-white">
+        <div className="container-custom">
+          <div className="text-center max-w-3xl mx-auto mb-10">
+            <span className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+              Featured Display Setup
+            </span>
+            <h2 className="heading-lg mt-2">48" LED Retail Wrap Counter (RGB)</h2>
+            <p className="text-gray-600 mt-3">
+              Our most popular display system, engineered for high-converting retail environments.
+            </p>
+          </div>
+          <FeaturedProductAd variant="large" />
+        </div>
+      </section>
+
       {/* Fast Path Navigation - Controls user flow immediately */}
       <FastPathNavigation />
 
@@ -325,6 +342,22 @@ export default async function HomePage() {
 
       <BenefitsSection />
       
+      {/* Built for High-Converting Stores - MID PAGE (Placement 2) */}
+      <section className="section-padding bg-gray-50">
+        <div className="container-custom">
+          <div className="text-center max-w-3xl mx-auto mb-10">
+            <span className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+              Built for High-Converting Stores
+            </span>
+            <h2 className="heading-lg mt-2">Professional Display That Drives Sales</h2>
+            <p className="text-gray-600 mt-3">
+              Transform your store with premium display cases designed for maximum impact.
+            </p>
+          </div>
+          <FeaturedProductAd variant="default" />
+        </div>
+      </section>
+
       {/* Featured Products Section - Hard Sell Area */}
       <section className="section-padding bg-white">
         <div className="container-custom">
@@ -419,6 +452,30 @@ export default async function HomePage() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Ready to Upgrade - BOTTOM CTA (Placement 3) */}
+      <section className="section-padding bg-white">
+        <div className="container-custom">
+          <div className="text-center max-w-3xl mx-auto mb-10">
+            <h2 className="heading-lg">Ready to Upgrade Your Store?</h2>
+            <p className="text-gray-600 mt-3 mb-8">
+              Join hundreds of retailers who have transformed their stores with professional display cases.
+            </p>
+          </div>
+          <FeaturedProductAd variant="compact" />
+          <div className="text-center mt-8">
+            <Link 
+              href="/products/products-48-led-retail-wrap-counter-rgb"
+              className="inline-flex items-center px-8 py-4 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors text-lg"
+            >
+              View Product Details
+              <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
           </div>
         </div>
       </section>
