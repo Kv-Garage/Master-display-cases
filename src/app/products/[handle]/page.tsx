@@ -8,6 +8,55 @@ import ProductPageReviews from '@/components/sections/ProductReviews';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+// Conversion-focused section component - compact supporting block
+function WhyUpgradeSection() {
+  return (
+    <div className="py-6 border-b border-gray-100">
+      <div className="grid md:grid-cols-2 gap-6 items-center">
+        <div>
+          <h2 className="text-lg font-bold text-black mb-3">
+            Why Stores Upgrade to LED Display Counters
+          </h2>
+          <ul className="space-y-2">
+            <li className="flex items-start gap-2">
+              <svg className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              <span className="text-sm text-gray-700">Increase impulse purchases with better visibility</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <svg className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              <span className="text-sm text-gray-700">Secure high-value products with lockable glass</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <svg className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              <span className="text-sm text-gray-700">Instantly upgrade store appearance (higher perceived value)</span>
+            </li>
+          </ul>
+        </div>
+        <div className="flex flex-col items-start md:items-end justify-center gap-3">
+          <p className="text-green-700 font-semibold text-sm bg-green-50 px-4 py-2 rounded-lg">
+            💰 Most stores recover this investment in 30–60 days
+          </p>
+          <Link
+            href="/collections/rgb-displays"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors text-sm"
+          >
+            View Displays
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 interface ProductPageProps {
   params: Promise<{ handle: string }>;
 }
@@ -209,6 +258,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
                       </>
                     )}
                   </div>
+                </div>
+
+                {/* Conversion Support Section - Added between title and configurator */}
+                <div className="mb-6">
+                  <WhyUpgradeSection />
                 </div>
 
                 {/* Main Configurator - handles variant selection + bundle */}
