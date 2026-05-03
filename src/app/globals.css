@@ -1508,9 +1508,49 @@ img {
 
   /* ============================================
      COMPARISON / BEFORE-AFTER FIX
-     Vertical stacking
+     Clean mobile layout - remove overlay clutter
      ============================================ */
   
+  /* BeforeAfterGridSection - Grid becomes single column */
+  .grid.md\:grid-cols-2 {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* BeforeAfterSlider - Remove ALL overlay text on mobile */
+  /* Top labels (BEFORE/AFTER) */
+  .absolute.top-4.left-4.bg-black\/70,
+  .absolute.top-4.right-4.bg-black\/70 {
+    display: none !important;
+  }
+
+  /* Subtitle overlays */
+  .absolute.bottom-16.left-4,
+  .absolute.bottom-16.right-4 {
+    display: none !important;
+  }
+
+  /* Value proposition overlays */
+  .absolute.bottom-4.left-4.right-1\/2,
+  .absolute.bottom-4.left-1\/2.right-4 {
+    display: none !important;
+  }
+
+  /* Center callout - hide on mobile */
+  .absolute.top-1\/2.left-1\/2.-translate-x-1\/2.-translate-y-1\/2.z-10 {
+    display: none !important;
+  }
+
+  /* Progress indicator dots - hide on mobile */
+  .flex.justify-center.mt-4.space-x-2 {
+    display: none !important;
+  }
+
+  /* Slider handle - make larger for touch */
+  .absolute.top-1\/2.left-1\/2.-translate-x-1\/2.-translate-y-1\/2.w-12.h-12 {
+    width: 56px !important;
+    height: 56px !important;
+  }
+
   /* Comparison container */
   .comparison,
   .before-after,
@@ -1534,6 +1574,29 @@ img {
     width: 100% !important;
     height: auto !important;
     margin-bottom: 12px !important;
+  }
+
+  /* ProductBeforeAfterSection - Stack vertically on mobile */
+  .grid.lg\:grid-cols-2 {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 24px !important;
+  }
+
+  /* Value callout box - full width on mobile */
+  .bg-white.rounded-xl.p-8.shadow-lg {
+    width: 100% !important;
+    padding: 24px !important;
+  }
+
+  /* Stats grid in callout - 2 columns */
+  .grid.grid-cols-2 {
+    gap: 12px !important;
+  }
+
+  /* Stats numbers - smaller on mobile */
+  .text-3xl.font-bold {
+    font-size: 24px !important;
   }
 
   /* ============================================
