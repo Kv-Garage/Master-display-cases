@@ -480,8 +480,8 @@ html {
 /* Mobile container with optimal padding */
 @media (max-width: 767px) {
   .container-custom {
-    padding-left: 16px !important;
-    padding-right: 16px !important;
+    padding-left: 16px;
+    padding-right: 16px;
   }
 }
 
@@ -539,33 +539,16 @@ html {
 
 /* Reduce vertical spacing on mobile for tighter flow */
 @media (max-width: 767px) {
-  /* Section padding reduction */
-  .py-12 {
-    padding-top: 2rem !important;
-    padding-bottom: 2rem !important;
+  /* These are gentle overrides for better mobile flow */
+  /* Section padding reduction - only where not explicitly set */
+  section.py-12 {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
   }
   
-  .py-8 {
-    padding-top: 1.5rem !important;
-    padding-bottom: 1.5rem !important;
-  }
-  
-  /* Gap reduction */
-  .gap-8 {
-    gap: 1rem !important;
-  }
-  
-  .gap-6 {
-    gap: 0.75rem !important;
-  }
-  
-  /* Margin reduction for common elements */
-  .mb-6 {
-    margin-bottom: 1rem !important;
-  }
-  
-  .mb-8 {
-    margin-bottom: 1.25rem !important;
+  section.py-8 {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
   }
 }
 
