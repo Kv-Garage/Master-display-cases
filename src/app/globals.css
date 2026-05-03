@@ -485,6 +485,58 @@ html {
   }
 }
 
+/* ============================================
+   MOBILE HEADER & HERO FIXES
+   Fixes logo size, header height, hero spacing
+   ============================================ */
+
+@media (max-width: 767px) {
+  /* 1. LOGO FIX - Reduce logo size on mobile */
+  header img[h-24],
+  header .h-24 {
+    max-height: 36px !important;
+    height: auto !important;
+  }
+  
+  /* Header height compression */
+  header .h-\[120px\] {
+    height: auto !important;
+    min-height: 56px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+  
+  /* Reduce top bar text size */
+  .top-bar {
+    font-size: 11px;
+    padding: 4px;
+  }
+}
+
+/* ============================================
+   MOBILE HERO SPACING FIX
+   Remove excessive top padding
+   ============================================ */
+
+@media (max-width: 767px) {
+  /* Reduce hero section top padding */
+  .hero-section,
+  section:first-of-type {
+    padding-top: 1rem !important;
+  }
+  
+  /* Reduce hero headline size slightly */
+  .hero-headline {
+    font-size: 1.5rem !important;
+    line-height: 1.2 !important;
+  }
+  
+  /* Tighter spacing in hero */
+  .hero-content > * + * {
+    margin-top: 0.5rem !important;
+  }
+}
+
 /* Touch-friendly minimum sizes */
 @media (max-width: 767px) {
   /* All buttons minimum 44px height (Apple HIG) */
