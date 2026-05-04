@@ -9,6 +9,8 @@ import CartDrawer from "@/components/layout/CartDrawer";
 import AnalyticsProvider from "@/components/analytics/AnalyticsProvider";
 import EmailCapturePopup from "@/components/marketing/EmailCapturePopup";
 import AIChatbot from "@/components/chat/AIChatbot";
+import RobotsMeta from "@/components/seo/RobotsMeta";
+import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -135,6 +137,9 @@ export default function RootLayout({
         strategy="afterInteractive"
       />
       <body className="min-h-screen flex flex-col font-sans antialiased">
+        {/* Robots Meta - Conditionally adds noindex for myshopify.com domains */}
+        <RobotsMeta />
+
         {/* Shopify Analytics Bridge Script */}
         {/* Passes UTM params and referrer data to Shopify when navigating to store */}
         <Script
@@ -201,15 +206,17 @@ export default function RootLayout({
             `
           }}
         />
-        <AnalyticsProvider />
-        <CartProvider>
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-          <CartDrawer />
-        </CartProvider>
-        <EmailCapturePopup />
-        <AIChatbot />
+        <ErrorBoundary>
+          <AnalyticsProvider />
+          <CartProvider>
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+            <CartDrawer />
+          </CartProvider>
+          <EmailCapturePopup />
+          <AIChatbot />
+        </ErrorBoundary>
       </body>
     </html>
   );

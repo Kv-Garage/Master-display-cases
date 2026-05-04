@@ -5,11 +5,16 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Button from '@/components/ui/Button';
 
+// Google Customer Reviews Merchant ID
+const GOOGLE_MERCHANT_ID = 5779505021;
+
 function ThankYouContent() {
   const searchParams = useSearchParams();
   const [orderId, setOrderId] = useState<string | null>(null);
   const [orderNumber, setOrderNumber] = useState<string | null>(null);
   const [email, setEmail] = useState<string | null>(null);
+  const [deliveryCountry, setDeliveryCountry] = useState<string | null>(null);
+  const [estimatedDeliveryDate, setEstimatedDeliveryDate] = useState<string | null>(null);
 
   useEffect(() => {
     // Check for order parameters from Shopify checkout redirect
@@ -17,6 +22,7 @@ function ThankYouContent() {
     const urlOrderNumber = searchParams.get('order_number');
     const urlEmail = searchParams.get('email');
     const urlCheckoutToken = searchParams.get('checkout_token');
+    const urlCountry = searchParams.get('to_country') || searchParams.get('country');
     
     // Also check localStorage for order details stored before checkout
     const storedOrder = localStorage.getItem('last_order');
@@ -40,6 +46,18 @@ function ThankYouContent() {
       setEmail(urlEmail);
     }
     
+    // Set delivery country (default to US if not provided)
+    if (urlCountry) {
+      setDeliveryCountry(urlCountry.toUpperCase());
+    } else {
+      setDeliveryCountry('US');
+    }
+    
+    // Estimate delivery date (14 days from now for display cases)
+    const deliveryDate = new Date();
+    deliveryDate.setDate(deliveryDate.getDate() + 14);
+    setEstimatedDeliveryDate(deliveryDate.toISOString().split('T')[0]);
+    
     // Clear the stored order after reading
     if (storedOrder) {
       localStorage.removeItem('last_order');
@@ -52,6 +70,7 @@ function ThankYouContent() {
       email: urlEmail,
       checkoutToken: urlCheckoutToken,
       storedOrder,
+      deliveryCountry: urlCountry,
     });
   }, [searchParams]);
 
@@ -169,6 +188,37 @@ function ThankYouContent() {
           </div>
         </div>
       </div>
+
+      {/* Google Customer Reviews Opt-In Badge Container */}
+      <div id="google_survey_badge" className="fixed bottom-4 right-4 z-40"></div>
+
+      {/* Google Customer Reviews Script */}
+      {orderId && email && (
+        <>
+          <script
+            src="https://apis.google.com/js/platform.js?onload=renderOptIn"
+            async
+            defer
+          />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                window.renderOptIn = function() {
+                  window.gapi.load('surveyoptin', function() {
+                    window.gapi.surveyoptin.render({
+                      "merchant_id": "${GOOGLE_MERCHANT_ID}",
+                      "order_id": "${orderId}",
+                      "email": "${email}",
+                      "delivery_country": "${deliveryCountry || 'US'}",
+                      "estimated_delivery_date": "${estimatedDeliveryDate || new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}"
+                    });
+                  });
+                }
+              `,
+            }}
+          />
+        </>
+      )}
     </main>
   );
 }
