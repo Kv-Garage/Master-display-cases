@@ -7,10 +7,16 @@
  * - Graceful fallback on API failures (never crashes server)
  * - Request deduplication to prevent thundering herd
  * - Comprehensive error logging for debugging
+ * - Falls back to sample data when Shopify is not configured
  */
 
 const domain = process.env.NEXT_PUBLIC_SHOPIFY_DOMAIN;
 const token = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_TOKEN;
+
+// Check if Shopify is properly configured
+export function isShopifyConfigured(): boolean {
+  return !!domain && !!token;
+}
 
 // Timeout for API requests (5 seconds)
 const API_TIMEOUT = 5000;

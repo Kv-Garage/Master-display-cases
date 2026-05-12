@@ -1,15 +1,23 @@
 /**
  * Shopify Storefront API Integration
  * Safe data flow with null handling - never crashes
+ * Falls back to sample data when Shopify is not configured
  */
 
-import { shopifyFetch } from './shopify-client';
+import { shopifyFetch, isShopifyConfigured as isShopifyClientConfigured } from './shopify-client';
+import { 
+  getFallbackProducts, 
+  getFallbackProduct, 
+  getFallbackCollectionProducts, 
+  getFallbackCollection,
+  getFallbackCollections 
+} from '@/data/fallback-products';
 
 /**
  * Check if Shopify API is configured
  */
 export function isShopifyConfigured(): boolean {
-  return !!process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_TOKEN;
+  return isShopifyClientConfigured();
 }
 
 /**
@@ -52,8 +60,15 @@ export function normalizeProduct(product: any) {
 
 /**
  * Get products from Shopify (SIMPLIFIED QUERY - safe null handling)
+ * Falls back to sample data when Shopify is not configured
  */
 export async function getProducts() {
+  // If Shopify is not configured, return fallback products
+  if (!isShopifyConfigured()) {
+    console.log('[Shopify] Using fallback products - Shopify not configured');
+    return getFallbackProducts();
+  }
+
   const data = await shopifyFetch(`
     query {
       products(first: 20) {
@@ -85,7 +100,8 @@ export async function getProducts() {
 
   if (!data || !data.products) {
     console.error("No product data returned from getProducts()");
-    return [];
+    // Return fallback products if API fails
+    return getFallbackProducts();
   }
 
   return data.products.edges.map((edge: any) => {
@@ -113,8 +129,15 @@ export async function getProducts() {
 
 /**
  * Get a single product by handle (SIMPLIFIED QUERY - safe null handling)
+ * Falls back to sample data when Shopify is not configured
  */
 export async function getProduct(handle: string) {
+  // If Shopify is not configured, return fallback product
+  if (!isShopifyConfigured()) {
+    console.log('[Shopify] Using fallback product - Shopify not configured');
+    return getFallbackProduct(handle);
+  }
+
   const data = await shopifyFetch(`
     query getProduct($handle: String!) {
       product(handle: $handle) {
@@ -156,7 +179,8 @@ export async function getProduct(handle: string) {
 
   if (!data || !data.product) {
     console.error(`No product data returned for handle: ${handle}`);
-    return null;
+    // Try fallback product
+    return getFallbackProduct(handle);
   }
 
   return normalizeProduct(data.product);
@@ -164,8 +188,15 @@ export async function getProduct(handle: string) {
 
 /**
  * Get collections (SIMPLIFIED QUERY - safe null handling)
+ * Falls back to sample data when Shopify is not configured
  */
 export async function getCollections() {
+  // If Shopify is not configured, return fallback collections
+  if (!isShopifyConfigured()) {
+    console.log('[Shopify] Using fallback collections - Shopify not configured');
+    return getFallbackCollections();
+  }
+
   const data = await shopifyFetch(`
     {
       collections(first: 20) {
@@ -182,7 +213,8 @@ export async function getCollections() {
 
   if (!data || !data.collections) {
     console.error("No collections data returned");
-    return [];
+    // Return fallback collections if API fails
+    return getFallbackCollections();
   }
 
   return data.collections.edges.map((edge: any) => edge.node);
@@ -190,8 +222,15 @@ export async function getCollections() {
 
 /**
  * Get a single collection by handle
+ * Falls back to sample data when Shopify is not configured
  */
 export async function getCollection(handle: string) {
+  // If Shopify is not configured, return fallback collection
+  if (!isShopifyConfigured()) {
+    console.log('[Shopify] Using fallback collection - Shopify not configured');
+    return getFallbackCollection(handle);
+  }
+
   const data = await shopifyFetch(`
     query ($handle: String!) {
       collection(handle: $handle) {
@@ -204,7 +243,8 @@ export async function getCollection(handle: string) {
 
   if (!data || !data.collection) {
     console.error(`No collection data returned for handle: ${handle}`);
-    return null;
+    // Try fallback collection
+    return getFallbackCollection(handle);
   }
 
   return data.collection;
@@ -345,8 +385,15 @@ export async function getBlogPost(handle: string) {
 
 /**
  * Get collection products (SIMPLIFIED QUERY - safe null handling)
+ * Falls back to sample data when Shopify is not configured
  */
 export async function getCollectionProducts(handle: string) {
+  // If Shopify is not configured, return fallback collection products
+  if (!isShopifyConfigured()) {
+    console.log('[Shopify] Using fallback collection products - Shopify not configured');
+    return getFallbackCollectionProducts(handle);
+  }
+
   const data = await shopifyFetch(`
     query getCollectionProducts($handle: String!) {
       collection(handle: $handle) {
@@ -382,7 +429,8 @@ export async function getCollectionProducts(handle: string) {
 
   if (!data || !data.collection || !data.collection.products) {
     console.error(`No collection products returned for handle: ${handle}`);
-    return [];
+    // Return fallback collection products if API fails
+    return getFallbackCollectionProducts(handle);
   }
 
   return data.collection.products.edges.map((edge: any) => {
