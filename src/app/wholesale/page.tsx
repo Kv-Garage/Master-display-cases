@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Button from '@/components/ui/Button';
 import { getProducts } from '@/lib/shopify';
-import { getShopifyProductUrl } from '@/lib/shopify-urls';
+import { getProductUrl } from '@/lib/shopify-urls';
 
 // SEO Metadata
 export const metadata = {
@@ -288,7 +288,7 @@ export default async function WholesalePage() {
               featuredProducts.map((product: any) => (
                 <Link
                   key={product.id}
-                  href={getShopifyProductUrl(product.handle)}
+                  href={getProductUrl(product.handle)}
                   className="group bg-white rounded-lg overflow-hidden border border-gray-200 hover:shadow-lg transition-all"
                 >
                   <div className="aspect-square bg-gray-100 relative overflow-hidden">
@@ -339,7 +339,7 @@ export default async function WholesalePage() {
           </div>
 
           <div className="text-center mt-12">
-            <Button href={getShopifyProductUrl('led-retail-display-showcase')} variant="secondary" size="lg">
+            <Button href={getProductUrl('led-retail-display-showcase')} variant="secondary" size="lg">
               View All Products
             </Button>
           </div>
